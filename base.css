@@ -1,29 +1,18 @@
 :root{
-  --bg1:#050816;
-  --bg2:#0b1020;
-  --card:rgba(255,255,255,.06);
-  --border:rgba(255,255,255,.12);
-  --text:#eef2ff;
-  --muted:#b6c2ff;
-
-  /* Button system (themes override these) */
-  --btnText: #eef2ff;
-  --btnBorder: rgba(255,255,255,.18);
-  --btnGradA: rgba(34,197,94,.22);
-  --btnGradB: rgba(6,182,212,.18);
-
-  /* layout sizing */
-  --linksMaxWidth: 720px;
-  --linksColWidth: 320px; /* target button width in 2-col */
+  --bg1:#050816; --bg2:#0b1020;
+  --card: rgba(255,255,255,.06);
+  --border: rgba(255,255,255,.12);
+  --text: #eef2ff;
+  --muted: rgba(238,242,255,.78);
 }
 
 *{ box-sizing:border-box; }
 
+html,body{ height:100%; }
 body{
   margin:0;
-  min-height:100vh;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
-  color:var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  color: var(--text);
   background:
     radial-gradient(circle at 20% 20%, rgba(6,182,212,.18) 0%, transparent 45%),
     radial-gradient(circle at 80% 30%, rgba(167,139,250,.14) 0%, transparent 45%),
@@ -31,234 +20,198 @@ body{
 }
 
 .wrap{
-  width:min(860px, 100%);
-  margin:0 auto;
-  padding:24px 14px 40px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 18px 14px 40px;
 }
 
 .card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 18px 60px rgba(0,0,0,.25);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.25);
 }
 
 .header{
   text-align:center;
-  padding:10px 6px 14px;
+  padding-top: 4px;
 }
 
 .logo{
-  width:86px;
-  height:86px;
-  object-fit:contain;
-  border-radius:18px;
+  width: 90px;
+  height: 90px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.18);
+  padding: 10px;
+  object-fit: contain;
   display:block;
-  margin:0 auto 10px;
+  margin: 0 auto 10px;
 }
 
 .brand{
-  margin:0;
-  font-size:34px;
-  font-weight:900;
-  letter-spacing:.2px;
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .tagline{
-  margin:8px 0 0;
-  color:rgba(238,242,255,.78);
-  font-weight:700;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 14px;
 }
+
+.small{ color: var(--muted); font-size: 13px; }
 
 .sep{
   border:0;
   height:1px;
-  background:rgba(255,255,255,.10);
-  margin:14px 0;
+  background: rgba(255,255,255,.12);
+  margin: 14px 0;
 }
 
 .section-title{
-  text-align: center;              /* center it */
-  font-weight: 900;
-  letter-spacing: .16em;
   text-transform: uppercase;
-  font-size: 14px;                 /* slightly larger */
-  color: rgba(238,242,255,.90);
-  margin-bottom: 12px;
+  letter-spacing: .12em;
+  font-weight: 900;
+  font-size: 14px;
+  text-align:center;
+  margin-bottom: 10px;
+}
+
+/* Hide helper */
+.is-hidden{ display:none !important; }
+
+/* =========================================================
+   ABOUT: centered
+========================================================= */
+#aboutSection{ text-align:center; }
+#about{
+  max-width: 720px;
+  margin: 0 auto;
+  line-height: 1.55;
+  font-size: 14px;
+  color: rgba(238,242,255,.86);
 }
 
 /* =========================================================
-  LINKS
+   Call / Text / Email pill row
 ========================================================= */
+.pill-row{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+}
 
+.pill-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width: 86px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+  text-decoration:none;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* =========================================================
+   Link buttons (2x2 grid + solo last)
+========================================================= */
 .links{
   display:flex;
   flex-wrap:wrap;
-  gap:12px;
+  gap: 12px;
   justify-content:center;
-  width:min(var(--linksMaxWidth), 100%);
-  margin:0 auto;
+}
+
+.links.links--grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  justify-content: stretch;
 }
 
 .btn{
   display:flex;
   align-items:center;
   justify-content:center;
-
-  text-decoration:none;
-  font-weight:900;
-  color:var(--btnText);
-
-  border:1px solid var(--btnBorder);
-  border-radius:16px;
-
-  padding:12px 14px;
-  min-height:48px;
-
-  /* key: do NOT stretch full width */
-  width: min(100%, var(--linksColWidth));
-  max-width: var(--linksColWidth);
-
-  /* theme gradient */
-  background: linear-gradient(90deg, var(--btnGradA), var(--btnGradB));
-}
-
-/* smaller variant used when many buttons */
-.btn--small{
-  min-height:44px;
-  padding:10px 12px;
-  border-radius:14px;
-}
-
-/* 2-col grid mode */
-.links--grid{
-  display:grid;
-  grid-template-columns: repeat(2, minmax(0, var(--linksColWidth)));
-  justify-content:center;
-}
-
-/* odd last button spans both columns but still not absurdly wide */
-.btn--last-full{
-  grid-column: 1 / span 2;
-  justify-self:center;
-  width:min(100%, calc(var(--linksColWidth) * 1.35));
-  max-width: calc(var(--linksColWidth) * 1.35);
-}
-
-.is-hidden{ display:none !important; }
-
-/* =========================================================
-  ABOUT (Centered)
-========================================================= */
-
-.about-text{
   text-align:center;
-  line-height:1.55;
-  font-size:16px;
-  color:rgba(238,242,255,.86);
-  max-width: 760px;
-  margin: 0 auto;
+
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.10);
+  color: var(--text);
+  text-decoration:none;
+  font-weight: 900;
+
+  /* keep them from stretching full card width */
+  width: 100%;
+  max-width: 320px;
+}
+
+.links.links--grid .btn{
+  max-width: 100%;
+}
+
+.btn.btn--small{
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.links.links--grid .btn.btn--last-full{
+  grid-column: 1 / span 2;
+  max-width: 520px;
+  justify-self:center;
 }
 
 /* =========================================================
-  ACTION SECTION (Call / Text / Email)
-  - follows theme gradients AND animations automatically
+   CONTACT: centered, stacked label then value
 ========================================================= */
+#contactSection{ text-align:center; }
 
-.actions-section{
-  display:flex;
-  justify-content:center;
-  padding: 2px 0;
+.contact-grid{
+  display:grid;
+  gap: 12px;
+  justify-items:center;
+  margin-top: 10px;
 }
 
-.actions-inner{
-  width: min(var(--linksMaxWidth), 100%);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
+.contact-row{
+  width: min(520px, 100%);
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align:center;
 }
 
-.action-btn{
-  appearance:none;
+.contact-row .pill{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-
-  min-width:110px;
-  padding:10px 16px;
-
-  border-radius:999px;
-  font-weight:900;
-  text-decoration:none;
-  cursor:pointer;
-
-  color: var(--btnText);
-  border: 1px solid var(--btnBorder);
-
-  /* This is the magic: same gradient vars as themes */
-  background: linear-gradient(90deg, var(--btnGradA), var(--btnGradB));
-
-  /* And if a theme sets animation on buttons, inherit it */
-  animation: inherit;
-  background-size: inherit;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.08);
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 8px;
 }
 
-/* =========================================================
-  CONTACT INFO (Centered stacked layout)
-========================================================= */
-
-/* =========================================================
-  CONTACT INFO (Centered stacked layout)
-========================================================= */
-
-.contact-stack{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  align-items:center;
-  text-align:center;
-  padding-top:6px;
+#contactPhone, #contactEmail{
+  color: rgba(238,242,255,.92);
+  text-decoration: underline;
+  font-weight: 800;
 }
-
-.ci{
-  width:min(440px, 100%);     /* ⬅ narrower than before */
-  padding:14px 16px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.20);
-}
-
-.ci-label{
-  font-weight:900;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-size:13px;             /* slightly larger */
-  color:rgba(238,242,255,.88);
-}
-
-.ci-value{
-  display:block;
-  margin-top:8px;
-  font-weight:800;
-  font-size:17px;             /* slightly larger */
-  color:rgba(238,242,255,.95);
-  text-decoration:none;
-}
-
-/* =========================================================
-  EMBED MODE (for theme gallery thumbnails)
-========================================================= */
-
-body.embed .wrap{ padding:0; }
-body.embed .card{
-  border:0;
-  border-radius:0;
-  box-shadow:none;
-  padding:14px;
-  background:transparent;
-}
-body.embed .sep,
-body.embed footer{ display:none; }
