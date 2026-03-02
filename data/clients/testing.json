@@ -1,0 +1,26 @@
+{
+  "slug": "testing",
+  "businessName": "testing",
+  "tagline": "testing",
+  "about": "testing now about now testing",
+  "links": {
+    "website": "https://www.google.com",
+    "facebook": "",
+    "instagram": "https://www.instagram.com",
+    "tiktok": "https://www.tiktok.com",
+    "linkedin": "",
+    "paypal": "https://www.paypal.com",
+    "cashapp": "https://www.cashapp.com",
+    "venmo": "https://www.venmo.com"
+  },
+  "contact": {
+    "name": "testing",
+    "phoneE164": "+11234567890",
+    "phoneDisplay": "1234567890",
+    "email": "baltax.ccox1@gmail.com"
+  },
+  "theme": "animated-01-aurora-glide.css",
+  "logoPath": "/assets/logos/testing.jpg",
+  "vcardPath": "/vcards/testing.vcf",
+  "qrPath": "/assets/qr/testing.png"
+}
