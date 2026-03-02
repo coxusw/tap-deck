@@ -3,38 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Redirecting…</title>
-  <meta http-equiv="refresh" content="0;url=/" />
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:24px}
-    code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-  </style>
+  <title>Tap-Deck</title>
+  <meta name="robots" content="noindex" />
 </head>
 <body>
-  Redirecting…
-  <script>
-    (function(){
-      // If this 404 was triggered by /slug (a client route),
-      // redirect to /?client=slug so index.html can load the profile.
+<script>
+  (function () {
+    // Convert "/slug" -> "/?client=slug"
+    var path = (location.pathname || "/").replace(/^\/+|\/+$/g, "");
+    var qs = location.search || "";
 
-      var path = (location.pathname || "/").replace(/^\/+|\/+$/g, "");
-      var qs = location.search || "";
+    // If it's already the homepage or a known folder, just go home
+    var known = ["", "theme-gallery", "pay", "preview", "admin", "intake", "shop", "assets", "themes", "data", "vcards"];
+    if (known.indexOf(path.split("/")[0]) !== -1) {
+      location.replace("/" + qs);
+      return;
+    }
 
-      // Ignore real files (assets/pages) so we don’t break actual 404s for missing files
-      var looksLikeFile = /\.[a-z0-9]{1,6}$/i.test(path); // e.g. .css .js .png .json
-      if (!path || looksLikeFile) {
-        location.replace("/" + qs);
-        return;
-      }
+    // preserve any query params by appending them after client
+    var target = "/?client=" + encodeURIComponent(path);
+    if (qs && qs !== "?") target += "&" + qs.replace(/^\?/, "");
 
-      // Preserve existing query string, add client if not already present
-      var u = new URL(location.origin + "/");
-      var p = new URLSearchParams(qs);
-      if (!p.get("client")) p.set("client", path);
-      u.search = p.toString();
-
-      location.replace(u.toString());
-    })();
-  </script>
+    location.replace(target);
+  })();
+</script>
 </body>
 </html>
