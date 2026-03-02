@@ -3,372 +3,415 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tap-Deck</title>
+  <title>Tap-Deck — Tap. Share. Done.</title>
+  <meta name="description" content="Tap-Deck gives you a clean, professional link powered by NFC + QR. One-time fee. No subscriptions." />
 
-  <!-- Base styles (shared layout) -->
+  <!-- Your existing shared site styles -->
   <link rel="stylesheet" href="/base.css?v=1" />
 
-  <!-- Theme stylesheet (swapped by JS) -->
-  <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=1" />
+  <style>
+    /* Light page-specific layout helpers that won't break themes */
+    :root{
+      --pageMax: 920px;
+      --muted: rgba(238,242,255,.78);
+      --muted2: rgba(238,242,255,.62);
+      --border: rgba(255,255,255,.14);
+      --cardbg: rgba(255,255,255,.06);
+    }
+
+    .page { padding: 24px 14px 48px; }
+    .pageWrap { max-width: var(--pageMax); margin: 0 auto; }
+
+    .heroCard{
+      background: var(--cardbg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    }
+
+    .heroTop{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .brandLockup{
+      display:flex; align-items:center; gap:12px;
+      min-width: 240px;
+    }
+
+    .mark{
+      width:44px; height:44px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.20);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:900;
+    }
+
+    .brandText .name{
+      margin:0;
+      font-weight:900;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .brandText .tag{
+      margin:3px 0 0;
+      font-size:12px;
+      color: var(--muted2);
+    }
+
+    .heroTitle{
+      margin: 6px 0 8px 0;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: -.2px;
+      font-weight: 950;
+      text-align:center;
+    }
+    .heroSub{
+      margin: 0 auto 14px;
+      color: var(--muted);
+      line-height: 1.45;
+      text-align:center;
+      max-width: 720px;
+      font-size: 14px;
+    }
+
+    .ctaRow{
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:center;
+      margin-top: 14px;
+    }
+    .ctaRow a{
+      text-decoration:none;
+      font-weight: 900;
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      color: inherit;
+      min-width: 220px;
+      text-align:center;
+    }
+    .ctaRow a.primary{
+      background: linear-gradient(90deg, rgba(34,197,94,.24), rgba(6,182,212,.18));
+      border-color: rgba(34,197,94,.30);
+    }
+
+    .priceLine{
+      margin-top: 10px;
+      text-align:center;
+      color: var(--muted2);
+      font-size: 12px;
+      line-height:1.35;
+    }
+    .priceLine b{ color: rgba(238,242,255,.92); }
+
+    .section{
+      margin-top: 16px;
+      background: var(--cardbg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.18);
+    }
+
+    .section h2{
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      font-weight: 950;
+      text-align:center;
+      letter-spacing:.2px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 740px){
+      .grid2{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .step{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .step .k{
+      font-weight: 950;
+      margin: 0 0 6px 0;
+    }
+    .step .v{
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .bullets{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .productGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 740px){
+      .productGrid{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .product{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .product h3{
+      margin:0 0 6px 0;
+      font-size: 14px;
+      font-weight: 950;
+    }
+    .product p{
+      margin:0 0 10px 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.45;
+    }
+    .product .row{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      justify-content:space-between;
+    }
+    .product .price{
+      font-weight: 950;
+      color: rgba(238,242,255,.92);
+      font-size: 13px;
+    }
+    .product a{
+      text-decoration:none;
+      font-weight: 900;
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      color: inherit;
+    }
+
+    .faq details{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+    .faq details + details{ margin-top: 10px; }
+    .faq summary{
+      cursor:pointer;
+      font-weight: 950;
+      list-style:none;
+    }
+    .faq summary::-webkit-details-marker{ display:none; }
+    .faq .ans{
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height:1.5;
+      font-size: 13px;
+    }
+
+    .footer{
+      margin-top: 16px;
+      text-align:center;
+      color: var(--muted2);
+      font-size: 12px;
+    }
+    .footer a{ color: inherit; }
+  </style>
 </head>
 
 <body>
-  <main class="wrap">
-    <section class="card">
-      <header class="header">
-        <a id="logoLink" href="#" target="_blank" rel="noopener" style="text-decoration:none">
-          <img id="logoImg" class="logo" alt="Logo" src="/assets/logos/crestedcritters.png" />
-        </a>
+  <div class="page">
+    <div class="pageWrap">
 
-        <h1 class="brand" id="brand">Loading…</h1>
-        <p class="tagline" id="tagline"></p>
-      </header>
+      <section class="heroCard">
+        <div class="heroTop">
+          <div class="brandLockup">
+            <div class="mark" aria-hidden="true">TD</div>
+            <div class="brandText">
+              <p class="name">Tap-Deck</p>
+              <p class="tag">NFC + QR Profiles</p>
+            </div>
+          </div>
 
-      <!-- LINKS -->
-      <nav class="links" id="linksWrap" aria-label="Links">
-        <a class="btn" id="btnWebsite" href="#" target="_blank" rel="noopener">Website</a>
-        <a class="btn" id="btnFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
-        <a class="btn" id="btnInstagram" href="#" target="_blank" rel="noopener">Instagram</a>
-        <a class="btn" id="btnTikTok" href="#" target="_blank" rel="noopener">TikTok</a>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="pill" href="/theme-gallery/" style="text-decoration:none; font-weight:900;">Themes</a>
+            <a class="pill" href="/shop/" style="text-decoration:none; font-weight:900;">Shop</a>
+            <a class="pill" href="mailto:support@tap-deck.com" style="text-decoration:none; font-weight:900;">Support</a>
+          </div>
+        </div>
 
-        <a class="btn" id="btnLinkedIn" href="#" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn" id="btnPayPal" href="#" target="_blank" rel="noopener">PayPal</a>
-        <a class="btn" id="btnCashApp" href="#" target="_blank" rel="noopener">Cash App</a>
-        <a class="btn" id="btnVenmo" href="#" target="_blank" rel="noopener">Venmo</a>
+        <h1 class="heroTitle">Tap. Share. Done.</h1>
+        <p class="heroSub">
+          Tap-Deck gives you a clean, professional link powered by NFC and QR — <b>one-time fee, no subscriptions</b>.
+          Your profile works instantly by tap, scan, or share.
+        </p>
 
-        <!-- vCard -->
-        <a class="btn" id="btnVcard" href="#" download>Save Contact</a>
-      </nav>
+        <div class="ctaRow">
+          <a class="primary" href="/theme-gallery/">Choose Your Theme</a>
+          <a href="/shop/">Shop NFC Devices</a>
+        </div>
 
-      <hr class="sep" />
-
-      <!-- ABOUT -->
-      <section id="aboutSection">
-        <div class="section-title">About</div>
-        <div id="about" class="about-text"></div>
-      </section>
-
-      <!-- action buttons go BETWEEN separators -->
-      <hr class="sep" />
-
-      <!-- CALL / TEXT / EMAIL -->
-      <section class="actions-section" id="actionsSection">
-        <div class="actions-inner">
-          <a class="action-btn" id="pillCall" href="#">Call</a>
-          <a class="action-btn" id="pillText" href="#">Text</a>
-          <a class="action-btn" id="pillEmail" href="#">Email</a>
+        <div class="priceLine">
+          Early Adopter Activation Price: <b>$15 (one-time)</b><br/>
+          Increasing to <b>$25</b> in the near future.
         </div>
       </section>
 
-      <hr class="sep" />
-
-      <!-- CONTACT INFO -->
-      <section id="contactSection">
-        <div class="section-title">Contact Info</div>
-
-        <div class="contact-stack">
-          <div class="ci" id="ciName">
-            <div class="ci-label">Name</div>
-            <div class="ci-value" id="contactName"></div>
+      <section class="section">
+        <h2>What is Tap-Deck?</h2>
+        <div class="grid2">
+          <div class="step">
+            <div class="k">Your link</div>
+            <p class="v">You get a page at <b>tap-deck.com/your-slug</b> that you can share anywhere.</p>
           </div>
-
-          <div class="ci" id="ciPhone">
-            <div class="ci-label">Phone</div>
-            <a class="ci-value" id="contactPhone" href="#"></a>
+          <div class="step">
+            <div class="k">Works everywhere</div>
+            <p class="v">Tap with NFC, scan the QR code, or send your link — it just works.</p>
           </div>
-
-          <div class="ci" id="ciEmail">
-            <div class="ci-label">Email</div>
-            <a class="ci-value" id="contactEmail" href="#"></a>
+          <div class="step">
+            <div class="k">Built for business or personal</div>
+            <p class="v">Use a business logo now — later you can pivot to personal profiles with photos too.</p>
+          </div>
+          <div class="step">
+            <div class="k">No subscriptions</div>
+            <p class="v">One-time activation to go live. Physical NFC products are optional add-ons.</p>
           </div>
         </div>
       </section>
 
-      <footer style="margin-top:14px; text-align:center;">
-        <div class="small">
-          © <span id="year"></span> <span id="footerBrand">Tap-Deck</span>
+      <section class="section">
+        <h2>How it works</h2>
+        <div class="grid2">
+          <div class="step">
+            <div class="k">1) Choose your slug + theme</div>
+            <p class="v">Pick the link you want and select a theme that matches your vibe.</p>
+          </div>
+          <div class="step">
+            <div class="k">2) Pay the one-time activation</div>
+            <p class="v">$15 early adopter price (increasing soon).</p>
+          </div>
+          <div class="step">
+            <div class="k">3) Fill out your info</div>
+            <p class="v">Submit your details and upload your logo/photo.</p>
+          </div>
+          <div class="step">
+            <div class="k">4) You go live</div>
+            <p class="v">You’ll receive your live link and QR code to share immediately.</p>
+          </div>
         </div>
-      </footer>
-    </section>
-  </main>
+      </section>
+
+      <section class="section">
+        <h2>Pricing</h2>
+        <ul class="bullets">
+          <li><b>Profile Activation:</b> <b>$15</b> one-time early adopter price (increasing to <b>$25</b> soon)</li>
+          <li><b>No monthly fees.</b> No subscriptions. Your profile stays live.</li>
+          <li><b>Physical NFC products</b> are optional and purchased separately.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Optional NFC devices</h2>
+        <div class="productGrid">
+          <div class="product">
+            <h3>3D Printed NFC Expo Sign (with profile QR)</h3>
+            <p>Perfect for vendor tables, events, booths — tap or scan to your profile.</p>
+            <div class="row">
+              <div class="price">Pre-loaded with your profile</div>
+              <a href="/shop/">View in Shop</a>
+            </div>
+          </div>
+
+          <div class="product">
+            <h3>NFC Card</h3>
+            <p>Classic tap-to-share card for business or personal use.</p>
+            <div class="row">
+              <div class="price">Pre-loaded with your profile</div>
+              <a href="/shop/">View in Shop</a>
+            </div>
+          </div>
+
+          <div class="product">
+            <h3>NFC Bracelet</h3>
+            <p>Wearable tap-to-share — great for creators and networking.</p>
+            <div class="row">
+              <div class="price">Pre-loaded with your profile</div>
+              <a href="/shop/">View in Shop</a>
+            </div>
+          </div>
+
+          <div class="product">
+            <h3>NFC Chips</h3>
+            <p>Embed into displays, signs, product packaging, or custom builds.</p>
+            <div class="row">
+              <div class="price">Pre-loaded with your profile</div>
+              <a href="/shop/">View in Shop</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section faq">
+        <h2>FAQ</h2>
+
+        <details>
+          <summary>Is this a subscription?</summary>
+          <div class="ans">No. Tap-Deck profiles are a one-time activation fee with no recurring costs.</div>
+        </details>
+
+        <details>
+          <summary>Can I change themes later?</summary>
+          <div class="ans">
+            Yes you can updated all information via contacting support, but coming soon you will be able to make these changes on the fly when ever you want!
+          </div>
+        </details>
+
+        <details>
+          <summary>Do I need an NFC device?</summary>
+          <div class="ans">No — your link and QR code work without any physical product. NFC devices are optional.</div>
+        </details>
+
+        <details>
+          <summary>What if my slug is taken?</summary>
+          <div class="ans">You’ll be prompted to choose a different slug before activation.</div>
+        </details>
+      </section>
+
+      <section class="section" style="text-align:center;">
+        <h2>Ready to claim your link?</h2>
+        <p class="heroSub" style="margin-bottom:12px;">
+          Claim your Tap-Deck profile for <b>$15</b> before the price increases.
+        </p>
+        <div class="ctaRow" style="margin-top:0;">
+          <a class="primary" href="/theme-gallery/">Choose Your Theme</a>
+          <a href="/shop/">Shop NFC Devices</a>
+        </div>
+      </section>
+
+      <div class="footer">
+        © <span id="y"></span> Tap-Deck · <a href="mailto:support@tap-deck.com">support@tap-deck.com</a>
+      </div>
+
+    </div>
+  </div>
 
   <script>
-    const DEFAULT_THEME = "theme-01-neon-dark.css";
-    const DEFAULT_LOGO  = "/assets/logos/crestedcritters.png";
-    const BRAND_HOST    = "www.tap-deck.com";
-
-    const $ = (id) => document.getElementById(id);
-
-    function getParam(name){
-      return new URLSearchParams(location.search).get(name) || "";
-    }
-
-    function normalizeUrl(u){
-      const x = (u||"").trim();
-      if(!x) return "";
-      if(x.startsWith("http://") || x.startsWith("https://")) return x;
-      return "https://" + x;
-    }
-
-    function normalizeTheme(v){
-      const s = (v||"").trim();
-      if(!s) return "";
-      return s.replace(/^\/?themes\//i, "").replace(/^\/+/, "");
-    }
-
-    function hide(el){
-      if(!el) return;
-      el.classList.add("is-hidden");
-    }
-    function show(el){
-      if(!el) return;
-      el.classList.remove("is-hidden");
-    }
-
-    function setBtn(id, url){
-      const el = $(id);
-      if(!el) return false;
-
-      const u = (url||"").trim();
-      if(!u || u === "#"){
-        hide(el);
-        el.href = "#";
-        return false;
-      }
-
-      show(el);
-      el.href = u;
-      return true;
-    }
-
-    function applyTheme(themeFile){
-      const theme = normalizeTheme(themeFile || DEFAULT_THEME) || DEFAULT_THEME;
-      const href = ("/themes/" + theme).replace("/themes//","/themes/");
-      $("themeStylesheet").href = href + `?v=${Date.now()}`;
-      return theme;
-    }
-
-    function setLogo(src){
-      const img = $("logoImg");
-      img.src = src || DEFAULT_LOGO;
-      img.onerror = ()=>{ img.onerror=null; img.src = DEFAULT_LOGO; };
-    }
-
-    function applyLinksLayout(){
-      const wrap = $("linksWrap");
-      if(!wrap) return;
-
-      // Only count visible buttons
-      const btns = Array.from(wrap.querySelectorAll("a.btn"))
-        .filter(a => !a.classList.contains("is-hidden"));
-
-      // Reset classes
-      wrap.classList.remove("links--grid");
-      btns.forEach(b=>{
-        b.classList.remove("btn--last-full");
-        b.classList.remove("btn--small");
-      });
-
-      // Make smaller if there are a lot
-      if(btns.length >= 5){
-        btns.forEach(b => b.classList.add("btn--small"));
-      }
-
-      // Use 2-column grid when there are 4+ buttons
-      if(btns.length >= 4){
-        wrap.classList.add("links--grid");
-
-        // If odd count, last button spans full width
-        if(btns.length % 2 === 1){
-          btns[btns.length - 1].classList.add("btn--last-full");
-        }
-      }
-    }
-
-    async function fetchClient(slug){
-      const url = `https://${BRAND_HOST}/data/clients/${encodeURIComponent(slug)}.json?v=${Date.now()}`;
-      const res = await fetch(url, { cache: "no-store" });
-      if(!res.ok) throw new Error("Profile not found");
-      return await res.json();
-    }
-
-    function buildVcardText(client){
-      const fullName = (client.contact?.name || client.businessName || "Contact").trim();
-      const org = (client.businessName || "").trim();
-      const phone = (client.contact?.phoneE164 || "").trim();
-      const email = (client.contact?.email || "").trim();
-      const url = (client.links?.website || "").trim();
-
-      const esc = (s) => String(s||"")
-        .replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
-
-      const lines = ["BEGIN:VCARD","VERSION:3.0",`FN:${esc(fullName)}`];
-      if(org) lines.push(`ORG:${esc(org)}`);
-      if(phone) lines.push(`TEL;TYPE=CELL:${esc(phone)}`);
-      if(email) lines.push(`EMAIL;TYPE=INTERNET:${esc(email)}`);
-      if(url) lines.push(`URL:${esc(url)}`);
-      lines.push("END:VCARD");
-      return lines.join("\n");
-    }
-
-    function wireVcard(client){
-      const a = $("btnVcard");
-      if(!a) return;
-
-      const vpath = (client.vcardPath || "").trim();
-      if(vpath){
-        a.removeAttribute("download");
-        a.href = vpath;
-        return;
-      }
-
-      const text = buildVcardText(client);
-      const blob = new Blob([text], { type: "text/vcard;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      a.href = url;
-      a.download = `${client.slug || "contact"}.vcf`;
-    }
-
-    function wireActions(client){
-      const phone = (client.contact?.phoneE164 || "").trim();
-      const email = (client.contact?.email || "").trim();
-
-      const call = $("pillCall");
-      const text = $("pillText");
-      const mail = $("pillEmail");
-      const sec  = $("actionsSection");
-
-      // If nothing to show, hide the whole section
-      if(!phone && !email){
-        hide(sec);
-        return;
-      }
-      show(sec);
-
-      // Call/Text require phone
-      if(phone){
-        show(call);
-        show(text);
-        call.href = `tel:${phone}`;
-        text.href = `sms:${phone}`;
-      }else{
-        hide(call);
-        hide(text);
-      }
-
-      // Email requires email
-      if(email){
-        show(mail);
-        mail.href = `mailto:${email}`;
-      }else{
-        hide(mail);
-      }
-    }
-
-    async function main(){
-      if (getParam("embed") === "1") document.body.classList.add("embed");
-      $("year").textContent = new Date().getFullYear();
-
-      const pathSlug = location.pathname.replace(/^\/+|\/+$/g, "");
-      const slug = (pathSlug || getParam("client") || "").trim().toLowerCase();
-
-      if(!slug){
-        $("brand").textContent = "No profile selected";
-        hide($("linksWrap"));
-        hide($("aboutSection"));
-        hide($("actionsSection"));
-        hide($("contactSection"));
-        return;
-      }
-
-      const client = await fetchClient(slug);
-
-      document.title = client.businessName ? client.businessName : `Tap-Deck — ${slug}`;
-      $("brand").textContent = client.businessName || slug;
-      $("footerBrand").textContent = client.businessName || "Tap-Deck";
-      $("tagline").textContent = client.tagline || "";
-
-      // Theme
-      applyTheme(client.theme || DEFAULT_THEME);
-
-      // Logo
-      setLogo(client.logoPath || DEFAULT_LOGO);
-      $("logoLink").href = normalizeUrl(client.links?.website || "") || "#";
-
-      // About (centered via CSS)
-      const about = (client.about || "").trim();
-      if(about){
-        $("about").textContent = about;
-        show($("aboutSection"));
-      }else{
-        hide($("aboutSection"));
-      }
-
-      // Links
-      const links = client.links || {};
-      setBtn("btnWebsite",  normalizeUrl(links.website));
-      setBtn("btnFacebook", normalizeUrl(links.facebook));
-      setBtn("btnInstagram", normalizeUrl(links.instagram));
-      setBtn("btnTikTok",   normalizeUrl(links.tiktok));
-
-      setBtn("btnLinkedIn", normalizeUrl(links.linkedin));
-      setBtn("btnPayPal",   normalizeUrl(links.paypal));
-      setBtn("btnCashApp",  normalizeUrl(links.cashapp));
-      setBtn("btnVenmo",    normalizeUrl(links.venmo));
-
-      // vCard
-      wireVcard(client);
-
-      // Action buttons
-      wireActions(client);
-
-      // Contact stack (centered)
-      const name = (client.contact?.name || client.businessName || "").trim();
-      if(name){
-        $("contactName").textContent = name;
-        show($("ciName"));
-      }else{
-        hide($("ciName"));
-      }
-
-      const phone = (client.contact?.phoneE164 || "").trim();
-      if(phone){
-        $("contactPhone").textContent = client.contact?.phoneDisplay || phone;
-        $("contactPhone").href = `tel:${phone}`;
-        show($("ciPhone"));
-      }else{
-        hide($("ciPhone"));
-      }
-
-      const email = (client.contact?.email || "").trim();
-      if(email){
-        $("contactEmail").textContent = email;
-        $("contactEmail").href = `mailto:${email}`;
-        show($("ciEmail"));
-      }else{
-        hide($("ciEmail"));
-      }
-
-      // If all contact fields hidden, hide section
-      const anyContact =
-        !$("ciName").classList.contains("is-hidden") ||
-        !$("ciPhone").classList.contains("is-hidden") ||
-        !$("ciEmail").classList.contains("is-hidden");
-      if(!anyContact) hide($("contactSection"));
-
-      // 2x2 layout after we hide blanks
-      applyLinksLayout();
-    }
-
-    main().catch(err=>{
-      console.error(err);
-      $("brand").textContent = "Profile not found";
-      hide($("linksWrap"));
-      hide($("aboutSection"));
-      hide($("actionsSection"));
-      hide($("contactSection"));
-    });
+    document.getElementById("y").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
