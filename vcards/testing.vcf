@@ -1,0 +1,8 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:testing
+ORG:testing
+TEL;TYPE=CELL:+11234567890
+EMAIL;TYPE=INTERNET:baltax.ccox1@gmail.com
+URL:https://www.google.com
+END:VCARD
