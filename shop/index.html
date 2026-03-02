@@ -6,190 +6,173 @@
   <title>Tap-Deck Shop</title>
   <meta name="description" content="Tap-Deck NFC devices pre-loaded with your profile." />
 
-  <!-- Shared site styling -->
+  <!-- Shared site styles -->
   <link rel="stylesheet" href="/base.css?v=1" />
 
   <style>
-    /* Shop-specific tweaks that still respect base.css look */
-    .shop-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-    }
-
-    .shop-title{
-      margin:0;
-      font-weight:950;
-      letter-spacing:-.2px;
-      font-size:28px;
-      line-height:1.1;
-    }
+    /* Shop-specific: keep it minimal and “base.css-native” */
 
     .shop-sub{
-      margin:8px 0 0;
-      color:rgba(238,242,255,.78);
-      line-height:1.5;
-      font-size:13px;
-      max-width:720px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 14px;
+      margin: 8px auto 0;
+      max-width: 640px;
+      line-height: 1.5;
     }
 
-    .shop-actions{
+    .product-list{
+      width: min(720px, 100%);
+      margin: 0 auto;
       display:flex;
-      gap:10px;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .product{
+      border-radius: 18px;
+      padding: 14px 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .product-title{
+      margin: 0;
+      font-weight: 950;
+      font-size: 16px;
+      text-align:center;
+    }
+
+    .product-desc{
+      margin: 8px auto 0;
+      text-align:center;
+      color: rgba(238,242,255,.86);
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 620px;
+    }
+
+    .product-meta{
+      margin-top: 10px;
+      display:flex;
+      gap: 12px;
+      justify-content:center;
       flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .shop-grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-      margin-top:12px;
-    }
-    @media (min-width: 760px){
-      .shop-grid{ grid-template-columns: 1fr 1fr; }
-    }
-
-    .shop-item{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
-      border-radius:16px;
-      padding:14px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.12);
-    }
-
-    .shop-item h2{
-      margin:0 0 8px;
-      font-size:15px;
-      font-weight:950;
-      letter-spacing:-.1px;
-    }
-
-    .shop-item p{
-      margin:0 0 12px;
-      color:rgba(238,242,255,.78);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .shop-row{
-      display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
     }
 
-    .shop-price{
-      font-weight:950;
-      color:rgba(238,242,255,.92);
-      font-size:13px;
-    }
-
-    /* Make the buy button feel like your site buttons */
-    .shop-buy{
+    .price-pill{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:10px 14px;
-      border-radius:12px;
-      border:1px solid rgba(34,197,94,.30);
-      background:linear-gradient(90deg, rgba(34,197,94,.24), rgba(6,182,212,.18));
-      color:inherit;
-      font-weight:950;
-      text-decoration:none;
-      min-width:180px;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-
-    .shop-note{
-      margin-top:12px;
-      color:rgba(238,242,255,.62);
-      font-size:12px;
-      line-height:1.45;
-    }
-
-    /* If your base.css already defines .pill, this will just “fit in”.
-       If not, this provides a compatible fallback. */
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.08);
-      color:inherit;
-      text-decoration:none;
-      font-weight:900;
-      cursor:pointer;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      color: rgba(238,242,255,.92);
+      font-weight: 900;
+      font-size: 13px;
       user-select:none;
+    }
+
+    /* Make the buy button feel like your other buttons, but not huge */
+    .buy-btn{
+      min-width: 220px;
+    }
+
+    /* A small “info” section style */
+    .note{
+      text-align:center;
+      color: rgba(238,242,255,.72);
+      font-size: 12px;
+      line-height: 1.45;
+      margin: 0 auto;
+      max-width: 680px;
+    }
+
+    @media (max-width: 520px){
+      .buy-btn{ min-width: 200px; }
     }
   </style>
 </head>
 
 <body>
+  <!-- Sticky Home (top-right) -->
+  <a class="sticky-home" href="/" aria-label="Home">Home</a>
+
   <main class="wrap">
     <section class="card">
-      <div class="shop-head">
-        <div>
-          <h1 class="shop-title">Shop</h1>
-          <p class="shop-sub">
-            All items come <b>pre-loaded with your Tap-Deck profile</b>.
-            If you haven’t created your profile yet, start in the Theme Gallery first.
-          </p>
-        </div>
+      <header class="header">
+        <a href="/" style="text-decoration:none" aria-label="Tap-Deck Home">
+          <img class="logo" alt="Tap-Deck" src="/assets/logos/crestedcritters.png" />
+        </a>
+        <h1 class="brand">Shop</h1>
+        <p class="shop-sub">
+          All items come <b>pre-loaded with your Tap-Deck profile</b>.
+          If you haven’t created your profile yet, start by choosing a theme first.
+        </p>
+      </header>
 
-        <div class="shop-actions">
-          <a class="pill" href="/">Home</a>
-          <a class="pill" href="/theme-gallery/">Theme Gallery</a>
-          <a class="pill" href="mailto:support@tap-deck.com">Support</a>
-        </div>
-      </div>
+      <nav class="links" aria-label="Shop actions">
+        <a class="btn btn--chip" href="/theme-gallery/" style="min-width: 180px;">Choose Theme</a>
+        <a class="btn btn--chip" href="mailto:support@tap-deck.com" style="min-width: 180px;">Support</a>
+      </nav>
 
-      <div class="shop-grid" id="grid" aria-label="Shop items"></div>
+      <hr class="sep" />
 
-      <div class="shop-note">
+      <div class="section-title">Products</div>
+
+      <section class="product-list" id="productList"></section>
+
+      <hr class="sep" />
+
+      <p class="note">
         Checkout uses Square payment links. After purchase, we’ll ensure your device is linked to your profile.
-      </div>
+        If you already have a profile, include your slug in the checkout notes (or email support).
+      </p>
+
+      <footer class="footer">
+        <div class="small">© <span id="year"></span> Tap-Deck</div>
+      </footer>
     </section>
   </main>
 
   <script>
-    // ✅ EDIT PRODUCTS HERE (easy)
-    // Add a new item by copying an object and changing name/desc/price/payLink.
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ✅ EDIT PRODUCTS HERE
+    // - name: product title
+    // - desc: short description
+    // - priceLabel: what to show on the pill (ex: "$29" or "Early adopter")
+    // - payLink: Square payment link
     const PRODUCTS = [
       {
         name: "3D Printed NFC Expo Sign + Profile QR",
         desc: "Perfect for vendor tables and events — tap or scan to open your profile instantly.",
-        price: "$— (Square link)",
+        priceLabel: "See Square link",
         payLink: "https://square.link/u/tvd67HVK"
       },
       {
         name: "NFC Card",
         desc: "Classic tap-to-share card for business or personal networking.",
-        price: "$— (Square link)",
+        priceLabel: "See Square link",
         payLink: "https://square.link/u/tvd67HVK"
       },
       {
         name: "NFC Bracelet",
         desc: "Wearable tap-to-share — great for creators, events, and social use.",
-        price: "$— (Square link)",
+        priceLabel: "See Square link",
         payLink: "https://square.link/u/tvd67HVK"
       },
       {
         name: "NFC Chips",
         desc: "Embed into signs, displays, packaging, or custom builds.",
-        price: "$— (Square link)",
+        priceLabel: "See Square link",
         payLink: "https://square.link/u/tvd67HVK"
       }
     ];
 
-    const grid = document.getElementById("grid");
+    const list = document.getElementById("productList");
 
     function escapeHtml(s){
       return String(s||"")
@@ -199,19 +182,19 @@
     function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
 
     function render(){
-      grid.innerHTML = "";
+      list.innerHTML = "";
       for(const p of PRODUCTS){
         const el = document.createElement("div");
-        el.className = "shop-item";
+        el.className = "product";
         el.innerHTML = `
-          <h2>${escapeHtml(p.name)}</h2>
-          <p>${escapeHtml(p.desc)}</p>
-          <div class="shop-row">
-            <div class="shop-price">${escapeHtml(p.price || "")}</div>
-            <a class="shop-buy" href="${escapeAttr(p.payLink)}" target="_blank" rel="noopener">Buy on Square</a>
+          <h2 class="product-title">${escapeHtml(p.name)}</h2>
+          <p class="product-desc">${escapeHtml(p.desc)}</p>
+          <div class="product-meta">
+            <span class="price-pill">${escapeHtml(p.priceLabel || "")}</span>
+            <a class="btn buy-btn" href="${escapeAttr(p.payLink)}" target="_blank" rel="noopener">Buy on Square</a>
           </div>
         `;
-        grid.appendChild(el);
+        list.appendChild(el);
       }
     }
 
