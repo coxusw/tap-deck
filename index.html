@@ -6,13 +6,15 @@
   <title>Tap-Deck</title>
 
   <!-- Shared base layout -->
-  <link rel="stylesheet" href="/base.css?v=3" />
+  <link rel="stylesheet" href="/base.css?v=4" />
 
   <!-- Theme stylesheet (swapped by JS when viewing a profile) -->
-  <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=3" />
+  <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=4" />
 
   <style>
-    /* Always-available sticky controls */
+    /* =========================================================
+       Sticky controls (PROFILE only)
+    ========================================================= */
     .sticky-home{
       position:fixed;
       top:12px;
@@ -27,6 +29,7 @@
       text-decoration:none;
       font-weight:900;
       line-height:1;
+      display:none; /* shown on profile */
     }
 
     .sticky-qr{
@@ -51,21 +54,45 @@
       display:block;
     }
 
-    /* Simple homepage layout (kept minimal; uses base.css look/feel) */
-    #homeApp .hero{
+    /* =========================================================
+       Homepage styling (uses base.css vibe)
+    ========================================================= */
+    #homeApp .home-hero{
       text-align:center;
-      padding:24px 0 6px;
+      padding:10px 0 4px;
     }
-    #homeApp .hero h1{ margin:0 0 8px 0; }
-    #homeApp .hero p{ margin:0 auto; max-width:740px; opacity:.88; line-height:1.5; }
-    #homeApp .home-actions{
+    #homeApp .home-logo{
+      width:84px;
+      height:84px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      object-fit:contain;
+      padding:10px;
+      margin:0 auto 10px;
+      display:block;
+    }
+    #homeApp h1{
+      margin:0 0 8px 0;
+      font-size:30px;
+      letter-spacing:-0.02em;
+    }
+    #homeApp .sub{
+      margin:0 auto;
+      max-width:820px;
+      opacity:.90;
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .home-actions{
       display:flex;
       gap:12px;
       flex-wrap:wrap;
       justify-content:center;
       margin-top:14px;
     }
-    #homeApp .home-actions a{
+    .home-actions a{
       text-decoration:none;
       font-weight:900;
       padding:12px 14px;
@@ -73,44 +100,201 @@
       border:1px solid rgba(255,255,255,.16);
       background:rgba(255,255,255,.10);
       color:inherit;
+      min-width:200px;
+      text-align:center;
+    }
+    .home-actions a.primary{
+      background:linear-gradient(90deg, rgba(34,197,94,.24), rgba(6,182,212,.18));
+      border-color:rgba(34,197,94,.28);
+    }
+
+    .price-line{
+      margin-top:12px;
+      text-align:center;
+      font-size:14px;
+      opacity:.92;
+    }
+    .price-line b{ font-weight:900; }
+
+    .home-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .home-box{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:14px;
+    }
+    .home-box h3{
+      margin:0 0 8px 0;
+      font-size:15px;
+    }
+    .home-box p{
+      margin:0;
+      opacity:.90;
+      line-height:1.5;
+      font-size:13px;
+    }
+    .steps{
+      margin:0;
+      padding-left:18px;
+      opacity:.92;
+      line-height:1.6;
+      font-size:13px;
+    }
+
+    .faq{
+      margin-top:12px;
+      display:grid;
+      gap:10px;
+    }
+    details{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:12px 14px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:900;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    details p{
+      margin:10px 0 0 0;
+      opacity:.90;
+      line-height:1.55;
+      font-size:13px;
+    }
+    .fineprint{
+      margin-top:12px;
+      text-align:center;
+      opacity:.78;
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    /* Give home a bit of breathing room on tiny screens */
+    @media (max-width:420px){
+      #homeApp h1{ font-size:26px; }
+      .home-actions a{ min-width: 160px; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Sticky Home button (always visible) -->
-  <a class="sticky-home" href="/" aria-label="Home">Home</a>
-
-  <!-- Sticky QR (only visible on profiles that have qrPath) -->
-  <div class="sticky-qr" id="stickyQr" title="Download QR">
+  <!-- Sticky controls (shown only on PROFILE view) -->
+  <a class="sticky-home" id="stickyHome" href="/" aria-label="Home">Home</a>
+  <div class="sticky-qr" id="stickyQr" title="Open / download QR">
     <img id="stickyQrImg" alt="QR Code" />
   </div>
 
-  <!-- HOME APP (only when no slug) -->
+  <!-- =========================================================
+       HOME APP (only when no slug)
+  ========================================================= -->
   <main class="wrap" id="homeApp" style="display:none;">
     <section class="card">
-      <div class="hero">
+      <div class="home-hero">
+        <img class="home-logo" src="/assets/logos/tap-deck.png" alt="Tap-Deck logo"
+             onerror="this.onerror=null; this.src='/assets/logos/crestedcritters.png';" />
+
         <h1>Tap-Deck</h1>
-        <p>
-          One-time fee. No subscriptions. Pick a theme, claim your link, and share it anywhere.
-          Want NFC gear pre-loaded with your profile? We’ve got that too.
+        <p class="sub">
+          Tap-Deck gives you a clean, professional profile link you can share anywhere —
+          plus optional physical NFC products that come pre-loaded to your profile.
         </p>
 
+        <div class="price-line">
+          <b>One-time fee.</b> No recurring costs.
+          <br/>
+          Early adopters price: <b>$15</b> (will increase to <b>$25</b> soon).
+          <br/>
+          Physical products are separate purchases if you want them.
+        </div>
+
         <div class="home-actions">
-          <a href="/theme-gallery/">Get started (choose a theme)</a>
+          <a class="primary" href="/theme-gallery/">Get started: Choose a theme</a>
           <a href="/shop/">Shop NFC products</a>
         </div>
       </div>
 
       <hr class="sep" />
 
-      <div class="small" style="text-align:center;">
-        Early adopters price: <b>$15</b> (will increase to <b>$25</b> soon)
+      <div class="home-grid">
+        <div class="home-box">
+          <h3>What you get</h3>
+          <p>
+            A profile at <b>www.tap-deck.com/your-slug</b> with your logo (or photo), links, contact card download,
+            and a QR you can share or print.
+          </p>
+        </div>
+
+        <div class="home-box">
+          <h3>How it works</h3>
+          <ol class="steps">
+            <li>Choose your theme.</li>
+            <li>Pay once (or use a one-time token).</li>
+            <li>Fill out the intake form.</li>
+            <li>You’ll receive an email with your live link and QR.</li>
+          </ol>
+        </div>
+
+        <div class="home-box">
+          <h3>Perfect for</h3>
+          <p>
+            Small businesses, vendors, events, real estate, service pros —
+            and soon a personal “social” version for everyday use.
+          </p>
+        </div>
+      </div>
+
+      <hr class="sep" />
+
+      <div class="section-title" style="text-align:center;">FAQ</div>
+      <div class="faq">
+        <details>
+          <summary>Can I change themes later?</summary>
+          <p>
+            Yes you can updated all information via contacting support, but coming soon you will be able to make these changes on the fly when ever you want!
+          </p>
+        </details>
+
+        <details>
+          <summary>Are there recurring fees?</summary>
+          <p>
+            No — Tap-Deck profiles are a one-time fee. The only additional cost is if you choose to purchase physical products
+            (cards, bracelets, chips, signage) pre-loaded to your profile.
+          </p>
+        </details>
+
+        <details>
+          <summary>What if my slug is already taken?</summary>
+          <p>
+            You’ll be prompted to choose a different slug. Your slug must be unique because it becomes your public link.
+          </p>
+        </details>
+
+        <details>
+          <summary>Do you offer NFC products?</summary>
+          <p>
+            Yes — visit the <a href="/shop/" style="color:inherit; font-weight:900;">Shop</a> for NFC cards, bracelets, chips, and display signage.
+            All items can come pre-loaded with your profile.
+          </p>
+        </details>
+      </div>
+
+      <div class="fineprint">
+        © <span id="homeYear"></span> Tap-Deck • Need help? <a href="mailto:support@tap-deck.com" style="color:inherit; font-weight:900;">support@tap-deck.com</a>
       </div>
     </section>
   </main>
 
-  <!-- PROFILE APP (only when slug present) -->
+  <!-- =========================================================
+       PROFILE APP (only when slug present)
+  ========================================================= -->
   <main class="wrap" id="profileApp" style="display:none;">
     <section class="card">
       <header class="header">
@@ -129,13 +313,15 @@
         <div id="about" class="small" style="font-size:14px; color:rgba(238,242,255,.86)"></div>
       </section>
 
-      <!-- Call/Text/Email section (your “quick actions”) -->
       <hr class="sep" />
+
+      <!-- Call/Text/Email section -->
       <nav class="pill-row" id="pillRow" aria-label="Quick actions">
         <a class="pill-btn" id="pillCall" href="#">Call</a>
         <a class="pill-btn" id="pillText" href="#">Text</a>
         <a class="pill-btn" id="pillEmail" href="#">Email</a>
       </nav>
+
       <hr class="sep" />
 
       <nav class="links" id="linksWrap" aria-label="Links">
@@ -185,7 +371,7 @@
   <script>
     const DEFAULT_THEME = "theme-01-neon-dark.css";
     const DEFAULT_LOGO  = "/assets/logos/crestedcritters.png";
-    const BRAND_HOST    = "www.tap-deck.com"; // used only for absolute fetch fallback
+    const BRAND_HOST    = "www.tap-deck.com"; // fallback host for absolute fetch
 
     const $ = (id) => document.getElementById(id);
 
@@ -270,7 +456,7 @@
     }
 
     async function fetchClient(slug){
-      // Prefer same-origin relative path (best for Pages)
+      // Prefer same-origin relative path
       const rel = `/data/clients/${encodeURIComponent(slug)}.json?v=${Date.now()}`;
       const res1 = await fetch(rel, { cache: "no-store" });
       if(res1.ok) return await res1.json();
@@ -334,7 +520,6 @@
       img.src = qrPath + `?v=${Date.now()}`;
       wrap.style.display = "";
 
-      // click to download/open
       wrap.onclick = () => {
         window.open(qrPath, "_blank", "noopener");
       };
@@ -363,7 +548,6 @@
         hide(mail);
       }
 
-      // If all hidden, hide the row container
       const any = [call,text,mail].some(a => a && !a.classList.contains("is-hidden"));
       if(!any) hide($("pillRow"));
       else show($("pillRow"));
@@ -372,6 +556,10 @@
     async function renderProfile(slug){
       $("homeApp").style.display = "none";
       $("profileApp").style.display = "";
+
+      // show profile sticky buttons
+      $("stickyHome").style.display = "";
+      // sticky QR will show only if qrPath exists
 
       $("year").textContent = new Date().getFullYear();
 
@@ -435,11 +623,14 @@
     function renderHome(){
       $("profileApp").style.display = "none";
       $("homeApp").style.display = "";
-      $("year") && ($("year").textContent = new Date().getFullYear());
+      $("stickyHome").style.display = "none";
+      $("stickyQr").style.display = "none";
+      document.title = "Tap-Deck";
+      $("homeYear").textContent = new Date().getFullYear();
     }
 
     async function main(){
-      // If you land on /slug, 404.html should have redirected you to /?client=slug.
+      // Usually /slug is redirected to /?client=slug via 404.html
       const pathSlug = location.pathname.replace(/^\/+|\/+$/g, "");
       const slug = (pathSlug || getParam("client") || "").trim().toLowerCase();
 
@@ -452,7 +643,6 @@
         await renderProfile(slug);
       }catch(err){
         console.error(err);
-        // If profile not found, show home (prevents “stuck”)
         renderHome();
       }
     }
