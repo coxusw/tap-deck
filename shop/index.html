@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tap-Deck Shop</title>
+  <meta name="description" content="Tap-Deck NFC devices pre-loaded with your profile." />
+
+  <link rel="stylesheet" href="/base.css?v=1" />
+
+  <style>
+    :root{
+      --pageMax: 920px;
+      --muted: rgba(238,242,255,.78);
+      --muted2: rgba(238,242,255,.62);
+      --border: rgba(255,255,255,.14);
+      --cardbg: rgba(255,255,255,.06);
+    }
+    body{ margin:0; }
+    .page{ padding: 24px 14px 48px; }
+    .wrap{ max-width: var(--pageMax); margin: 0 auto; }
+
+    .top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+    .title{
+      margin:0;
+      font-weight: 950;
+      font-size: 22px;
+      letter-spacing: -.2px;
+    }
+    .sub{ margin:6px 0 0; color: var(--muted); line-height:1.45; font-size: 13px; }
+
+    .bar{
+      background: var(--cardbg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.18);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 740px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .item{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .item h2{
+      margin:0 0 6px 0;
+      font-size: 15px;
+      font-weight: 950;
+    }
+    .item p{
+      margin:0 0 10px 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.45;
+    }
+    .row{
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center; justify-content:space-between;
+    }
+    .price{
+      font-weight: 950;
+      color: rgba(238,242,255,.92);
+      font-size: 13px;
+    }
+    .btn{
+      text-decoration:none;
+      font-weight: 900;
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      color: inherit;
+      cursor:pointer;
+      text-align:center;
+      min-width: 160px;
+    }
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(34,197,94,.24), rgba(6,182,212,.18));
+      border-color: rgba(34,197,94,.30);
+    }
+
+    .note{
+      margin-top: 12px;
+      color: var(--muted2);
+      font-size: 12px;
+      line-height:1.4;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="wrap">
+
+      <div class="top">
+        <div>
+          <h1 class="title">Shop</h1>
+          <p class="sub">All items come <b>pre-loaded with your Tap-Deck profile</b>.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="pill" href="/" style="text-decoration:none; font-weight:900;">Home</a>
+          <a class="pill" href="/theme-gallery/" style="text-decoration:none; font-weight:900;">Choose Theme</a>
+          <a class="pill" href="mailto:support@tap-deck.com" style="text-decoration:none; font-weight:900;">Support</a>
+        </div>
+      </div>
+
+      <section class="bar">
+        <div class="grid" id="grid"></div>
+
+        <div class="note">
+          Checkout uses Square payment links. After purchase, we’ll confirm your slug and ensure your device is linked to your profile.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // ✅ EDIT PRODUCTS HERE (easy)
+    // You can change prices/descriptions and add new items by copying an object.
+    const PRODUCTS = [
+      {
+        name: "3D Printed NFC Expo Sign + Profile QR",
+        desc: "Perfect for vendor tables and events — tap or scan to open your profile instantly.",
+        price: "See Square link",
+        payLink: "https://square.link/u/tvd67HVK"
+      },
+      {
+        name: "NFC Card",
+        desc: "Classic tap-to-share card for business or personal networking.",
+        price: "See Square link",
+        payLink: "https://square.link/u/tvd67HVK"
+      },
+      {
+        name: "NFC Bracelet",
+        desc: "Wearable tap-to-share — great for creators, events, and social use.",
+        price: "See Square link",
+        payLink: "https://square.link/u/tvd67HVK"
+      },
+      {
+        name: "NFC Chips",
+        desc: "Embed into signs, displays, packaging, or custom builds.",
+        price: "See Square link",
+        payLink: "https://square.link/u/tvd67HVK"
+      }
+    ];
+
+    const grid = document.getElementById("grid");
+
+    function render(){
+      grid.innerHTML = "";
+      for(const p of PRODUCTS){
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <h2>${escapeHtml(p.name)}</h2>
+          <p>${escapeHtml(p.desc)}</p>
+          <div class="row">
+            <div class="price">${escapeHtml(p.price)}</div>
+            <a class="btn primary" href="${escapeAttr(p.payLink)}" target="_blank" rel="noopener">Buy on Square</a>
+          </div>
+        `;
+        grid.appendChild(el);
+      }
+    }
+
+    function escapeHtml(s){
+      return String(s||"")
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+    }
+    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
+
+    render();
+  </script>
+</body>
+</html>
