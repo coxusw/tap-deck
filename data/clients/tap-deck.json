@@ -1,0 +1,26 @@
+{
+  "slug": "tap-deck",
+  "businessName": "",
+  "tagline": "",
+  "about": "",
+  "links": {
+    "website": "",
+    "facebook": "",
+    "instagram": "",
+    "tiktok": "",
+    "linkedin": "",
+    "paypal": "",
+    "cashapp": "",
+    "venmo": ""
+  },
+  "contact": {
+    "name": "",
+    "phoneE164": "",
+    "phoneDisplay": "",
+    "email": ""
+  },
+  "theme": "",
+  "logoPath": "",
+  "vcardPath": "/vcards/tap-deck.vcf",
+  "qrPath": "/assets/qr/tap-deck.png"
+}
