@@ -8,7 +8,8 @@
   - "Use this theme" goes to /pay/?theme=...&slug=...
 
   NEW:
-  - Preview profile is selectable via URL:
+  - Sticky "Home" button pinned top-right (always visible)
+  - Preview profile selectable via URL:
       /theme-gallery/?preview=crestedcritters
   - Loads that profile from:
       /data/clients/{preview}.json
@@ -54,6 +55,39 @@
     h1{ margin:0; font-family:Fraunces,serif; font-weight:600; font-size:32px; }
     .sub{margin:10px auto 0; max-width:1000px; color:var(--muted); line-height:1.5}
     .wrap{max-width:1150px; margin:0 auto; padding:14px 16px 40px}
+
+    /* ✅ Sticky home button (always visible) */
+    .homeFixed{
+      position:fixed;
+      top:14px;
+      right:14px;
+      z-index:9999;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow:0 12px 40px rgba(0,0,0,.25);
+    }
+    .homeFixed:hover{
+      background:rgba(255,255,255,.14);
+      transform: translateY(-1px);
+    }
+
+    /* Make sure header text doesn’t collide on tiny screens */
+    @media (max-width:520px){
+      .homeFixed{ top:10px; right:10px; padding:9px 12px; }
+      header{ padding-top:56px; } /* give space under fixed button */
+    }
 
     .top-controls{
       display:flex;
@@ -173,6 +207,9 @@
 </head>
 
 <body>
+  <!-- ✅ Sticky Home button -->
+  <a class="homeFixed" href="/">Home</a>
+
   <header>
     <h1>Choose a theme</h1>
     <p class="sub">
@@ -198,10 +235,7 @@
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-  <a class="pill" href="/" style="text-decoration:none;">Home</a>
-  <button class="pill" id="btnReload" type="button">Reload theme list</button>
-</div>
+      <button class="pill" id="btnReload" type="button">Reload theme list</button>
     </div>
 
     <div id="status"></div>
@@ -252,15 +286,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/\b\w/g, (m)=>m.toUpperCase());
   }
 
-  function classify(file){
-    const n = file.toLowerCase();
-    if (n.startsWith("luxury-")) return "luxury";
-    if (n.startsWith("business-")) return "business";
-    if (n.startsWith("animated-")) return "animated";
-    if (n.startsWith("basic-")) return "basic";
-    return "other";
-  }
-
   function normalizeUrl(u){
     const x = (u || "").trim();
     if(!x) return "";
@@ -268,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "https://" + x;
   }
 
-  // -------- Preview profile loader (NEW) --------
+  // -------- Preview profile loader --------
   let PREVIEW_PROFILE = {
     slug: DEFAULT_PREVIEW_SLUG,
     businessName: "Crested Critters",
@@ -300,7 +325,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!res.ok) throw new Error("preview profile not found");
       const data = await res.json();
 
-      // Merge safely
       PREVIEW_PROFILE = {
         ...PREVIEW_PROFILE,
         ...data,
@@ -309,32 +333,26 @@ document.addEventListener("DOMContentLoaded", () => {
         contact: { ...(PREVIEW_PROFILE.contact || {}), ...(data.contact || {}) },
       };
 
-      // Ensure we have a logo path for preview thumbnails
       PREVIEW_PROFILE.logoPath = (PREVIEW_PROFILE.logoPath || "").trim() || FALLBACK_PREVIEW_LOGO_PATH;
 
-      // Ensure website is normalized (for the preview logo link)
       if (PREVIEW_PROFILE.links && PREVIEW_PROFILE.links.website){
         PREVIEW_PROFILE.links.website = normalizeUrl(PREVIEW_PROFILE.links.website);
       }
 
-      // Ensure required preview text exists
       PREVIEW_PROFILE.businessName = (PREVIEW_PROFILE.businessName || PREVIEW_PROFILE.slug || "Tap-Deck").trim();
       PREVIEW_PROFILE.tagline = (PREVIEW_PROFILE.tagline || "").trim();
       PREVIEW_PROFILE.about = (PREVIEW_PROFILE.about || "Theme preview thumbnail.").trim();
 
     }catch(e){
-      // If it fails, we just keep the default preview profile values.
       PREVIEW_PROFILE.slug = DEFAULT_PREVIEW_SLUG;
     }
   }
 
   function previewUrl(themeFile){
-    // Same-origin relative URL to avoid CORS headaches
     const u = new URL("/preview/", location.origin);
     u.searchParams.set("theme", themeFile);
     u.searchParams.set("embed", "1");
 
-    // Use loaded preview profile values
     u.searchParams.set("businessName", PREVIEW_PROFILE.businessName || "Tap-Deck");
     u.searchParams.set("tagline", PREVIEW_PROFILE.tagline || "");
     u.searchParams.set("about", PREVIEW_PROFILE.about || "Theme preview thumbnail.");
@@ -357,7 +375,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (phone) u.searchParams.set("phone", phone);
     if (email) u.searchParams.set("email", email);
 
-    // ✅ Let preview load the preview profile’s real logo
     const logoPath = (PREVIEW_PROFILE.logoPath || FALLBACK_PREVIEW_LOGO_PATH).trim();
     if (logoPath) u.searchParams.set("logo", logoPath);
 
@@ -386,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return data
       .filter(x => x.type==="file" && x.name.toLowerCase().endsWith(".css"))
       .map(x => x.name)
-      .filter(name => name !== DEFAULT_THEME_TO_HIDE) // ✅ hide default theme
+      .filter(name => name !== DEFAULT_THEME_TO_HIDE)
       .sort((a,b)=>a.localeCompare(b));
   }
 
@@ -441,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
     slugTimer = setTimeout(()=>checkSlugAvailability(slug), 220);
   }
 
-  // ---- Render themes (with lazy iframe loading) ----
+  // ---- Render themes (lazy iframe loading) ----
   let ALL = [];
   let observer = null;
 
@@ -450,7 +467,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const iframes = Array.from(document.querySelectorAll("iframe[data-src]"));
     if (!("IntersectionObserver" in window)){
-      // Fallback: load all
       iframes.forEach(f => { f.src = f.getAttribute("data-src"); f.removeAttribute("data-src"); });
       return;
     }
@@ -466,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         observer.unobserve(frame);
       });
-    }, { rootMargin: "600px 0px" }); // pre-load slightly before visible
+    }, { rootMargin: "600px 0px" });
 
     iframes.forEach(f => observer.observe(f));
   }
@@ -477,21 +493,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     for(const f of files){
       const title = humanize(f);
-      const c = classify(f);
 
       const el = document.createElement("div");
       el.className = "card";
       el.innerHTML = `
         <div class="name">${title}</div>
 
-        <!-- (chips hidden via CSS, kept for future use if you want them back) -->
         <div class="chips">
-          <span class="chip">${c}</span>
+          <span class="chip">hidden</span>
           <span class="chip"><code>${f}</code></span>
         </div>
 
         <div class="thumb">
-          <!-- ✅ lazy load to make page feel much faster -->
           <iframe loading="lazy" referrerpolicy="no-referrer" data-src="${previewUrl(f)}"></iframe>
         </div>
 
@@ -539,10 +552,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Init
   $("slugInput").addEventListener("input", onSlugInput);
 
-  // If URL has ?slug=..., prefill it
   const qsSlug = makeSlug(getParam("slug"));
   if (qsSlug){
     $("slugInput").value = qsSlug;
