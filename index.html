@@ -518,7 +518,7 @@
       }
 
       img.src = qrPath + `?v=${Date.now()}`;
-      wrap.style.display = "";
+      wrap.style.display = "block";
 
       wrap.onclick = () => {
         window.open(qrPath, "_blank", "noopener");
@@ -558,7 +558,7 @@
       $("profileApp").style.display = "";
 
       // show profile sticky buttons
-      $("stickyHome").style.display = "";
+      $("stickyHome").style.display = "inline-flex";
       // sticky QR will show only if qrPath exists
 
       $("year").textContent = new Date().getFullYear();
