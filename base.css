@@ -1,217 +1,263 @@
 :root{
-  --bg1:#050816; --bg2:#0b1020;
-  --card: rgba(255,255,255,.06);
-  --border: rgba(255,255,255,.12);
+  --maxw: 980px;
+  --cardw: 720px;
+
+  /* fallback accents (themes override button styling anyway) */
   --text: #eef2ff;
-  --muted: rgba(238,242,255,.78);
+  --muted: rgba(238,242,255,.75);
+  --line: rgba(255,255,255,.14);
 }
 
 *{ box-sizing:border-box; }
 
-html,body{ height:100%; }
 body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(6,182,212,.18) 0%, transparent 45%),
-    radial-gradient(circle at 80% 30%, rgba(167,139,250,.14) 0%, transparent 45%),
-    linear-gradient(180deg,var(--bg1),var(--bg2),var(--bg1));
+  min-height:100vh;
+}
+
+/* Used by preview embeds */
+body.embed .sticky-qr,
+body.embed .sticky-home{
+  display:none !important;
 }
 
 .wrap{
-  max-width: 860px;
+  max-width: var(--maxw);
   margin: 0 auto;
-  padding: 18px 14px 40px;
+  padding: 28px 16px 50px;
 }
 
 .card{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
-  box-shadow: 0 18px 60px rgba(0,0,0,.25);
+  width: min(var(--cardw), 100%);
+  margin: 0 auto;
+  border-radius: 22px;
+  padding: 22px 18px 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 26px 90px rgba(0,0,0,.28);
+  backdrop-filter: blur(10px);
 }
 
 .header{
   text-align:center;
-  padding-top: 4px;
+  margin-bottom: 12px;
 }
 
 .logo{
-  width: 90px;
-  height: 90px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.18);
-  padding: 10px;
-  object-fit: contain;
+  width: 86px;
+  height: 86px;
+  border-radius: 18px;
+  object-fit: cover;
   display:block;
   margin: 0 auto 10px;
+  background: rgba(0,0,0,.22);
 }
 
 .brand{
   margin: 0;
-  font-size: 30px;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  font-size: 34px;
+  letter-spacing: .2px;
 }
 
 .tagline{
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   color: var(--muted);
-  font-weight: 600;
   font-size: 14px;
 }
 
-.small{ color: var(--muted); font-size: 13px; }
+/* Sections */
+.section-title{
+  text-align:center;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 13px;
+  margin: 6px 0 10px;
+}
+
+.about-text{
+  text-align:center;
+  color: rgba(238,242,255,.88);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 620px;
+}
 
 .sep{
-  border:0;
-  height:1px;
-  background: rgba(255,255,255,.12);
-  margin: 14px 0;
+  border: 0;
+  height: 1px;
+  background: var(--line);
+  margin: 16px 0;
 }
 
-.section-title{
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  font-weight: 900;
-  font-size: 14px;
-  text-align:center;
-  margin-bottom: 10px;
-}
-
-/* Hide helper */
-.is-hidden{ display:none !important; }
-
-/* =========================================================
-   ABOUT: centered
-========================================================= */
-#aboutSection{ text-align:center; }
-#about{
-  max-width: 720px;
-  margin: 0 auto;
-  line-height: 1.55;
-  font-size: 14px;
-  color: rgba(238,242,255,.86);
-}
-
-/* =========================================================
-   Call / Text / Email pill row
-========================================================= */
-.pill-row{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:wrap;
-}
-
-.pill-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width: 86px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.08);
-  color: var(--text);
-  text-decoration:none;
-  font-weight: 900;
-  line-height: 1;
-}
-
-/* =========================================================
-   Link buttons (2x2 grid + solo last)
-========================================================= */
+/* Link buttons */
 .links{
   display:flex;
   flex-wrap:wrap;
   gap: 12px;
   justify-content:center;
-}
-
-.links.links--grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  justify-content: stretch;
-}
-
-.btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.10);
-  color: var(--text);
-  text-decoration:none;
-  font-weight: 900;
-
-  /* keep them from stretching full card width */
-  width: 100%;
-  max-width: 320px;
-}
-
-.links.links--grid .btn{
-  max-width: 100%;
-}
-
-.btn.btn--small{
-  padding: 10px 12px;
-  font-size: 13px;
-}
-
-.links.links--grid .btn.btn--last-full{
-  grid-column: 1 / span 2;
-  max-width: 520px;
-  justify-self:center;
-}
-
-/* =========================================================
-   CONTACT: centered, stacked label then value
-========================================================= */
-#contactSection{ text-align:center; }
-
-.contact-grid{
-  display:grid;
-  gap: 12px;
-  justify-items:center;
   margin-top: 10px;
 }
 
-.contact-row{
-  width: min(520px, 100%);
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  border-radius: 14px;
-  padding: 12px 14px;
-  text-align:center;
+.links a.btn{
+  text-decoration:none;
 }
 
-.contact-row .pill{
+.btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding: 6px 12px;
+  padding: 12px 18px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.08);
   font-weight: 900;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  font-size: 12px;
-  margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.10);
+  color: var(--text);
+  min-width: 240px;
+  text-align:center;
+  user-select:none;
+  cursor:pointer;
 }
 
-#contactPhone, #contactEmail{
+/* smaller link style when many buttons exist */
+.btn--small{
+  padding: 10px 14px;
+  min-width: 210px;
+}
+
+/* 2-column grid mode for links */
+.links--grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+  justify-items: center;
+}
+
+.links--grid a.btn{
+  width: 100%;
+  min-width: 0;
+}
+
+/* last full width for odd count */
+.btn--last-full{
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(520px, 100%);
+}
+
+/* Quick contact row (Call/Text/Email) */
+.quick-contact{
+  display:block;
+}
+
+.quick-row{
+  display:flex;
+  gap: 12px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.btn--chip{
+  min-width: 120px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+/* Contact stack layout */
+.contact-stack{
+  width: min(520px, 100%);
+  margin: 0 auto;
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  text-align:center;
+}
+
+.contact-item{
+  padding: 14px 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.contact-label{
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: 12px;
+  opacity: .92;
+  margin-bottom: 6px;
+}
+
+.contact-value{
+  font-weight: 800;
+  font-size: 15px;
+  color: rgba(238,242,255,.92);
+}
+
+.contact-value a{
   color: rgba(238,242,255,.92);
   text-decoration: underline;
-  font-weight: 800;
+  text-underline-offset: 3px;
+}
+
+.footer{
+  margin-top: 14px;
+  text-align:center;
+}
+
+.small{
+  color: rgba(238,242,255,.75);
+  font-size: 12px;
+}
+
+/* Utilities */
+.is-hidden{ display:none !important; }
+
+/* Sticky QR (top-left) */
+.sticky-qr{
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  width: 92px;
+  height: 92px;
+  border-radius: 14px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.20);
+  background: rgba(0,0,0,.25);
+  box-shadow: 0 18px 60px rgba(0,0,0,.35);
+  z-index: 9999;
+}
+.sticky-qr img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+
+/* Sticky Home (top-right) */
+.sticky-home{
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.20);
+  background: rgba(0,0,0,.28);
+  color: rgba(238,242,255,.92);
+  text-decoration:none;
+  font-weight: 900;
+  box-shadow: 0 18px 60px rgba(0,0,0,.35);
+}
+
+/* Mobile tweaks */
+@media (max-width: 520px){
+  .brand{ font-size: 28px; }
+  .btn{ min-width: 200px; }
+  .btn--chip{ min-width: 96px; }
 }
