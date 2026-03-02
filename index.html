@@ -8,20 +8,96 @@
   <!-- Base styles (shared layout) -->
   <link rel="stylesheet" href="/base.css?v=1" />
 
-  <!-- Theme stylesheet (swapped by JS) -->
+  <!-- Theme stylesheet (swapped by JS for profiles) -->
   <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=1" />
+
+  <style>
+    /* Homepage-only polish (safe + doesn't affect theme CSS much) */
+    .home-wrap{max-width:1100px;margin:0 auto;padding:26px 16px 60px;}
+    .home-hero{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 18px 60px rgba(0,0,0,.20);
+    }
+    .home-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .home-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .home-logo img{width:46px;height:46px;border-radius:12px;object-fit:contain;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);padding:6px}
+    .home-logo b{font-size:18px}
+    .home-nav{display:flex;gap:10px;flex-wrap:wrap}
+    .home-pill{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.08);
+      color:rgba(238,242,255,.95);
+      text-decoration:none;
+      font-weight:800;
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .home-h1{margin:10px 0 10px;font-size:34px;line-height:1.15}
+    .home-sub{margin:0;color:rgba(182,194,255,.95);line-height:1.5;font-size:15px;max-width:800px}
+    .home-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .home-btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:12px 14px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.10);
+      color:rgba(238,242,255,.95);
+      text-decoration:none;font-weight:900;
+      min-width:210px;
+    }
+    .home-btn.primary{
+      background:linear-gradient(90deg, rgba(34,197,94,.24), rgba(6,182,212,.18));
+      border-color:rgba(34,197,94,.30);
+    }
+    .home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+    .home-card{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:16px;
+    }
+    .home-card h3{margin:0 0 8px;font-size:16px}
+    .home-card p{margin:0;color:rgba(182,194,255,.95);line-height:1.45;font-size:13px}
+    .home-price{
+      margin-top:14px;
+      border:1px solid rgba(34,197,94,.30);
+      background:rgba(34,197,94,.10);
+      border-radius:18px;
+      padding:16px;
+    }
+    .home-price .big{font-size:26px;font-weight:1000;margin:4px 0}
+    .home-faq{margin-top:14px}
+    details.home-q{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:12px 14px;
+      margin:10px 0;
+    }
+    details.home-q summary{cursor:pointer;font-weight:900}
+    details.home-q div{margin-top:8px;color:rgba(182,194,255,.95);line-height:1.45;font-size:13px}
+  </style>
 </head>
 
 <body>
+  <!-- =========================
+       PROFILE UI (only shown when slug present)
+  ========================== -->
+
   <!-- Sticky QR (top-left) -->
   <a id="qrStickyLink" class="sticky-qr is-hidden" href="#" target="_blank" rel="noopener" aria-label="Download QR code">
     <img id="qrStickyImg" alt="QR Code" />
   </a>
 
   <!-- Sticky Home (top-right) -->
-  <a id="homeSticky" class="sticky-home" href="/" aria-label="Home">Home</a>
+  <a id="homeSticky" class="sticky-home is-hidden" href="/" aria-label="Home">Home</a>
 
-  <main class="wrap">
+  <main class="wrap is-hidden" id="profilePage">
     <section class="card">
       <header class="header">
         <a id="logoLink" href="#" target="_blank" rel="noopener" style="text-decoration:none">
@@ -32,7 +108,7 @@
         <p class="tagline" id="tagline"></p>
       </header>
 
-      <!-- LINKS (Website/social/pay/etc) -->
+      <!-- LINKS -->
       <nav class="links" id="linksWrap" aria-label="Links">
         <a class="btn" id="btnWebsite" href="#" target="_blank" rel="noopener">Website</a>
         <a class="btn" id="btnFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
@@ -44,7 +120,6 @@
         <a class="btn" id="btnCashApp" href="#" target="_blank" rel="noopener">Cash App</a>
         <a class="btn" id="btnVenmo" href="#" target="_blank" rel="noopener">Venmo</a>
 
-        <!-- vCard -->
         <a class="btn" id="btnVcard" href="#" download>Save Contact</a>
       </nav>
 
@@ -58,7 +133,7 @@
 
       <hr class="sep" />
 
-      <!-- ✅ QUICK CONTACT (Call/Text/Email) - MOVED BELOW LINKS, ABOVE CONTACT INFO -->
+      <!-- QUICK CONTACT -->
       <section id="quickContactSection" class="quick-contact is-hidden" aria-label="Quick contact">
         <div class="quick-row">
           <a class="btn btn--chip" id="btnCall" href="#" aria-label="Call">Call</a>
@@ -73,7 +148,6 @@
       <section id="contactSection">
         <div class="section-title" id="contactTitle">Contact Info</div>
 
-        <!-- ✅ New stacked layout -->
         <div class="contact-stack" id="contactStack">
           <div class="contact-item" id="itemName">
             <div class="contact-label">Name</div>
@@ -104,6 +178,93 @@
     </section>
   </main>
 
+  <!-- =========================
+       HOMEPAGE UI (only shown when NO slug)
+  ========================== -->
+  <main class="home-wrap" id="homePage">
+    <section class="home-hero">
+      <div class="home-topbar">
+        <a class="home-logo" href="/" aria-label="Tap-Deck Home">
+          <img src="/assets/logos/crestedcritters.png" alt="Tap-Deck" />
+          <div>
+            <b>Tap-Deck</b>
+            <div class="small" style="margin-top:2px;">One link. Your brand. Anywhere.</div>
+          </div>
+        </a>
+
+        <nav class="home-nav" aria-label="Site links">
+          <a class="home-pill" href="/theme-gallery/">Themes</a>
+          <a class="home-pill" href="/shop/">Shop</a>
+          <a class="home-pill" href="mailto:support@tap-deck.com">Support</a>
+        </nav>
+      </div>
+
+      <h1 class="home-h1">Your tap-to-share profile.<br/>No monthly fees.</h1>
+      <p class="home-sub">
+        Tap-Deck gives you a clean profile link you can share anywhere (and pair with NFC products).
+        Pick a theme, submit your info, and your profile goes live automatically.
+      </p>
+
+      <div class="home-cta">
+        <a class="home-btn primary" href="/theme-gallery/">Get started → Choose a theme</a>
+        <a class="home-btn" href="/shop/">Shop NFC products</a>
+      </div>
+    </section>
+
+    <section class="home-grid" aria-label="How it works">
+      <div class="home-card">
+        <h3>1) Choose a slug</h3>
+        <p>Your slug becomes your link: <code>www.tap-deck.com/your-slug</code>. We check availability instantly.</p>
+      </div>
+      <div class="home-card">
+        <h3>2) Pick a theme</h3>
+        <p>Preview themes live and select the one that fits your style (basic, business, animated).</p>
+      </div>
+      <div class="home-card">
+        <h3>3) Activate + submit info</h3>
+        <p>Complete your intake form. We deploy your profile and email you your live link + QR.</p>
+      </div>
+    </section>
+
+    <section class="home-price" aria-label="Pricing">
+      <div style="font-weight:1000;">Pricing</div>
+      <div class="big">$15 <span style="font-size:14px;font-weight:800;color:rgba(182,194,255,.95)">early adopters price</span></div>
+      <div class="small" style="margin-top:6px;color:rgba(182,194,255,.95);line-height:1.45;">
+        One-time fee — no recurring costs. Price will increase to <b>$25</b> in the near future.
+        (Physical NFC products are optional add-ons.)
+      </div>
+    </section>
+
+    <section class="home-faq" aria-label="FAQ">
+      <h2 style="margin:18px 0 8px;font-size:18px;">FAQ</h2>
+
+      <details class="home-q">
+        <summary>Can I change themes later?</summary>
+        <div>
+          Yes you can update all information via contacting support, but coming soon you will be able to make these changes on the fly whenever you want!
+        </div>
+      </details>
+
+      <details class="home-q">
+        <summary>Do I need an NFC device?</summary>
+        <div>
+          Nope — your link works anywhere. NFC devices just make it easier to share with a tap.
+        </div>
+      </details>
+
+      <details class="home-q">
+        <summary>How long does it take?</summary>
+        <div>
+          Usually just a few minutes. You’ll get an email when your profile is live.
+        </div>
+      </details>
+    </section>
+
+    <div class="small" style="margin-top:16px;text-align:center;color:rgba(182,194,255,.95);">
+      © <span id="homeYear"></span> Tap-Deck • <a href="mailto:support@tap-deck.com" style="color:inherit">support@tap-deck.com</a>
+    </div>
+  </main>
+
   <script>
     const DEFAULT_THEME = "theme-01-neon-dark.css";
     const DEFAULT_LOGO  = "/assets/logos/crestedcritters.png";
@@ -128,29 +289,15 @@
       return s.replace(/^\/?themes\//i, "").replace(/^\/+/, "");
     }
 
-    function hide(el){
-      if(!el) return;
-      el.classList.add("is-hidden");
-    }
-    function show(el){
-      if(!el) return;
-      el.classList.remove("is-hidden");
-    }
+    function hide(el){ if(el) el.classList.add("is-hidden"); }
+    function show(el){ if(el) el.classList.remove("is-hidden"); }
 
     function setBtn(id, url){
       const el = $(id);
       if(!el) return false;
-
       const u = (url||"").trim();
-      if(!u || u === "#"){
-        hide(el);
-        el.href = "#";
-        return false;
-      }
-
-      show(el);
-      el.href = u;
-      return true;
+      if(!u || u === "#"){ hide(el); el.href = "#"; return false; }
+      show(el); el.href = u; return true;
     }
 
     function applyTheme(themeFile){
@@ -170,27 +317,19 @@
       const wrap = $("linksWrap");
       if(!wrap) return;
 
-      // Only count visible buttons
       const btns = Array.from(wrap.querySelectorAll("a.btn"))
         .filter(a => !a.classList.contains("is-hidden"));
 
-      // Reset
       wrap.classList.remove("links--grid");
       btns.forEach(b=>{
         b.classList.remove("btn--last-full");
         b.classList.remove("btn--small");
       });
 
-      // Slightly smaller if many links
-      if(btns.length >= 5){
-        btns.forEach(b => b.classList.add("btn--small"));
-      }
+      if(btns.length >= 5) btns.forEach(b => b.classList.add("btn--small"));
 
-      // 2-column grid when 4+ buttons
       if(btns.length >= 4){
         wrap.classList.add("links--grid");
-
-        // If odd count, last button spans full width
         if(btns.length % 2 === 1){
           btns[btns.length - 1].classList.add("btn--last-full");
         }
@@ -243,16 +382,12 @@
     }
 
     function wireStickyQr(client){
-      const qrPath = (client.qrPath || client.qrCodePath || "").trim(); // supports either key
+      const qrPath = (client.qrPath || client.qrCodePath || "").trim();
       const link = $("qrStickyLink");
       const img = $("qrStickyImg");
-
       if(!link || !img) return;
 
-      if(!qrPath){
-        hide(link);
-        return;
-      }
+      if(!qrPath){ hide(link); return; }
 
       img.src = qrPath + `?v=${Date.now()}`;
       link.href = qrPath;
@@ -286,27 +421,39 @@
         btnEmail.href = "#";
       }
 
-      if(any) show(section);
-      else hide(section);
+      if(any) show(section); else hide(section);
+    }
+
+    function isReservedRoute_(slug){
+      // prevent trying to treat these as profile slugs
+      const reserved = new Set(["theme-gallery","pay","preview","shop","admin","api"]);
+      return reserved.has((slug||"").toLowerCase());
     }
 
     async function main(){
-      if (getParam("embed") === "1") document.body.classList.add("embed");
-      $("year").textContent = new Date().getFullYear();
+      // homepage year
+      const hy = document.getElementById("homeYear");
+      if (hy) hy.textContent = new Date().getFullYear();
 
-      // Path-based slug: /slug
+      // Determine slug (path-based: /slug)
       const pathSlug = location.pathname.replace(/^\/+|\/+$/g, "");
       const slug = (pathSlug || getParam("client") || "").trim().toLowerCase();
 
-      if(!slug){
-        $("brand").textContent = "No profile selected";
-        hide($("linksWrap"));
-        hide($("aboutSection"));
-        hide($("quickContactSection"));
-        hide($("contactSection"));
+      // If no slug OR reserved route → show homepage
+      if(!slug || isReservedRoute_(slug)){
+        show($("homePage"));
+        hide($("profilePage"));
         hide($("qrStickyLink"));
+        hide($("homeSticky"));
         return;
       }
+
+      // Otherwise show profile
+      hide($("homePage"));
+      show($("profilePage"));
+      show($("homeSticky"));
+
+      $("year").textContent = new Date().getFullYear();
 
       const client = await fetchClient(slug);
 
@@ -315,14 +462,11 @@
       $("footerBrand").textContent = client.businessName || "Tap-Deck";
       $("tagline").textContent = client.tagline || "";
 
-      // Theme
       applyTheme(client.theme || DEFAULT_THEME);
 
-      // Logo
       setLogo(client.logoPath || DEFAULT_LOGO);
       $("logoLink").href = normalizeUrl(client.links?.website || "") || "#";
 
-      // About
       const about = (client.about || "").trim();
       if(about){
         $("about").textContent = about;
@@ -331,28 +475,20 @@
         hide($("aboutSection"));
       }
 
-      // Links (hide blanks)
       const links = client.links || {};
       setBtn("btnWebsite",  normalizeUrl(links.website));
       setBtn("btnFacebook", normalizeUrl(links.facebook));
       setBtn("btnInstagram", normalizeUrl(links.instagram));
       setBtn("btnTikTok",   normalizeUrl(links.tiktok));
-
       setBtn("btnLinkedIn", normalizeUrl(links.linkedin));
       setBtn("btnPayPal",   normalizeUrl(links.paypal));
       setBtn("btnCashApp",  normalizeUrl(links.cashapp));
       setBtn("btnVenmo",    normalizeUrl(links.venmo));
 
-      // vCard
       wireVcard(client);
-
-      // Sticky QR
       wireStickyQr(client);
-
-      // Quick contact (Call/Text/Email) — now positioned where you want
       wireQuickContact(client);
 
-      // Contact info (stacked)
       const name = (client.contact?.name || client.businessName || "").trim();
       $("contactName").textContent = name;
       if(name) show($("itemName")); else hide($("itemName"));
@@ -376,18 +512,17 @@
         hide($("itemEmail"));
       }
 
-      // Apply 2x2 layout after we hide blanks
       applyLinksLayout();
     }
 
     main().catch(err=>{
       console.error(err);
-      $("brand").textContent = "Profile not found";
-      hide($("linksWrap"));
-      hide($("aboutSection"));
-      hide($("quickContactSection"));
-      hide($("contactSection"));
-      hide($("qrStickyLink"));
+      // If profile fails, fall back to homepage (better UX)
+      show(document.getElementById("homePage"));
+      hide(document.getElementById("profilePage"));
+      hide(document.getElementById("qrStickyLink"));
+      hide(document.getElementById("homeSticky"));
+      document.title = "Tap-Deck";
     });
   </script>
 </body>
