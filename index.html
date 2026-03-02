@@ -5,297 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tap-Deck</title>
 
-  <!-- Shared base layout -->
-  <link rel="stylesheet" href="/base.css?v=4" />
+  <!-- Base styles (shared layout) -->
+  <link rel="stylesheet" href="/base.css?v=1" />
 
-  <!-- Theme stylesheet (swapped by JS when viewing a profile) -->
-  <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=4" />
-
-  <style>
-    /* =========================================================
-       Sticky controls (PROFILE only)
-    ========================================================= */
-    .sticky-home{
-      position:fixed;
-      top:12px;
-      right:12px;
-      z-index:9999;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
-      color:#eef2ff;
-      text-decoration:none;
-      font-weight:900;
-      line-height:1;
-      display:none; /* shown on profile */
-    }
-
-    .sticky-qr{
-      position:fixed;
-      top:12px;
-      left:12px;
-      z-index:9999;
-      width:92px;
-      height:92px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
-      overflow:hidden;
-      display:none; /* shown only when profile has qrPath */
-      cursor:pointer;
-    }
-    .sticky-qr img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    /* =========================================================
-       Homepage styling (uses base.css vibe)
-    ========================================================= */
-    #homeApp .home-hero{
-      text-align:center;
-      padding:10px 0 4px;
-    }
-    #homeApp .home-logo{
-      width:84px;
-      height:84px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.18);
-      object-fit:contain;
-      padding:10px;
-      margin:0 auto 10px;
-      display:block;
-    }
-    #homeApp h1{
-      margin:0 0 8px 0;
-      font-size:30px;
-      letter-spacing:-0.02em;
-    }
-    #homeApp .sub{
-      margin:0 auto;
-      max-width:820px;
-      opacity:.90;
-      line-height:1.55;
-      font-size:14px;
-    }
-
-    .home-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:center;
-      margin-top:14px;
-    }
-    .home-actions a{
-      text-decoration:none;
-      font-weight:900;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.10);
-      color:inherit;
-      min-width:200px;
-      text-align:center;
-    }
-    .home-actions a.primary{
-      background:linear-gradient(90deg, rgba(34,197,94,.24), rgba(6,182,212,.18));
-      border-color:rgba(34,197,94,.28);
-    }
-
-    .price-line{
-      margin-top:12px;
-      text-align:center;
-      font-size:14px;
-      opacity:.92;
-    }
-    .price-line b{ font-weight:900; }
-
-    .home-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-    .home-box{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      border-radius:16px;
-      padding:14px;
-    }
-    .home-box h3{
-      margin:0 0 8px 0;
-      font-size:15px;
-    }
-    .home-box p{
-      margin:0;
-      opacity:.90;
-      line-height:1.5;
-      font-size:13px;
-    }
-    .steps{
-      margin:0;
-      padding-left:18px;
-      opacity:.92;
-      line-height:1.6;
-      font-size:13px;
-    }
-
-    .faq{
-      margin-top:12px;
-      display:grid;
-      gap:10px;
-    }
-    details{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      border-radius:16px;
-      padding:12px 14px;
-    }
-    summary{
-      cursor:pointer;
-      font-weight:900;
-      list-style:none;
-    }
-    summary::-webkit-details-marker{ display:none; }
-    details p{
-      margin:10px 0 0 0;
-      opacity:.90;
-      line-height:1.55;
-      font-size:13px;
-    }
-    .fineprint{
-      margin-top:12px;
-      text-align:center;
-      opacity:.78;
-      font-size:12px;
-      line-height:1.45;
-    }
-
-    /* Give home a bit of breathing room on tiny screens */
-    @media (max-width:420px){
-      #homeApp h1{ font-size:26px; }
-      .home-actions a{ min-width: 160px; }
-    }
-  </style>
+  <!-- Theme stylesheet (swapped by JS) -->
+  <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=1" />
 </head>
 
 <body>
-  <!-- Sticky controls (shown only on PROFILE view) -->
-  <a class="sticky-home" id="stickyHome" href="/" aria-label="Home">Home</a>
-  <div class="sticky-qr" id="stickyQr" title="Open / download QR">
-    <img id="stickyQrImg" alt="QR Code" />
-  </div>
+  <!-- Sticky QR (top-left) -->
+  <a id="qrStickyLink" class="sticky-qr is-hidden" href="#" target="_blank" rel="noopener" aria-label="Download QR code">
+    <img id="qrStickyImg" alt="QR Code" />
+  </a>
 
-  <!-- =========================================================
-       HOME APP (only when no slug)
-  ========================================================= -->
-  <main class="wrap" id="homeApp" style="display:none;">
-    <section class="card">
-      <div class="home-hero">
-        <img class="home-logo" src="/assets/logos/tap-deck.png" alt="Tap-Deck logo"
-             onerror="this.onerror=null; this.src='/assets/logos/crestedcritters.png';" />
+  <!-- Sticky Home (top-right) -->
+  <a id="homeSticky" class="sticky-home" href="/" aria-label="Home">Home</a>
 
-        <h1>Tap-Deck</h1>
-        <p class="sub">
-          Tap-Deck gives you a clean, professional profile link you can share anywhere —
-          plus optional physical NFC products that come pre-loaded to your profile.
-        </p>
-
-        <div class="price-line">
-          <b>One-time fee.</b> No recurring costs.
-          <br/>
-          Early adopters price: <b>$15</b> (will increase to <b>$25</b> soon).
-          <br/>
-          Physical products are separate purchases if you want them.
-        </div>
-
-        <div class="home-actions">
-          <a class="primary" href="/theme-gallery/">Get started: Choose a theme</a>
-          <a href="/shop/">Shop NFC products</a>
-        </div>
-      </div>
-
-      <hr class="sep" />
-
-      <div class="home-grid">
-        <div class="home-box">
-          <h3>What you get</h3>
-          <p>
-            A profile at <b>www.tap-deck.com/your-slug</b> with your logo (or photo), links, contact card download,
-            and a QR you can share or print.
-          </p>
-        </div>
-
-        <div class="home-box">
-          <h3>How it works</h3>
-          <ol class="steps">
-            <li>Choose your theme.</li>
-            <li>Pay once (or use a one-time token).</li>
-            <li>Fill out the intake form.</li>
-            <li>You’ll receive an email with your live link and QR.</li>
-          </ol>
-        </div>
-
-        <div class="home-box">
-          <h3>Perfect for</h3>
-          <p>
-            Small businesses, vendors, events, real estate, service pros —
-            and soon a personal “social” version for everyday use.
-          </p>
-        </div>
-      </div>
-
-      <hr class="sep" />
-
-      <div class="section-title" style="text-align:center;">FAQ</div>
-      <div class="faq">
-        <details>
-          <summary>Can I change themes later?</summary>
-          <p>
-            Yes you can updated all information via contacting support, but coming soon you will be able to make these changes on the fly when ever you want!
-          </p>
-        </details>
-
-        <details>
-          <summary>Are there recurring fees?</summary>
-          <p>
-            No — Tap-Deck profiles are a one-time fee. The only additional cost is if you choose to purchase physical products
-            (cards, bracelets, chips, signage) pre-loaded to your profile.
-          </p>
-        </details>
-
-        <details>
-          <summary>What if my slug is already taken?</summary>
-          <p>
-            You’ll be prompted to choose a different slug. Your slug must be unique because it becomes your public link.
-          </p>
-        </details>
-
-        <details>
-          <summary>Do you offer NFC products?</summary>
-          <p>
-            Yes — visit the <a href="/shop/" style="color:inherit; font-weight:900;">Shop</a> for NFC cards, bracelets, chips, and display signage.
-            All items can come pre-loaded with your profile.
-          </p>
-        </details>
-      </div>
-
-      <div class="fineprint">
-        © <span id="homeYear"></span> Tap-Deck • Need help? <a href="mailto:support@tap-deck.com" style="color:inherit; font-weight:900;">support@tap-deck.com</a>
-      </div>
-    </section>
-  </main>
-
-  <!-- =========================================================
-       PROFILE APP (only when slug present)
-  ========================================================= -->
-  <main class="wrap" id="profileApp" style="display:none;">
+  <main class="wrap">
     <section class="card">
       <header class="header">
         <a id="logoLink" href="#" target="_blank" rel="noopener" style="text-decoration:none">
@@ -306,24 +32,7 @@
         <p class="tagline" id="tagline"></p>
       </header>
 
-      <hr class="sep" />
-
-      <section id="aboutSection">
-        <div class="section-title">About</div>
-        <div id="about" class="small" style="font-size:14px; color:rgba(238,242,255,.86)"></div>
-      </section>
-
-      <hr class="sep" />
-
-      <!-- Call/Text/Email section -->
-      <nav class="pill-row" id="pillRow" aria-label="Quick actions">
-        <a class="pill-btn" id="pillCall" href="#">Call</a>
-        <a class="pill-btn" id="pillText" href="#">Text</a>
-        <a class="pill-btn" id="pillEmail" href="#">Email</a>
-      </nav>
-
-      <hr class="sep" />
-
+      <!-- LINKS (Website/social/pay/etc) -->
       <nav class="links" id="linksWrap" aria-label="Links">
         <a class="btn" id="btnWebsite" href="#" target="_blank" rel="noopener">Website</a>
         <a class="btn" id="btnFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
@@ -335,32 +44,59 @@
         <a class="btn" id="btnCashApp" href="#" target="_blank" rel="noopener">Cash App</a>
         <a class="btn" id="btnVenmo" href="#" target="_blank" rel="noopener">Venmo</a>
 
+        <!-- vCard -->
         <a class="btn" id="btnVcard" href="#" download>Save Contact</a>
       </nav>
 
       <hr class="sep" />
 
+      <!-- ABOUT -->
+      <section id="aboutSection">
+        <div class="section-title" id="aboutTitle">About</div>
+        <div id="about" class="about-text"></div>
+      </section>
+
+      <hr class="sep" />
+
+      <!-- ✅ QUICK CONTACT (Call/Text/Email) - MOVED BELOW LINKS, ABOVE CONTACT INFO -->
+      <section id="quickContactSection" class="quick-contact is-hidden" aria-label="Quick contact">
+        <div class="quick-row">
+          <a class="btn btn--chip" id="btnCall" href="#" aria-label="Call">Call</a>
+          <a class="btn btn--chip" id="btnText" href="#" aria-label="Text">Text</a>
+          <a class="btn btn--chip" id="btnEmail" href="#" aria-label="Email">Email</a>
+        </div>
+      </section>
+
+      <hr class="sep" />
+
+      <!-- CONTACT INFO -->
       <section id="contactSection">
-        <div class="section-title">Contact Info</div>
-        <div class="contact-grid">
-          <div class="contact-row">
-            <span class="pill">Name</span>
-            <span id="contactName"></span>
+        <div class="section-title" id="contactTitle">Contact Info</div>
+
+        <!-- ✅ New stacked layout -->
+        <div class="contact-stack" id="contactStack">
+          <div class="contact-item" id="itemName">
+            <div class="contact-label">Name</div>
+            <div class="contact-value" id="contactName"></div>
           </div>
 
-          <div class="contact-row" id="rowPhone">
-            <span class="pill">Phone</span>
-            <a id="contactPhone" href="#"></a>
+          <div class="contact-item" id="itemPhone">
+            <div class="contact-label">Phone</div>
+            <div class="contact-value">
+              <a id="contactPhone" href="#"></a>
+            </div>
           </div>
 
-          <div class="contact-row" id="rowEmail">
-            <span class="pill">Email</span>
-            <a id="contactEmail" href="#"></a>
+          <div class="contact-item" id="itemEmail">
+            <div class="contact-label">Email</div>
+            <div class="contact-value">
+              <a id="contactEmail" href="#"></a>
+            </div>
           </div>
         </div>
       </section>
 
-      <footer style="margin-top:14px; text-align:center;">
+      <footer class="footer">
         <div class="small">
           © <span id="year"></span> <span id="footerBrand">Tap-Deck</span>
         </div>
@@ -371,7 +107,7 @@
   <script>
     const DEFAULT_THEME = "theme-01-neon-dark.css";
     const DEFAULT_LOGO  = "/assets/logos/crestedcritters.png";
-    const BRAND_HOST    = "www.tap-deck.com"; // fallback host for absolute fetch
+    const BRAND_HOST    = "www.tap-deck.com";
 
     const $ = (id) => document.getElementById(id);
 
@@ -434,21 +170,27 @@
       const wrap = $("linksWrap");
       if(!wrap) return;
 
+      // Only count visible buttons
       const btns = Array.from(wrap.querySelectorAll("a.btn"))
         .filter(a => !a.classList.contains("is-hidden"));
 
+      // Reset
       wrap.classList.remove("links--grid");
       btns.forEach(b=>{
         b.classList.remove("btn--last-full");
         b.classList.remove("btn--small");
       });
 
+      // Slightly smaller if many links
       if(btns.length >= 5){
         btns.forEach(b => b.classList.add("btn--small"));
       }
 
+      // 2-column grid when 4+ buttons
       if(btns.length >= 4){
         wrap.classList.add("links--grid");
+
+        // If odd count, last button spans full width
         if(btns.length % 2 === 1){
           btns[btns.length - 1].classList.add("btn--last-full");
         }
@@ -456,16 +198,10 @@
     }
 
     async function fetchClient(slug){
-      // Prefer same-origin relative path
-      const rel = `/data/clients/${encodeURIComponent(slug)}.json?v=${Date.now()}`;
-      const res1 = await fetch(rel, { cache: "no-store" });
-      if(res1.ok) return await res1.json();
-
-      // Fallback absolute
-      const abs = `https://${BRAND_HOST}/data/clients/${encodeURIComponent(slug)}.json?v=${Date.now()}`;
-      const res2 = await fetch(abs, { cache: "no-store" });
-      if(!res2.ok) throw new Error("Profile not found");
-      return await res2.json();
+      const url = `https://${BRAND_HOST}/data/clients/${encodeURIComponent(slug)}.json?v=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if(!res.ok) throw new Error("Profile not found");
+      return await res.json();
     }
 
     function buildVcardText(client){
@@ -507,61 +243,70 @@
     }
 
     function wireStickyQr(client){
-      const qrPath = (client.qrPath || "").trim();
-      const wrap = $("stickyQr");
-      const img = $("stickyQrImg");
-      if(!wrap || !img) return;
+      const qrPath = (client.qrPath || client.qrCodePath || "").trim(); // supports either key
+      const link = $("qrStickyLink");
+      const img = $("qrStickyImg");
+
+      if(!link || !img) return;
 
       if(!qrPath){
-        wrap.style.display = "none";
+        hide(link);
         return;
       }
 
       img.src = qrPath + `?v=${Date.now()}`;
-      wrap.style.display = "block";
-
-      wrap.onclick = () => {
-        window.open(qrPath, "_blank", "noopener");
-      };
+      link.href = qrPath;
+      show(link);
     }
 
-    function wireQuickActions(client){
+    function wireQuickContact(client){
+      const section = $("quickContactSection");
+      const btnCall = $("btnCall");
+      const btnText = $("btnText");
+      const btnEmail = $("btnEmail");
+
       const phone = (client.contact?.phoneE164 || "").trim();
       const email = (client.contact?.email || "").trim();
 
-      const call = $("pillCall");
-      const text = $("pillText");
-      const mail = $("pillEmail");
+      let any = false;
 
       if(phone){
-        call.href = `tel:${phone}`;
-        text.href = `sms:${phone}`;
-        show(call); show(text);
-      } else {
-        hide(call); hide(text);
+        btnCall.href = `tel:${phone}`;
+        btnText.href = `sms:${phone}`;
+        any = true;
+      }else{
+        btnCall.href = "#";
+        btnText.href = "#";
       }
 
       if(email){
-        mail.href = `mailto:${email}`;
-        show(mail);
-      } else {
-        hide(mail);
+        btnEmail.href = `mailto:${email}`;
+        any = true;
+      }else{
+        btnEmail.href = "#";
       }
 
-      const any = [call,text,mail].some(a => a && !a.classList.contains("is-hidden"));
-      if(!any) hide($("pillRow"));
-      else show($("pillRow"));
+      if(any) show(section);
+      else hide(section);
     }
 
-    async function renderProfile(slug){
-      $("homeApp").style.display = "none";
-      $("profileApp").style.display = "";
-
-      // show profile sticky buttons
-      $("stickyHome").style.display = "inline-flex";
-      // sticky QR will show only if qrPath exists
-
+    async function main(){
+      if (getParam("embed") === "1") document.body.classList.add("embed");
       $("year").textContent = new Date().getFullYear();
+
+      // Path-based slug: /slug
+      const pathSlug = location.pathname.replace(/^\/+|\/+$/g, "");
+      const slug = (pathSlug || getParam("client") || "").trim().toLowerCase();
+
+      if(!slug){
+        $("brand").textContent = "No profile selected";
+        hide($("linksWrap"));
+        hide($("aboutSection"));
+        hide($("quickContactSection"));
+        hide($("contactSection"));
+        hide($("qrStickyLink"));
+        return;
+      }
 
       const client = await fetchClient(slug);
 
@@ -570,11 +315,14 @@
       $("footerBrand").textContent = client.businessName || "Tap-Deck";
       $("tagline").textContent = client.tagline || "";
 
+      // Theme
       applyTheme(client.theme || DEFAULT_THEME);
-      setLogo(client.logoPath || DEFAULT_LOGO);
 
+      // Logo
+      setLogo(client.logoPath || DEFAULT_LOGO);
       $("logoLink").href = normalizeUrl(client.links?.website || "") || "#";
 
+      // About
       const about = (client.about || "").trim();
       if(about){
         $("about").textContent = about;
@@ -583,71 +331,64 @@
         hide($("aboutSection"));
       }
 
+      // Links (hide blanks)
       const links = client.links || {};
       setBtn("btnWebsite",  normalizeUrl(links.website));
       setBtn("btnFacebook", normalizeUrl(links.facebook));
       setBtn("btnInstagram", normalizeUrl(links.instagram));
       setBtn("btnTikTok",   normalizeUrl(links.tiktok));
+
       setBtn("btnLinkedIn", normalizeUrl(links.linkedin));
       setBtn("btnPayPal",   normalizeUrl(links.paypal));
       setBtn("btnCashApp",  normalizeUrl(links.cashapp));
       setBtn("btnVenmo",    normalizeUrl(links.venmo));
 
+      // vCard
       wireVcard(client);
 
-      $("contactName").textContent = client.contact?.name || client.businessName || "";
+      // Sticky QR
+      wireStickyQr(client);
+
+      // Quick contact (Call/Text/Email) — now positioned where you want
+      wireQuickContact(client);
+
+      // Contact info (stacked)
+      const name = (client.contact?.name || client.businessName || "").trim();
+      $("contactName").textContent = name;
+      if(name) show($("itemName")); else hide($("itemName"));
 
       const phone = (client.contact?.phoneE164 || "").trim();
       if(phone){
-        $("contactPhone").textContent = client.contact?.phoneDisplay || phone;
+        const display = (client.contact?.phoneDisplay || phone).trim();
+        $("contactPhone").textContent = display;
         $("contactPhone").href = `tel:${phone}`;
-        show($("rowPhone"));
+        show($("itemPhone"));
       }else{
-        hide($("rowPhone"));
+        hide($("itemPhone"));
       }
 
       const email = (client.contact?.email || "").trim();
       if(email){
         $("contactEmail").textContent = email;
         $("contactEmail").href = `mailto:${email}`;
-        show($("rowEmail"));
+        show($("itemEmail"));
       }else{
-        hide($("rowEmail"));
+        hide($("itemEmail"));
       }
 
-      wireQuickActions(client);
+      // Apply 2x2 layout after we hide blanks
       applyLinksLayout();
-      wireStickyQr(client);
     }
 
-    function renderHome(){
-      $("profileApp").style.display = "none";
-      $("homeApp").style.display = "";
-      $("stickyHome").style.display = "none";
-      $("stickyQr").style.display = "none";
-      document.title = "Tap-Deck";
-      $("homeYear").textContent = new Date().getFullYear();
-    }
-
-    async function main(){
-      // Usually /slug is redirected to /?client=slug via 404.html
-      const pathSlug = location.pathname.replace(/^\/+|\/+$/g, "");
-      const slug = (pathSlug || getParam("client") || "").trim().toLowerCase();
-
-      if(!slug){
-        renderHome();
-        return;
-      }
-
-      try{
-        await renderProfile(slug);
-      }catch(err){
-        console.error(err);
-        renderHome();
-      }
-    }
-
-    main();
+    main().catch(err=>{
+      console.error(err);
+      $("brand").textContent = "Profile not found";
+      hide($("linksWrap"));
+      hide($("aboutSection"));
+      hide($("quickContactSection"));
+      hide($("contactSection"));
+      hide($("qrStickyLink"));
+    });
   </script>
 </body>
 </html>
