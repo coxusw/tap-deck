@@ -6,24 +6,41 @@
   <title>Tap-Deck Shop</title>
   <meta name="description" content="Tap-Deck NFC devices pre-loaded with your profile." />
 
-  <!-- Shared base styles -->
+  <!-- Shared layout -->
   <link rel="stylesheet" href="/base.css?v=1" />
 
-  <!-- Match the home page theme (same approach as your profile/home) -->
+  <!-- Theme stylesheet (same approach as profiles) -->
   <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=1" />
 
   <style>
-    /* Shop-only tweaks while still using your base.css look */
-    .shop-grid{
+    /* Shop-specific styles that still “feel” like base.css */
+    .shop-card{
+      width: min(860px, 100%);
+    }
+
+    .nav-row{
+      display:flex;
+      gap: 12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
+    .btn--nav{
+      min-width: 160px;
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    .products-grid{
       display:grid;
       grid-template-columns: 1fr;
       gap: 12px;
-      margin-top: 10px;
+      align-items: stretch;
+      justify-items: stretch;
+      width: 100%;
     }
-    @media (min-width: 760px){
-      .shop-grid{
-        grid-template-columns: 1fr 1fr;
-      }
+    @media (min-width: 820px){
+      .products-grid{ grid-template-columns: 1fr 1fr; }
     }
 
     .product{
@@ -31,69 +48,82 @@
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.12);
       padding: 14px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.18);
-      text-align:center;
-    }
-    .product h2{
-      margin: 0 0 8px;
-      font-size: 16px;
-      font-weight: 950;
-      letter-spacing: .1px;
-    }
-    .product p{
-      margin: 0 auto 12px;
-      max-width: 440px;
-      color: rgba(238,242,255,.82);
-      font-size: 13px;
-      line-height: 1.45;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      min-height: 100%;
     }
 
-    .price{
-      margin-bottom: 10px;
+    .product-top{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+    }
+
+    .product-img{
+      width: 96px;
+      height: 96px;
+      border-radius: 16px;
+      flex: 0 0 auto;
+      object-fit: cover;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    .product-title{
+      margin: 0;
       font-weight: 950;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .product-price{
+      margin-top: 6px;
+      font-weight: 950;
+      font-size: 13px;
       color: rgba(238,242,255,.92);
+    }
+
+    .product-desc{
+      margin: 0;
+      color: rgba(238,242,255,.86);
       font-size: 13px;
+      line-height: 1.5;
     }
 
-    /* Use base.css button style but let shop buttons be a bit less wide */
-    .product .btn{
-      min-width: 210px;
+    .product-bullets{
+      margin: 0;
+      padding-left: 18px;
+      color: rgba(238,242,255,.78);
+      font-size: 12.5px;
+      line-height: 1.5;
     }
-    .product .btn--chip{
-      min-width: 140px;
-    }
+    .product-bullets li{ margin: 4px 0; }
 
-    .note{
-      text-align:center;
-      color: rgba(238,242,255,.70);
-      font-size: 12px;
-      line-height: 1.45;
-      max-width: 620px;
-      margin: 10px auto 0;
-    }
-
-    /* Top nav pills (reuse sticky-home look for consistency) */
-    .top-actions{
+    .product-actions{
+      margin-top: auto;
       display:flex;
       gap: 10px;
-      justify-content:center;
       flex-wrap:wrap;
-      margin-top: 10px;
-    }
-    .top-actions a{
-      text-decoration:none;
-    }
-    .top-pill{
-      display:inline-flex;
-      align-items:center;
       justify-content:center;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.20);
-      background: rgba(0,0,0,.28);
-      color: rgba(238,242,255,.92);
-      font-weight: 900;
-      box-shadow: 0 18px 60px rgba(0,0,0,.20);
+    }
+    .btn--buy{
+      min-width: 200px;
+    }
+
+    .fineprint{
+      text-align:center;
+      color: rgba(238,242,255,.72);
+      font-size: 12px;
+      line-height: 1.45;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Optional: smaller on mobile */
+    @media (max-width: 520px){
+      .product-top{ align-items:center; }
+      .product-img{ width: 84px; height: 84px; }
     }
   </style>
 </head>
@@ -103,17 +133,16 @@
   <a class="sticky-home" href="/" aria-label="Home">Home</a>
 
   <main class="wrap">
-    <section class="card">
+    <section class="card shop-card">
       <header class="header">
-        <a href="/" style="text-decoration:none">
-          <img class="logo" alt="Tap-Deck" src="/assets/logos/crestedcritters.png" />
-        </a>
+        <!-- Optional logo for shop header (set to Tap-Deck logo if you have one) -->
+        <img class="logo" alt="Tap-Deck" id="shopLogo" src="/assets/logos/tap-deck.png" />
         <h1 class="brand">Shop</h1>
         <p class="tagline">Physical Tap-Deck products that come <b>pre-loaded with your profile</b>.</p>
 
-        <div class="top-actions">
-          <a class="top-pill" href="/theme-gallery/">Choose Theme</a>
-          <a class="top-pill" href="mailto:support@tap-deck.com">Support</a>
+        <div class="nav-row">
+          <a class="btn btn--nav" href="/theme-gallery/">Choose Theme</a>
+          <a class="btn btn--nav" href="mailto:support@tap-deck.com">Support</a>
         </div>
       </header>
 
@@ -121,56 +150,100 @@
 
       <div class="section-title">Products</div>
 
-      <section class="shop-grid" id="grid"></section>
-
-      <div class="note">
-        Checkout uses Square payment links. After purchase, we’ll confirm your slug and ensure your device is linked to your profile.
-      </div>
+      <section class="products-grid" id="productsGrid"></section>
 
       <hr class="sep" />
 
-      <div class="section-title">Want a custom item?</div>
-      <div class="about-text">
-        Email <a href="mailto:support@tap-deck.com" style="color:rgba(238,242,255,.92); text-decoration:underline; text-underline-offset:3px;">support@tap-deck.com</a>
-        and tell us what you want to build.
-      </div>
+      <p class="fineprint">
+        Checkout uses Square payment links. After purchase, we’ll confirm your slug and ensure your device is linked to your profile.
+        If you don’t have a profile yet, start at <a href="/theme-gallery/" style="color:rgba(238,242,255,.92);text-decoration:underline;text-underline-offset:3px;">Choose Theme</a>.
+      </p>
 
       <footer class="footer">
-        <div class="small">
-          © <span id="year"></span> Tap-Deck
-        </div>
+        <div class="small">© <span id="year"></span> Tap-Deck</div>
       </footer>
     </section>
   </main>
 
   <script>
-    // ✅ EDIT PRODUCTS HERE (easy)
+    // ===== Theme loading (match “home page theme”) =====
+    // If you ever want the shop to follow a chosen theme automatically,
+    // you can pass ?theme=animated-03-cyber-grid.css etc.
+    const DEFAULT_THEME = "theme-01-neon-dark.css";
+    const $ = (id) => document.getElementById(id);
+
+    function getParam(name){
+      return new URLSearchParams(location.search).get(name) || "";
+    }
+    function normalizeTheme(v){
+      const s = (v||"").trim();
+      if(!s) return "";
+      return s.replace(/^\/?themes\//i, "").replace(/^\/+/, "");
+    }
+    function applyTheme(themeFile){
+      const theme = normalizeTheme(themeFile || DEFAULT_THEME) || DEFAULT_THEME;
+      const href = ("/themes/" + theme).replace("/themes//","/themes/");
+      $("themeStylesheet").href = href + `?v=${Date.now()}`;
+    }
+
+    // Use ?theme=... if provided, otherwise default (same as your home)
+    applyTheme(getParam("theme") || DEFAULT_THEME);
+
+    // ===== EDIT PRODUCTS HERE (images + prices + Square links) =====
+    // image: put files in /assets/shop/ (recommended) like:
+    // /assets/shop/nfc-card.jpg
     const PRODUCTS = [
       {
-        name: "tap-deck NFC bracelet",
-        desc: "Instantly share your Tap-Deck digital profile with a simple tap • Pre-loaded with your personal Tap-Deck link • No app required • No battery needed • Works with most modern smartphones • Lightweight, durable, and ready for everyday wear • Perfect for networking, events, and business professionals Your bracelet is programmed before it ships — just tap and connect. ⸻ Important: Please include your Tap-Deck profile slug in the order notes at checkout so we can properly program your bracelet. Don’t have a Tap-Deck profile yet? Create yours here: https://www.tap-deck.com",
-        price: "See Square link",
-        payLink: "https://square.link/u/24AeJEzR",
-        buttonText: "Buy on Square"
+        name: "3D Printed NFC Expo Sign + Profile QR",
+        price: "$___.__",
+        image: "/assets/shop/expo-sign.jpg",
+        desc: "Perfect for vendor tables and events — tap or scan to open your profile instantly.",
+        bullets: [
+          "Pre-loaded with your Tap-Deck link",
+          "Includes printed QR on the sign",
+          "No app required"
+        ],
+        payLink: "https://square.link/u/tvd67HVK"
       },
       {
-        name: "tap-deck NFC Fob",
-        desc: "• Instantly share your tap-deck digital profile with a simple tap • Pre-loaded with your personal tap-deck link • Compact keychain design — attach to keys, bag, or lanyard • No app required • No battery needed • Works with most modern smartphones • Durable, lightweight, and built for everyday carry • Perfect for networking, business owners, events, and on-the-go professionals Small device. Big connection power. ⸻ Important: Please include your tap-deck profile slug in the order notes at checkout so we can properly program your NFC fob. Don’t have a tap-deck profile yet? Create yours here: https://www.tap-deck.com",
-        price: "See Square link",
-        payLink: "https://square.link/u/BwGlgvX5",
-        buttonText: "Buy on Square"
+        name: "NFC Card",
+        price: "$___.__",
+        image: "/assets/shop/nfc-card.jpg",
+        desc: "Classic tap-to-share card for business or personal networking.",
+        bullets: [
+          "Pre-loaded with your profile",
+          "Works with most modern smartphones",
+          "Clean, professional look"
+        ],
+        payLink: "https://square.link/u/tvd67HVK"
+      },
+      {
+        name: "NFC Bracelet",
+        price: "$___.__",
+        image: "/assets/shop/nfc-bracelet.jpg",
+        desc: "Wearable tap-to-share — great for creators, events, and social use.",
+        bullets: [
+          "Hands-free sharing",
+          "Durable everyday wear",
+          "Pre-programmed before shipping"
+        ],
+        payLink: "https://square.link/u/tvd67HVK"
+      },
+      {
+        name: "NFC Chips",
+        price: "$___.__",
+        image: "/assets/shop/nfc-chips.jpg",
+        desc: "Embed into signs, displays, packaging, or custom builds.",
+        bullets: [
+          "Great for custom projects",
+          "Compact + versatile",
+          "Pre-loaded with your profile"
+        ],
+        payLink: "https://square.link/u/tvd67HVK"
       }
     ];
 
-    // If you ever want the shop to accept ?theme=... later, you can,
-    // but for now we just match your default home theme.
-    const DEFAULT_THEME = "theme-01-neon-dark.css";
-    const themeHref = ("/themes/" + DEFAULT_THEME).replace("/themes//","/themes/");
-    document.getElementById("themeStylesheet").href = themeHref + "?v=" + Date.now();
-
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    const grid = document.getElementById("grid");
+    const grid = document.getElementById("productsGrid");
 
     function escapeHtml(s){
       return String(s||"")
@@ -182,20 +255,35 @@
     function render(){
       grid.innerHTML = "";
       for(const p of PRODUCTS){
-        const el = document.createElement("div");
+        const bullets = Array.isArray(p.bullets) && p.bullets.length
+          ? `<ul class="product-bullets">${p.bullets.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>`
+          : "";
+
+        const el = document.createElement("article");
         el.className = "product";
         el.innerHTML = `
-          <h2>${escapeHtml(p.name)}</h2>
-          <p>${escapeHtml(p.desc)}</p>
-          <div class="price">${escapeHtml(p.price || "")}</div>
-          <div class="links" style="margin-top:0;">
-            <a class="btn btn--chip" href="${escapeAttr(p.payLink)}" target="_blank" rel="noopener">${escapeHtml(p.buttonText || "Buy")}</a>
+          <div class="product-top">
+            <img class="product-img" src="${escapeAttr(p.image || "/assets/shop/placeholder.jpg")}" alt="${escapeAttr(p.name)}"
+                 onerror="this.onerror=null;this.src='/assets/shop/placeholder.jpg';" />
+            <div>
+              <h2 class="product-title">${escapeHtml(p.name)}</h2>
+              <div class="product-price">${escapeHtml(p.price || "")}</div>
+            </div>
+          </div>
+
+          <p class="product-desc">${escapeHtml(p.desc || "")}</p>
+
+          ${bullets}
+
+          <div class="product-actions">
+            <a class="btn btn--buy" href="${escapeAttr(p.payLink || "#")}" target="_blank" rel="noopener">Buy on Square</a>
           </div>
         `;
         grid.appendChild(el);
       }
     }
 
+    document.getElementById("year").textContent = new Date().getFullYear();
     render();
   </script>
 </body>
