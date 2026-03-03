@@ -1,0 +1,26 @@
+{
+  "slug": "crestedcritters",
+  "businessName": "Crested Critters",
+  "tagline": "Isopods, botanicals, and 3D printed accessories for thriving enclosures.",
+  "about": "Crested Critters was officially established in 2025 to provided premium isopods, botanicals, and accessories designed to support thriving bioactive enclosures. If you have any questions please do not hesitate to reach out.",
+  "links": {
+    "website": "https://www.crestedcritters.com",
+    "facebook": "https://www.facebook.com/p/Crested-Critters-61576805665752/",
+    "instagram": "",
+    "tiktok": "",
+    "linkedin": "",
+    "paypal": "",
+    "cashapp": "",
+    "venmo": ""
+  },
+  "contact": {
+    "name": "Chris",
+    "phoneE164": "+12192526944",
+    "phoneDisplay": "219-252-6944",
+    "email": "contact_us@crestedcritters.com"
+  },
+  "theme": "animated-08-mint-wave.css",
+  "qrPath": "/assets/qr/crestedcritters.png",
+  "vcardPath": "/vcards/crestedcritters.vcf",
+  "logoPath": "/assets/logos/crestedcritters.png"
+}
