@@ -46,9 +46,9 @@ body.embed .sticky-home{
 }
 
 .logo{
-  width: 86px;
-  height: 86px;
-  border-radius: 18px;
+  width: 112px;
+  height: 112px;
+  border-radius: 24px;
   object-fit: cover;
   display:block;
   margin: 0 auto 10px;
