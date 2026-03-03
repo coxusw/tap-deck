@@ -1,0 +1,26 @@
+{
+  "slug": "thechalkinwildchild",
+  "businessName": "The Chalkin' Wild Child",
+  "tagline": "Creating Custom Items For Every Personality.",
+  "about": "Hi, I'm Samantha... aka THE Chalkin' Wild Child. Artist, designer, custom creator, and mom of a bunch of wild children.",
+  "links": {
+    "website": "https://www.thechalkinwildchild.com/",
+    "facebook": "",
+    "instagram": "",
+    "tiktok": "https://www.tiktok.com/@thechalkinwildchild?_r=1&_t=ZP-94N1j0kmAil",
+    "linkedin": "",
+    "paypal": "",
+    "cashapp": "https://cash.app/$thechalkinwildchild",
+    "venmo": "https://venmo.com/code?user_id=2983921943838720800&created=1772509518"
+  },
+  "contact": {
+    "name": "Samantha Morales",
+    "phoneE164": "+18309550069",
+    "phoneDisplay": "8309550069",
+    "email": "thechalkinwildchild@gmail.com"
+  },
+  "theme": "animated-05-deep-sea.css",
+  "logoPath": "/assets/logos/thechalkinwildchild.jpg",
+  "vcardPath": "/vcards/thechalkinwildchild.vcf",
+  "qrPath": "/assets/qr/thechalkinwildchild.png"
+}
