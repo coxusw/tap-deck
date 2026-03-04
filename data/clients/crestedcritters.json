@@ -5,8 +5,8 @@
   "about": "Crested Critters was officially established in 2025 to provided premium isopods, botanicals, and accessories designed to support thriving bioactive enclosures. If you have any questions please do not hesitate to reach out.",
   "links": {
     "website": "https://www.crestedcritters.com",
-    "facebook": "",
-    "instagram": "",
+    "facebook": "https://www.facebook.com/p/Crested-Critters-61576805665752/",
+    "instagram": "https://www.instagram.com/crested_critters/",
     "tiktok": "",
     "linkedin": "",
     "paypal": "",
@@ -20,7 +20,7 @@
     "email": "contact_us@crestedcritters.com"
   },
   "theme": "animated-13-northern-lights.css",
-  "logoPath": "/assets/logos/crestedcritters.png",
+  "qrPath": "/assets/qr/crestedcritters.png",
   "vcardPath": "/vcards/crestedcritters.vcf",
-  "qrPath": "/assets/qr/crestedcritters.png"
+  "logoPath": "/assets/logos/crestedcritters.png"
 }
