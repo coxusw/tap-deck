@@ -21,5 +21,6 @@
   },
   "theme": "animated-04-solar-flare.css",
   "qrPath": "/assets/qr/barriosstreaming.png",
-  "vcardPath": "/vcards/barriosstreaming.vcf"
+  "vcardPath": "/vcards/barriosstreaming.vcf",
+  "logoPath": "/assets/logos/barriosstreaming.jpg"
 }
