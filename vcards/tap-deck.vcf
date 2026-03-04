@@ -1,4 +1,8 @@
 BEGIN:VCARD
 VERSION:3.0
-FN:Contact
+FN:Chris
+ORG:Tap-Deck
+TEL;TYPE=CELL:219-252-6944
+EMAIL;TYPE=INTERNET:Support@tap-deck.com
+URL:https://www.tap-deck.com
 END:VCARD
