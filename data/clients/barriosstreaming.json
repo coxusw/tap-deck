@@ -15,12 +15,11 @@
   },
   "contact": {
     "name": "Barrios Streaming",
-    "phoneE164": "",
-    "phoneDisplay": "",
+    "phoneE164": "12199518418",
+    "phoneDisplay": "12199518418",
     "email": "Israel.barrios@barriosstreaming.co.site"
   },
   "theme": "animated-04-solar-flare.css",
-  "logoPath": "/assets/logos/barriosstreaming.jpg",
-  "vcardPath": "/vcards/barriosstreaming.vcf",
-  "qrPath": "/assets/qr/barriosstreaming.png"
+  "qrPath": "/assets/qr/barriosstreaming.png",
+  "vcardPath": "/vcards/barriosstreaming.vcf"
 }
