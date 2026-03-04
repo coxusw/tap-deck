@@ -6,12 +6,12 @@
   "links": {
     "website": "https://www.tap-deck.com",
     "facebook": "https://www.facebook.com/share/1CqLaMJbvP/?mibextid=wwXIfr",
-    "instagram": "",
-    "tiktok": "",
-    "linkedin": "",
-    "paypal": "",
-    "cashapp": "",
-    "venmo": ""
+    "instagram": "https://www.instagram.com",
+    "tiktok": "https://www.tiktok.com",
+    "linkedin": "https://www.linkdin.com",
+    "paypal": "https://www.paypal.com",
+    "cashapp": "https://www.cashapp.com",
+    "venmo": "https://www.venmo.com"
   },
   "contact": {
     "name": "Chris",
