@@ -1,0 +1,29 @@
+{
+  "slug": "testa",
+  "businessName": "testa",
+  "tagline": "testa",
+  "about": "testa",
+  "links": {
+    "website": "https://www.tap-deck.com",
+    "facebook": "",
+    "instagram": "https://www.instagram.com",
+    "tiktok": "https://www.tiktok.com",
+    "youtube": "https://www.youtube.com",
+    "booksy": "https://www.booksy.com",
+    "other": "",
+    "linkedin": "",
+    "paypal": "https://www.paypal.com",
+    "cashapp": "https://www.cashapp.com",
+    "venmo": "https://www.venmo.com"
+  },
+  "contact": {
+    "name": "testa",
+    "phoneE164": "+12192526944",
+    "phoneDisplay": "219-252-6944",
+    "email": "chrisuswcox@gmail.com"
+  },
+  "theme": "animated-02-neon-ribbon.css",
+  "logoPath": "",
+  "vcardPath": "/vcards/testa.vcf",
+  "qrPath": "/assets/qr/testa.png"
+}
