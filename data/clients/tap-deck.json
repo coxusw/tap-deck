@@ -8,6 +8,9 @@
     "facebook": "https://www.facebook.com/share/1CqLaMJbvP/?mibextid=wwXIfr",
     "instagram": "https://www.instagram.com",
     "tiktok": "https://www.tiktok.com",
+    "youtube": "https://www.youtube.com",
+    "booksy": "https://booksy.com",
+    "other": "https://www.google.com",
     "linkedin": "https://www.linkdin.com",
     "paypal": "https://www.paypal.com",
     "cashapp": "https://www.cashapp.com",
@@ -21,6 +24,5 @@
   },
   "theme": "",
   "qrPath": "/assets/qr/tap-deck.png",
-  "vcardPath": "/vcards/tap-deck.vcf",
-  "logoPath": "/assets/logos/tap-deck.png"
+  "vcardPath": "/vcards/tap-deck.vcf"
 }
