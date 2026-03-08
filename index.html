@@ -23,7 +23,7 @@
     }
     .home-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
     .home-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
-    .home-logo img{width:80px;height:80px;border-radius:12px;object-fit:contain;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);padding:6px}
+    .home-logo img{width:46px;height:46px;border-radius:12px;object-fit:contain;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);padding:6px}
     .home-logo b{font-size:18px}
     .home-nav{display:flex;gap:10px;flex-wrap:wrap}
     .home-pill{
@@ -101,7 +101,7 @@
     <section class="card">
       <header class="header">
         <a id="logoLink" href="#" target="_blank" rel="noopener" style="text-decoration:none">
-          <img id="logoImg" class="logo" alt="Logo" src="logos/TD.png" />
+          <img id="logoImg" class="logo" alt="Logo" src="/assets/logos/crestedcritters.png" />
         </a>
 
         <h1 class="brand" id="brand">Loading…</h1>
@@ -114,6 +114,10 @@
         <a class="btn" id="btnFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
         <a class="btn" id="btnInstagram" href="#" target="_blank" rel="noopener">Instagram</a>
         <a class="btn" id="btnTikTok" href="#" target="_blank" rel="noopener">TikTok</a>
+
+        <a class="btn" id="btnYouTube" href="#" target="_blank" rel="noopener">YouTube</a>
+        <a class="btn" id="btnBooksy" href="#" target="_blank" rel="noopener">Booksy</a>
+        <a class="btn" id="btnOther" href="#" target="_blank" rel="noopener">Other</a>
 
         <a class="btn" id="btnLinkedIn" href="#" target="_blank" rel="noopener">LinkedIn</a>
         <a class="btn" id="btnPayPal" href="#" target="_blank" rel="noopener">PayPal</a>
@@ -185,7 +189,7 @@
     <section class="home-hero">
       <div class="home-topbar">
         <a class="home-logo" href="/" aria-label="Tap-Deck Home">
-          <img src="logos/TD.png" alt="Tap-Deck" />
+          <img src="/assets/logos/crestedcritters.png" alt="Tap-Deck" />
           <div>
             <b>Tap-Deck</b>
             <div class="small" style="margin-top:2px;">One link. Your brand. Anywhere.</div>
@@ -201,10 +205,8 @@
 
       <h1 class="home-h1">Your tap-to-share profile.<br/>No monthly fees.</h1>
       <p class="home-sub">
-        Tap-Deck gives you a clean profile link, and QR code you can share anywhere.
-        Pick a theme, submit your info, and your profile goes live automatically. 
-        Dont stop there though Check out getting one of our NFC devices from the shop to pair
-        your profile to for tap to share profile!
+        Tap-Deck gives you a clean profile link you can share anywhere (and pair with NFC products).
+        Pick a theme, submit your info, and your profile goes live automatically.
       </p>
 
       <div class="home-cta">
@@ -216,7 +218,7 @@
     <section class="home-grid" aria-label="How it works">
       <div class="home-card">
         <h3>1) Choose a slug</h3>
-        <p>Your slug becomes your link: <code>www.Tap-Deck.com/your-slug</code>. We check availability instantly.</p>
+        <p>Your slug becomes your link: <code>www.tap-deck.com/your-slug</code>. We check availability instantly.</p>
       </div>
       <div class="home-card">
         <h3>2) Pick a theme</h3>
@@ -269,7 +271,7 @@
 
   <script>
     const DEFAULT_THEME = "theme-01-neon-dark.css";
-    const DEFAULT_LOGO  = "logos/TD.png";
+    const DEFAULT_LOGO  = "/assets/logos/crestedcritters.png";
     const BRAND_HOST    = "www.tap-deck.com";
 
     const $ = (id) => document.getElementById(id);
@@ -427,21 +429,17 @@
     }
 
     function isReservedRoute_(slug){
-      // prevent trying to treat these as profile slugs
-      const reserved = new Set(["theme-gallery","pay","preview","shop","admin","api"]);
+      const reserved = new Set(["theme-gallery","pay","preview","shop","admin","api","edit"]);
       return reserved.has((slug||"").toLowerCase());
     }
 
     async function main(){
-      // homepage year
       const hy = document.getElementById("homeYear");
       if (hy) hy.textContent = new Date().getFullYear();
 
-      // Determine slug (path-based: /slug)
       const pathSlug = location.pathname.replace(/^\/+|\/+$/g, "");
       const slug = (pathSlug || getParam("client") || "").trim().toLowerCase();
 
-      // If no slug OR reserved route → show homepage
       if(!slug || isReservedRoute_(slug)){
         show($("homePage"));
         hide($("profilePage"));
@@ -450,7 +448,6 @@
         return;
       }
 
-      // Otherwise show profile
       hide($("homePage"));
       show($("profilePage"));
       show($("homeSticky"));
@@ -482,6 +479,9 @@
       setBtn("btnFacebook", normalizeUrl(links.facebook));
       setBtn("btnInstagram", normalizeUrl(links.instagram));
       setBtn("btnTikTok",   normalizeUrl(links.tiktok));
+      setBtn("btnYouTube",  normalizeUrl(links.youtube));
+      setBtn("btnBooksy",   normalizeUrl(links.booksy));
+      setBtn("btnOther",    normalizeUrl(links.other));
       setBtn("btnLinkedIn", normalizeUrl(links.linkedin));
       setBtn("btnPayPal",   normalizeUrl(links.paypal));
       setBtn("btnCashApp",  normalizeUrl(links.cashapp));
@@ -519,7 +519,6 @@
 
     main().catch(err=>{
       console.error(err);
-      // If profile fails, fall back to homepage (better UX)
       show(document.getElementById("homePage"));
       hide(document.getElementById("profilePage"));
       hide(document.getElementById("qrStickyLink"));
