@@ -138,25 +138,10 @@
       border-color:rgba(239,68,68,.30);
       background:rgba(239,68,68,.10);
     }
-
-    .sticky-edit{
-      right:188px !important;
-    }
-
-    @media (max-width: 700px){
-      .sticky-edit{
-        right:132px !important;
-      }
-      #homeSticky{
-        max-width:150px;
-        text-align:center;
-      }
-    }
   </style>
 </head>
 
 <body>
-  <body class="home">
   <!-- =========================
        PROFILE UI (only shown when slug present)
   ========================== -->
@@ -167,7 +152,7 @@
   </a>
 
   <!-- Sticky Edit -->
-  <a id="editSticky" class="sticky-home is-hidden sticky-edit" href="/edit" aria-label="Edit">Edit</a>
+  <a id="editSticky" class="sticky-edit is-hidden" href="/edit" aria-label="Edit">Edit</a>
 
   <!-- Sticky Home / CTA -->
   <a id="homeSticky" class="sticky-home is-hidden" href="/" aria-label="Home">Home</a>
@@ -318,9 +303,9 @@
       <h2 style="margin:18px 0 8px;font-size:18px;">FAQ</h2>
 
       <details class="home-q">
-        <summary>Can I update my profile?</summary>
+        <summary>Can I change themes later?</summary>
         <div>
-          Yes you can update all information via the edit page. You will need your edit code which you can request if you cant remember it below on the home page!
+          Yes you can update all information via contacting support, but coming soon you will be able to make these changes on the fly whenever you want!
         </div>
       </details>
 
@@ -334,7 +319,7 @@
       <details class="home-q">
         <summary>How long does it take?</summary>
         <div>
-          Usually just a few minutes. You’ll get an email when your profile is live. If a New Profile is not live or an existing profile is not updated wait at least five minutes then reach out to support.
+          Usually just a few minutes. You’ll get an email when your profile is live.
         </div>
       </details>
     </section>
@@ -363,8 +348,6 @@
     const DEFAULT_LOGO  = "/assets/logos/crestedcritters.png";
     const BRAND_HOST    = "www.tap-deck.com";
 
-    // We will wire this up fully in the Apps Script step next.
-    // Replace this with your Apps Script web app URL after we update the script.
     const EDIT_HELP_WEBAPP = "https://script.google.com/macros/s/AKfycbxVOXKxYD3MkT81Y-xD-8vw8nJPJc9W_IaY-ZbL20Ckbcs21dfudA7Cn9gchGkCc-MZ/exec";
 
     const $ = (id) => document.getElementById(id);
@@ -544,7 +527,7 @@
       }
 
       if(!EDIT_HELP_WEBAPP){
-        setHomeEditNotice("Edit code request is not connected yet. We’ll wire this up in the next step.", false);
+        setHomeEditNotice("Edit code request is not connected yet.", false);
         return;
       }
 
@@ -585,26 +568,25 @@
       const slug = (pathSlug || getParam("client") || "").trim().toLowerCase();
 
       if(!slug || isReservedRoute_(slug)){
+        document.body.classList.add("home");
+
         show($("homePage"));
         hide($("profilePage"));
         hide($("qrStickyLink"));
 
-        // homepage mode
-        show($("homeSticky"));
+        hide($("homeSticky"));
         show($("editSticky"));
-        $("homeSticky").textContent = "Home";
-        $("homeSticky").setAttribute("aria-label", "Home");
-        $("homeSticky").href = "/";
         $("editSticky").href = "/edit";
         return;
       }
+
+      document.body.classList.remove("home");
 
       hide($("homePage"));
       show($("profilePage"));
       show($("homeSticky"));
       show($("editSticky"));
 
-      // profile mode
       $("homeSticky").textContent = "Get your own Profile!";
       $("homeSticky").setAttribute("aria-label", "Get your own Profile");
       $("homeSticky").href = "/";
@@ -679,13 +661,12 @@
 
     main().catch(err=>{
       console.error(err);
+      document.body.classList.add("home");
       show(document.getElementById("homePage"));
       hide(document.getElementById("profilePage"));
       hide(document.getElementById("qrStickyLink"));
-      show(document.getElementById("homeSticky"));
+      hide(document.getElementById("homeSticky"));
       show(document.getElementById("editSticky"));
-      $("homeSticky").textContent = "Home";
-      $("homeSticky").href = "/";
       $("editSticky").href = "/edit";
       document.title = "Tap-Deck";
     });
