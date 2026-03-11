@@ -34,7 +34,8 @@
     }
 
     .field-input,
-    .field-textarea{
+    .field-textarea,
+    .field-select{
       width:100%;
       border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
@@ -251,7 +252,7 @@
 
           <div class="full">
             <label class="field-label" for="theme">Theme</label>
-            <input class="field-input" id="theme" />
+            <select class="field-select" id="theme"></select>
           </div>
 
           <div class="full">
@@ -277,6 +278,10 @@
   <script>
     const WEBAPP = "https://script.google.com/macros/s/AKfycbxVOXKxYD3MkT81Y-xD-8vw8nJPJc9W_IaY-ZbL20Ckbcs21dfudA7Cn9gchGkCc-MZ/exec";
     const DEFAULT_THEME = "theme-01-neon-dark.css";
+    const GITHUB_OWNER = "coxusw";
+    const GITHUB_REPO = "tap-deck";
+    const GITHUB_BRANCH = "main";
+
     const $ = (id) => document.getElementById(id);
 
     function getParam(name){
@@ -289,6 +294,59 @@
       return s.replace(/^\/?themes\//i, "").replace(/^\/+/, "");
     }
 
+    function humanizeThemeName(file){
+      return String(file || "")
+        .replace(/\.css$/i, "")
+        .replace(/[-_]+/g, " ")
+        .replace(/\b\w/g, (m) => m.toUpperCase());
+    }
+
+    async function loadThemeOptions(selectedTheme = ""){
+      const select = $("theme");
+      if(!select) return;
+
+      const normalizedSelected = normalizeTheme(selectedTheme || DEFAULT_THEME) || DEFAULT_THEME;
+
+      try{
+        const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/themes?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
+        const res = await fetch(api, { headers: { "Accept":"application/vnd.github+json" }});
+        if(!res.ok) throw new Error(`GitHub API error ${res.status}`);
+
+        const data = await res.json();
+        if(!Array.isArray(data)) throw new Error("Unexpected GitHub response");
+
+        const themes = data
+          .filter(x => x.type === "file" && String(x.name || "").toLowerCase().endsWith(".css"))
+          .map(x => x.name)
+          .sort((a,b) => a.localeCompare(b));
+
+        select.innerHTML = "";
+        for(const theme of themes){
+          const opt = document.createElement("option");
+          opt.value = theme;
+          opt.textContent = humanizeThemeName(theme);
+          if(normalizeTheme(theme) === normalizedSelected){
+            opt.selected = true;
+          }
+          select.appendChild(opt);
+        }
+
+        if(!select.value && themes.length){
+          select.value = normalizedSelected;
+        }
+      }catch(err){
+        console.error(err);
+
+        // Fallback so the page still works
+        select.innerHTML = "";
+        const opt = document.createElement("option");
+        opt.value = normalizedSelected;
+        opt.textContent = humanizeThemeName(normalizedSelected);
+        opt.selected = true;
+        select.appendChild(opt);
+      }
+    }
+
     function applyTheme(themeFile){
       const theme = normalizeTheme(themeFile || DEFAULT_THEME) || DEFAULT_THEME;
       const href = ("/themes/" + theme).replace("/themes//","/themes/");
@@ -297,215 +355,4 @@
 
     function setNotice(msg, ok = true){
       const el = $("notice");
-      el.style.display = msg ? "block" : "none";
-      el.textContent = msg || "";
-      el.className = "notice " + (ok ? "ok" : "bad");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function normalizeUrl(u){
-      const x = String(u || "").trim();
-      if(!x) return "";
-      if(x.startsWith("http://") || x.startsWith("https://")) return x;
-      return "https://" + x;
-    }
-
-    function makeSlug(input){
-      return String(input || "")
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9-]+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
-    }
-
-    function buildClientJsonFromForm(){
-      return {
-        slug: makeSlug($("slug").value),
-        businessName: $("businessName").value.trim(),
-        tagline: $("tagline").value.trim(),
-        about: $("about").value.trim(),
-        links: {
-          website: normalizeUrl($("website").value),
-          facebook: normalizeUrl($("facebook").value),
-          instagram: normalizeUrl($("instagram").value),
-          tiktok: normalizeUrl($("tiktok").value),
-          youtube: normalizeUrl($("youtube").value),
-          booksy: normalizeUrl($("booksy").value),
-          other: normalizeUrl($("other").value),
-          linkedin: normalizeUrl($("linkedin").value),
-          paypal: normalizeUrl($("paypal").value),
-          cashapp: normalizeUrl($("cashapp").value),
-          venmo: normalizeUrl($("venmo").value),
-        },
-        contact: {
-          name: $("name").value.trim(),
-          phoneE164: $("phoneE164").value.trim(),
-          phoneDisplay: $("phoneDisplay").value.trim(),
-          email: $("email").value.trim(),
-        },
-        theme: $("theme").value.trim(),
-      };
-    }
-
-    function fileToBase64(file){
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = String(reader.result || "");
-          const comma = result.indexOf(",");
-          resolve(comma >= 0 ? result.slice(comma + 1) : result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function fillForm(client){
-      $("businessName").value = client.businessName || "";
-      $("tagline").value = client.tagline || "";
-      $("about").value = client.about || "";
-
-      $("website").value = client.links?.website || "";
-      $("facebook").value = client.links?.facebook || "";
-      $("instagram").value = client.links?.instagram || "";
-      $("tiktok").value = client.links?.tiktok || "";
-      $("youtube").value = client.links?.youtube || "";
-      $("booksy").value = client.links?.booksy || "";
-      $("other").value = client.links?.other || "";
-      $("linkedin").value = client.links?.linkedin || "";
-      $("paypal").value = client.links?.paypal || "";
-      $("cashapp").value = client.links?.cashapp || "";
-      $("venmo").value = client.links?.venmo || "";
-
-      $("name").value = client.contact?.name || "";
-      $("phoneE164").value = client.contact?.phoneE164 || "";
-      $("phoneDisplay").value = client.contact?.phoneDisplay || "";
-      $("email").value = client.contact?.email || "";
-      $("theme").value = client.theme || "";
-
-      applyTheme(client.theme || DEFAULT_THEME);
-    }
-
-    async function loadProfile(){
-      const btn = $("loadBtn");
-      const slug = makeSlug($("slug").value);
-      const editCode = $("editCode").value.trim();
-
-      if(!slug || !editCode){
-        setNotice("Please enter both slug and edit code.", false);
-        return;
-      }
-
-      const url =
-        WEBAPP +
-        "?action=getclientforedit" +
-        "&slug=" + encodeURIComponent(slug) +
-        "&editCode=" + encodeURIComponent(editCode);
-
-      try{
-        btn.disabled = true;
-        btn.textContent = "Loading...";
-        setNotice("Loading profile...", true);
-
-        const r = await fetch(url, { method: "GET" });
-        const j = await r.json();
-
-        if(!j.ok){
-          setNotice(j.error || "Invalid slug or edit code.", false);
-          return;
-        }
-
-        fillForm(j.client || {});
-        $("editorWrap").classList.remove("is-hidden");
-        setNotice("Profile loaded successfully.", true);
-      }catch(err){
-        console.error(err);
-        setNotice("Could not load profile.", false);
-      }finally{
-        btn.disabled = false;
-        btn.textContent = "Load Profile";
-      }
-    }
-
-    async function saveProfile(){
-      const btn = $("saveBtn");
-      const slug = makeSlug($("slug").value);
-      const editCode = $("editCode").value.trim();
-
-      if(!slug || !editCode){
-        setNotice("Missing slug or edit code.", false);
-        return;
-      }
-
-      const clientJson = buildClientJsonFromForm();
-
-      let logoBase64 = "";
-      let logoExt = "";
-
-      try{
-        btn.disabled = true;
-        btn.textContent = "Saving...";
-        setNotice("Saving changes...", true);
-
-        const file = $("logoFile").files && $("logoFile").files[0];
-        if(file){
-          logoBase64 = await fileToBase64(file);
-
-          const fileName = String(file.name || "").toLowerCase();
-          if(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) logoExt = "jpg";
-          else if(fileName.endsWith(".webp")) logoExt = "webp";
-          else logoExt = "png";
-        }
-
-        const payload = {
-          action: "updateprofile",
-          slug,
-          editCode,
-          clientJson,
-          logoBase64,
-          logoExt
-        };
-
-        const r = await fetch(WEBAPP, {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const j = await r.json();
-
-        if(!j.ok){
-          setNotice(j.error || "Could not save changes.", false);
-          return;
-        }
-
-        const next = new URL(window.location.href);
-        next.searchParams.set("saved", "1");
-        next.searchParams.set("slug", slug);
-        window.location.href = next.toString();
-      }catch(err){
-        console.error(err);
-        setNotice("Could not save changes.", false);
-      }finally{
-        btn.disabled = false;
-        btn.textContent = "Save Changes";
-      }
-    }
-
-    $("year").textContent = new Date().getFullYear();
-
-    const qsSlug = makeSlug(getParam("slug"));
-    if(qsSlug) $("slug").value = qsSlug;
-
-    if(getParam("saved") === "1"){
-      $("editorWrap").classList.remove("is-hidden");
-      setNotice("Changes saved successfully.", true);
-    }
-
-    applyTheme(DEFAULT_THEME);
-  </script>
-</body>
-</html>
+      el.style.display = msg ?
