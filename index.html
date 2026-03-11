@@ -81,6 +81,77 @@
     }
     details.home-q summary{cursor:pointer;font-weight:900}
     details.home-q div{margin-top:8px;color:rgba(182,194,255,.95);line-height:1.45;font-size:13px}
+
+    .home-edit-help{
+      margin-top:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:16px;
+    }
+    .home-edit-help h3{
+      margin:0 0 8px;
+      font-size:16px;
+    }
+    .home-edit-help p{
+      margin:0 0 12px;
+      color:rgba(182,194,255,.95);
+      line-height:1.45;
+      font-size:13px;
+    }
+    .home-edit-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .home-edit-input{
+      flex:1;
+      min-width:260px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.22);
+      color:rgba(238,242,255,.95);
+      padding:12px 14px;
+      font:inherit;
+      outline:none;
+    }
+    .home-edit-input::placeholder{
+      color:rgba(238,242,255,.48);
+    }
+    .home-edit-notice{
+      display:none;
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:rgba(238,242,255,.92);
+      text-align:center;
+      font-size:13px;
+    }
+    .home-edit-notice.ok{
+      border-color:rgba(34,197,94,.28);
+      background:rgba(34,197,94,.10);
+    }
+    .home-edit-notice.bad{
+      border-color:rgba(239,68,68,.30);
+      background:rgba(239,68,68,.10);
+    }
+
+    .sticky-edit{
+      right:188px !important;
+    }
+
+    @media (max-width: 700px){
+      .sticky-edit{
+        right:132px !important;
+      }
+      #homeSticky{
+        max-width:150px;
+        text-align:center;
+      }
+    }
   </style>
 </head>
 
@@ -94,7 +165,10 @@
     <img id="qrStickyImg" alt="QR Code" />
   </a>
 
-  <!-- Sticky Home (top-right) -->
+  <!-- Sticky Edit -->
+  <a id="editSticky" class="sticky-home is-hidden sticky-edit" href="/edit" aria-label="Edit">Edit</a>
+
+  <!-- Sticky Home / CTA -->
   <a id="homeSticky" class="sticky-home is-hidden" href="/" aria-label="Home">Home</a>
 
   <main class="wrap is-hidden" id="profilePage">
@@ -264,6 +338,20 @@
       </details>
     </section>
 
+    <section class="home-edit-help" aria-label="Request edit code">
+      <h3>Need your edit code?</h3>
+      <p>
+        Enter the email address on your Tap-Deck profile and we’ll send your edit code.
+      </p>
+
+      <div class="home-edit-row">
+        <input id="editCodeEmail" class="home-edit-input" type="email" placeholder="you@example.com" />
+        <button id="sendEditCodeBtn" class="home-btn" type="button">Send</button>
+      </div>
+
+      <div id="homeEditNotice" class="home-edit-notice"></div>
+    </section>
+
     <div class="small" style="margin-top:16px;text-align:center;color:rgba(182,194,255,.95);">
       © <span id="homeYear"></span> Tap-Deck • <a href="mailto:support@tap-deck.com" style="color:inherit">support@tap-deck.com</a>
     </div>
@@ -273,6 +361,10 @@
     const DEFAULT_THEME = "theme-01-neon-dark.css";
     const DEFAULT_LOGO  = "/assets/logos/crestedcritters.png";
     const BRAND_HOST    = "www.tap-deck.com";
+
+    // We will wire this up fully in the Apps Script step next.
+    // Replace this with your Apps Script web app URL after we update the script.
+    const EDIT_HELP_WEBAPP = "";
 
     const $ = (id) => document.getElementById(id);
 
@@ -433,6 +525,57 @@
       return reserved.has((slug||"").toLowerCase());
     }
 
+    function setHomeEditNotice(msg, ok = true){
+      const el = $("homeEditNotice");
+      if(!el) return;
+      el.style.display = msg ? "block" : "none";
+      el.textContent = msg || "";
+      el.className = "home-edit-notice " + (ok ? "ok" : "bad");
+    }
+
+    async function requestEditCode_(){
+      const email = (($("editCodeEmail")?.value) || "").trim();
+      const btn = $("sendEditCodeBtn");
+
+      if(!email){
+        setHomeEditNotice("Please enter your email address.", false);
+        return;
+      }
+
+      if(!EDIT_HELP_WEBAPP){
+        setHomeEditNotice("Edit code request is not connected yet. We’ll wire this up in the next step.", false);
+        return;
+      }
+
+      try{
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+        setHomeEditNotice("Sending your edit code request...", true);
+
+        const url =
+          EDIT_HELP_WEBAPP +
+          "?action=requesteditcode" +
+          "&email=" + encodeURIComponent(email);
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if(!data.ok){
+          setHomeEditNotice(data.error || "Could not send edit code.", false);
+          return;
+        }
+
+        setHomeEditNotice("If that email matches a Tap-Deck profile, your edit code has been sent.", true);
+        $("editCodeEmail").value = "";
+      }catch(err){
+        console.error(err);
+        setHomeEditNotice("Could not send edit code.", false);
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "Send";
+      }
+    }
+
     async function main(){
       const hy = document.getElementById("homeYear");
       if (hy) hy.textContent = new Date().getFullYear();
@@ -444,13 +587,27 @@
         show($("homePage"));
         hide($("profilePage"));
         hide($("qrStickyLink"));
-        hide($("homeSticky"));
+
+        // homepage mode
+        show($("homeSticky"));
+        show($("editSticky"));
+        $("homeSticky").textContent = "Home";
+        $("homeSticky").setAttribute("aria-label", "Home");
+        $("homeSticky").href = "/";
+        $("editSticky").href = "/edit";
         return;
       }
 
       hide($("homePage"));
       show($("profilePage"));
       show($("homeSticky"));
+      show($("editSticky"));
+
+      // profile mode
+      $("homeSticky").textContent = "Get your own Profile!";
+      $("homeSticky").setAttribute("aria-label", "Get your own Profile");
+      $("homeSticky").href = "/";
+      $("editSticky").href = "/edit";
 
       $("year").textContent = new Date().getFullYear();
 
@@ -517,12 +674,18 @@
       applyLinksLayout();
     }
 
+    $("sendEditCodeBtn")?.addEventListener("click", requestEditCode_);
+
     main().catch(err=>{
       console.error(err);
       show(document.getElementById("homePage"));
       hide(document.getElementById("profilePage"));
       hide(document.getElementById("qrStickyLink"));
-      hide(document.getElementById("homeSticky"));
+      show(document.getElementById("homeSticky"));
+      show(document.getElementById("editSticky"));
+      $("homeSticky").textContent = "Home";
+      $("homeSticky").href = "/";
+      $("editSticky").href = "/edit";
       document.title = "Tap-Deck";
     });
   </script>
