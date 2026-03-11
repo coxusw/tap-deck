@@ -2,7 +2,7 @@
   "slug": "testing",
   "businessName": "tested",
   "tagline": "tested",
-  "about": "tested",
+  "about": "tested with edit",
   "links": {
     "website": "https://www.google.com",
     "facebook": "",
@@ -23,7 +23,7 @@
     "email": "chrisuswcox@gmail.com"
   },
   "theme": "animated-01-aurora-glide.css",
-  "logoPath": "",
   "vcardPath": "/vcards/testing.vcf",
+  "logoPath": "",
   "qrPath": "/assets/qr/testing.png"
 }
