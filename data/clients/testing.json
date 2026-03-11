@@ -1,0 +1,29 @@
+{
+  "slug": "testing",
+  "businessName": "tested",
+  "tagline": "tested",
+  "about": "tested",
+  "links": {
+    "website": "https://www.google.com",
+    "facebook": "",
+    "instagram": "",
+    "tiktok": "",
+    "youtube": "",
+    "booksy": "",
+    "other": "",
+    "linkedin": "",
+    "paypal": "",
+    "cashapp": "",
+    "venmo": ""
+  },
+  "contact": {
+    "name": "tested",
+    "phoneE164": "+12192526944",
+    "phoneDisplay": "219-252-6944",
+    "email": "chrisuswcox@gmail.com"
+  },
+  "theme": "animated-01-aurora-glide.css",
+  "logoPath": "",
+  "vcardPath": "/vcards/testing.vcf",
+  "qrPath": "/assets/qr/testing.png"
+}
