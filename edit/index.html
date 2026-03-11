@@ -104,6 +104,11 @@
       line-height:1.4;
     }
 
+    .btn[disabled]{
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
     @media (max-width: 720px){
       .form-grid{
         grid-template-columns:1fr;
@@ -143,7 +148,7 @@
       </div>
 
       <div class="actions">
-        <button class="btn btn--chip" id="loadBtn" type="button">Load Profile</button>
+        <button class="btn btn--chip" id="loadBtn" type="button" onclick="loadProfile()">Load Profile</button>
       </div>
 
       <div id="notice" class="notice"></div>
@@ -259,7 +264,7 @@
         </div>
 
         <div class="actions">
-          <button class="btn" id="saveBtn" type="button">Save Changes</button>
+          <button class="btn" id="saveBtn" type="button" onclick="saveProfile()">Save Changes</button>
         </div>
       </div>
 
@@ -295,6 +300,7 @@
       el.style.display = msg ? "block" : "none";
       el.textContent = msg || "";
       el.className = "notice " + (ok ? "ok" : "bad");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function normalizeUrl(u){
@@ -382,6 +388,7 @@
     }
 
     async function loadProfile(){
+      const btn = $("loadBtn");
       const slug = makeSlug($("slug").value);
       const editCode = $("editCode").value.trim();
 
@@ -397,9 +404,11 @@
         "&editCode=" + encodeURIComponent(editCode);
 
       try{
+        btn.disabled = true;
+        btn.textContent = "Loading...";
         setNotice("Loading profile...", true);
 
-        const r = await fetch(url);
+        const r = await fetch(url, { method: "GET" });
         const j = await r.json();
 
         if(!j.ok){
@@ -413,10 +422,14 @@
       }catch(err){
         console.error(err);
         setNotice("Could not load profile.", false);
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "Load Profile";
       }
     }
 
     async function saveProfile(){
+      const btn = $("saveBtn");
       const slug = makeSlug($("slug").value);
       const editCode = $("editCode").value.trim();
 
@@ -431,13 +444,17 @@
       let logoExt = "";
 
       try{
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+        setNotice("Saving changes...", true);
+
         const file = $("logoFile").files && $("logoFile").files[0];
         if(file){
           logoBase64 = await fileToBase64(file);
 
-          const name = String(file.name || "").toLowerCase();
-          if(name.endsWith(".jpg") || name.endsWith(".jpeg")) logoExt = "jpg";
-          else if(name.endsWith(".webp")) logoExt = "webp";
+          const fileName = String(file.name || "").toLowerCase();
+          if(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) logoExt = "jpg";
+          else if(fileName.endsWith(".webp")) logoExt = "webp";
           else logoExt = "png";
         }
 
@@ -449,8 +466,6 @@
           logoBase64,
           logoExt
         };
-
-        setNotice("Saving changes...", true);
 
         const r = await fetch(WEBAPP, {
           method: "POST",
@@ -467,19 +482,28 @@
           return;
         }
 
-        setNotice("Changes saved successfully.", true);
+        const next = new URL(window.location.href);
+        next.searchParams.set("saved", "1");
+        next.searchParams.set("slug", slug);
+        window.location.href = next.toString();
       }catch(err){
         console.error(err);
         setNotice("Could not save changes.", false);
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "Save Changes";
       }
     }
 
-    $("loadBtn").addEventListener("click", loadProfile);
-    $("saveBtn").addEventListener("click", saveProfile);
     $("year").textContent = new Date().getFullYear();
 
     const qsSlug = makeSlug(getParam("slug"));
     if(qsSlug) $("slug").value = qsSlug;
+
+    if(getParam("saved") === "1"){
+      $("editorWrap").classList.remove("is-hidden");
+      setNotice("Changes saved successfully.", true);
+    }
 
     applyTheme(DEFAULT_THEME);
   </script>
