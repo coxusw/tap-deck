@@ -252,7 +252,7 @@ body.embed .sticky-edit{
   border: 1px solid rgba(255,255,255,.20);
   background: rgba(0,0,0,.28);
   color: rgba(238,242,255,.92);
-  text-decoration:none;
+  text-decoration: none;
   font-weight: 900;
   box-shadow: 0 18px 60px rgba(0,0,0,.35);
   white-space: nowrap;
@@ -264,21 +264,47 @@ body.embed .sticky-edit{
   right: 14px;
 }
 
-/* Edit button sits to the left of the right-most button */
+/* Edit button moved farther left so they do not collide */
 .sticky-edit{
-  right: 190px;
+  right: 260px;
 }
 
-/* Hide ONLY the Home button on the actual homepage */
+/* Hide ONLY the Home/Get your own Profile button on homepage */
 body.home #homeSticky{
-  display:none !important;
+  display: none !important;
 }
 
-/* Keep Edit visible unless you explicitly hide it elsewhere */
-body.home #editSticky{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
+@media (max-width: 700px){
+  .sticky-home{
+    right: 10px;
+    top: 10px;
+    max-width: 170px;
+    text-align: center;
+  }
+
+  .sticky-edit{
+    right: 205px;
+    top: 10px;
+  }
+}
+
+@media (max-width: 520px){
+  .sticky-home,
+  .sticky-edit{
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .sticky-home{
+    right: 8px;
+    top: 8px;
+    max-width: 150px;
+  }
+
+  .sticky-edit{
+    right: 175px;
+    top: 8px;
+  }
 }
 
 /* Slight polish for overall layout feel */
