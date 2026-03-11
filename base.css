@@ -17,6 +17,10 @@ body{
   min-height:100vh;
 }
 
+.btn + .btn{
+  margin-left:10px;
+}
+
 /* Used by preview embeds */
 body.embed .sticky-qr,
 body.embed .sticky-home{
