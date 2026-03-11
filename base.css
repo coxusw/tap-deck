@@ -17,17 +17,10 @@ body{
   min-height:100vh;
 }
 
-.btn + .btn{
-  margin-left:10px;
-}
-
-body.home .sticky-home{
-  display:none;
-}
-
 /* Used by preview embeds */
 body.embed .sticky-qr,
-body.embed .sticky-home{
+body.embed .sticky-home,
+body.embed .sticky-edit{
   display:none !important;
 }
 
@@ -128,6 +121,7 @@ body.embed .sticky-home{
   text-align:center;
   user-select:none;
   cursor:pointer;
+  margin: 4px;
 }
 
 /* smaller link style when many buttons exist */
@@ -247,11 +241,11 @@ body.embed .sticky-home{
   display:block;
 }
 
-/* Sticky Home (top-right) */
-.sticky-home{
+/* Sticky buttons shared look */
+.sticky-home,
+.sticky-edit{
   position: fixed;
   top: 14px;
-  right: 14px;
   z-index: 9999;
   padding: 10px 14px;
   border-radius: 999px;
@@ -261,11 +255,82 @@ body.embed .sticky-home{
   text-decoration:none;
   font-weight: 900;
   box-shadow: 0 18px 60px rgba(0,0,0,.35);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Right-most button */
+.sticky-home{
+  right: 14px;
+}
+
+/* Edit button sits to the left of the right-most button */
+.sticky-edit{
+  right: 190px;
+}
+
+/* Hide ONLY the Home button on the actual homepage */
+body.home #homeSticky{
+  display:none !important;
+}
+
+/* Keep Edit visible unless you explicitly hide it elsewhere */
+body.home #editSticky{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Slight polish for overall layout feel */
+.card,
+.contact-item,
+.sticky-home,
+.sticky-edit,
+.sticky-qr{
+  transition: all .18s ease;
 }
 
 /* Mobile tweaks */
+@media (max-width: 700px){
+  .sticky-home{
+    right: 10px;
+    top: 10px;
+    max-width: 170px;
+    text-align: center;
+  }
+
+  .sticky-edit{
+    right: 150px;
+    top: 10px;
+  }
+}
+
 @media (max-width: 520px){
   .brand{ font-size: 28px; }
   .btn{ min-width: 200px; }
   .btn--chip{ min-width: 96px; }
+
+  .sticky-home,
+  .sticky-edit{
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .sticky-home{
+    right: 8px;
+    top: 8px;
+    max-width: 150px;
+  }
+
+  .sticky-edit{
+    right: 132px;
+    top: 8px;
+  }
+
+  .sticky-qr{
+    top: 8px;
+    left: 8px;
+    width: 78px;
+    height: 78px;
+  }
 }
