@@ -1,1 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 
+<title>Edit Your Tap-Deck</title>
+
+<link rel="stylesheet" href="/base.css">
+
+<style>
+.edit-wrap{
+max-width:900px;
+margin:0 auto;
+padding:40px 20px;
+}
+
+.edit-card{
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.12);
+border-radius:20px;
+padding:25px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.full{
+grid-column:1/-1;
+}
+
+input, textarea{
+width:100%;
+padding:10px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.15);
+background:rgba(0,0,0,.25);
+color:white;
+}
+
+textarea{
+min-height:100px;
+}
+
+.actions{
+margin-top:20px;
+text-align:center;
+}
+
+.notice{
+margin-top:15px;
+padding:12px;
+border-radius:10px;
+display:none;
+}
+
+.notice.ok{
+background:rgba(34,197,94,.2);
+}
+
+.notice.bad{
+background:rgba(239,68,68,.2);
+}
+</style>
+
+</head>
+
+<body>
+
+<a class="sticky-home" href="/">Home</a>
+
+<div class="edit-wrap">
+
+<div class="edit-card">
+
+<h1>Edit Your Tap-Deck</h1>
+
+<p>Enter your profile slug and edit code.</p>
+
+<div class="form-grid">
+
+<div>
+<label>Slug</label>
+<input id="slug">
+</div>
+
+<div>
+<label>Edit Code</label>
+<input id="editCode">
+</div>
+
+</div>
+
+<div class="actions">
+<button class="btn" id="loadBtn">Load Profile</button>
+</div>
+
+<div id="notice" class="notice"></div>
+
+<hr class="sep">
+
+<div id="editor" style="display:none">
+
+<div class="form-grid">
+
+<div>
+<label>Business Name</label>
+<input id="businessName">
+</div>
+
+<div>
+<label>Tagline</label>
+<input id="tagline">
+</div>
+
+<div class="full">
+<label>About</label>
+<textarea id="about"></textarea>
+</div>
+
+<div>
+<label>Website</label>
+<input id="website">
+</div>
+
+<div>
+<label>Facebook</label>
+<input id="facebook">
+</div>
+
+<div>
+<label>Instagram</label>
+<input id="instagram">
+</div>
+
+<div>
+<label>TikTok</label>
+<input id="tiktok">
+</div>
+
+<div>
+<label>YouTube</label>
+<input id="youtube">
+</div>
+
+<div>
+<label>Booksy</label>
+<input id="booksy">
+</div>
+
+<div class="full">
+<label>Other</label>
+<input id="other">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const WEBAPP="PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE";
+
+function notice(msg,ok=true){
+
+const el=document.getElementById("notice");
+el.style.display="block";
+el.textContent=msg;
+
+el.className="notice "+(ok?"ok":"bad");
+
+}
+
+function fill(data){
+
+document.getElementById("businessName").value=data.businessName||"";
+document.getElementById("tagline").value=data.tagline||"";
+document.getElementById("about").value=data.about||"";
+
+document.getElementById("website").value=data.links.website||"";
+document.getElementById("facebook").value=data.links.facebook||"";
+document.getElementById("instagram").value=data.links.instagram||"";
+document.getElementById("tiktok").value=data.links.tiktok||"";
+document.getElementById("youtube").value=data.links.youtube||"";
+document.getElementById("booksy").value=data.links.booksy||"";
+document.getElementById("other").value=data.links.other||"";
+
+}
+
+document.getElementById("loadBtn").onclick=async ()=>{
+
+const slug=document.getElementById("slug").value.trim();
+const code=document.getElementById("editCode").value.trim();
+
+if(!slug||!code){
+
+notice("Missing slug or edit code",false);
+return;
+
+}
+
+const url=
+WEBAPP+
+"?action=getclientforedit"+
+"&slug="+encodeURIComponent(slug)+
+"&editCode="+encodeURIComponent(code);
+
+const r=await fetch(url);
+const j=await r.json();
+
+if(!j.ok){
+
+notice("Invalid slug or edit code",false);
+return;
+
+}
+
+fill(j.client);
+
+document.getElementById("editor").style.display="block";
+
+notice("Profile loaded successfully");
+
+}
+
+</script>
+
+</body>
+</html>
