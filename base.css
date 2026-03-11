@@ -21,6 +21,10 @@ body{
   margin-left:10px;
 }
 
+body.home .sticky-home{
+  display:none;
+}
+
 /* Used by preview embeds */
 body.embed .sticky-qr,
 body.embed .sticky-home{
