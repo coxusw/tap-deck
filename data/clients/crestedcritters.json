@@ -8,6 +8,9 @@
     "facebook": "https://www.facebook.com/p/Crested-Critters-61576805665752/",
     "instagram": "https://www.instagram.com/crested_critters/",
     "tiktok": "",
+    "youtube": "",
+    "booksy": "",
+    "other": "",
     "linkedin": "",
     "paypal": "",
     "cashapp": "",
@@ -19,8 +22,8 @@
     "phoneDisplay": "219-252-6944",
     "email": "contact_us@crestedcritters.com"
   },
-  "theme": "animated-13-northern-lights.css",
-  "qrPath": "/assets/qr/crestedcritters.png",
+  "theme": "animated-06-starry-drift.css",
   "vcardPath": "/vcards/crestedcritters.vcf",
-  "logoPath": "/assets/logos/crestedcritters.png"
+  "logoPath": "/assets/logos/crestedcritters.png",
+  "qrPath": "/assets/qr/crestedcritters.png"
 }
