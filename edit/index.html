@@ -278,106 +278,6 @@
       return new URLSearchParams(location.search).get(name) || "";
     }
 
-    function buildClientJsonFromForm(){
-return {
-slug: makeSlug($("slug").value),
-businessName: $("businessName").value.trim(),
-tagline: $("tagline").value.trim(),
-about: $("about").value.trim(),
-links: {
-website: normalizeUrl($("website").value),
-facebook: normalizeUrl($("facebook").value),
-instagram: normalizeUrl($("instagram").value),
-tiktok: normalizeUrl($("tiktok").value),
-youtube: normalizeUrl($("youtube").value),
-booksy: normalizeUrl($("booksy").value),
-other: normalizeUrl($("other").value),
-linkedin: normalizeUrl($("linkedin").value),
-paypal: normalizeUrl($("paypal").value),
-cashapp: normalizeUrl($("cashapp").value),
-venmo: normalizeUrl($("venmo").value),
-},
-contact: {
-name: $("name").value.trim(),
-phoneE164: $("phoneE164").value.trim(),
-phoneDisplay: $("phoneDisplay").value.trim(),
-email: $("email").value.trim(),
-},
-theme: $("theme").value.trim(),
-};
-}
-
-function fileToBase64(file){
-return new Promise((resolve, reject) => {
-const reader = new FileReader();
-reader.onload = () => {
-const result = String(reader.result || "");
-const comma = result.indexOf(",");
-resolve(comma >= 0 ? result.slice(comma + 1) : result);
-};
-reader.onerror = reject;
-reader.readAsDataURL(file);
-});
-}
-
-async function saveProfile(){
-const slug = makeSlug($("slug").value);
-const editCode = $("editCode").value.trim();
-
-if(!slug || !editCode){
-setNotice("Missing slug or edit code.", false);
-return;
-}
-
-const clientJson = buildClientJsonFromForm();
-
-let logoBase64 = "";
-let logoExt = "";
-
-const file = $("logoFile").files && $("logoFile").files[0];
-if(file){
-logoBase64 = await fileToBase64(file);
-
-const name = String(file.name || "").toLowerCase();
-if(name.endsWith(".jpg") || name.endsWith(".jpeg")) logoExt = "jpg";
-else if(name.endsWith(".webp")) logoExt = "webp";
-else logoExt = "png";
-}
-
-const payload = {
-action: "updateprofile",
-slug,
-editCode,
-clientJson,
-logoBase64,
-logoExt
-};
-
-try{
-setNotice("Saving changes...", true);
-
-const r = await fetch(WEBAPP, {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify(payload)
-});
-
-const j = await r.json();
-
-if(!j.ok){
-setNotice(j.error || "Could not save changes.", false);
-return;
-}
-
-setNotice("Changes saved successfully.", true);
-}catch(err){
-console.error(err);
-setNotice("Could not save changes.", false);
-}
-}
-
     function normalizeTheme(v){
       const s = (v || "").trim();
       if(!s) return "";
@@ -411,6 +311,48 @@ setNotice("Could not save changes.", false);
         .replace(/[^a-z0-9-]+/g, "-")
         .replace(/-+/g, "-")
         .replace(/^-|-$/g, "");
+    }
+
+    function buildClientJsonFromForm(){
+      return {
+        slug: makeSlug($("slug").value),
+        businessName: $("businessName").value.trim(),
+        tagline: $("tagline").value.trim(),
+        about: $("about").value.trim(),
+        links: {
+          website: normalizeUrl($("website").value),
+          facebook: normalizeUrl($("facebook").value),
+          instagram: normalizeUrl($("instagram").value),
+          tiktok: normalizeUrl($("tiktok").value),
+          youtube: normalizeUrl($("youtube").value),
+          booksy: normalizeUrl($("booksy").value),
+          other: normalizeUrl($("other").value),
+          linkedin: normalizeUrl($("linkedin").value),
+          paypal: normalizeUrl($("paypal").value),
+          cashapp: normalizeUrl($("cashapp").value),
+          venmo: normalizeUrl($("venmo").value),
+        },
+        contact: {
+          name: $("name").value.trim(),
+          phoneE164: $("phoneE164").value.trim(),
+          phoneDisplay: $("phoneDisplay").value.trim(),
+          email: $("email").value.trim(),
+        },
+        theme: $("theme").value.trim(),
+      };
+    }
+
+    function fileToBase64(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = String(reader.result || "");
+          const comma = result.indexOf(",");
+          resolve(comma >= 0 ? result.slice(comma + 1) : result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
     function fillForm(client){
@@ -455,6 +397,8 @@ setNotice("Could not save changes.", false);
         "&editCode=" + encodeURIComponent(editCode);
 
       try{
+        setNotice("Loading profile...", true);
+
         const r = await fetch(url);
         const j = await r.json();
 
@@ -465,10 +409,68 @@ setNotice("Could not save changes.", false);
 
         fillForm(j.client || {});
         $("editorWrap").classList.remove("is-hidden");
-        setNotice("Profile loaded successfully.");
+        setNotice("Profile loaded successfully.", true);
       }catch(err){
         console.error(err);
         setNotice("Could not load profile.", false);
+      }
+    }
+
+    async function saveProfile(){
+      const slug = makeSlug($("slug").value);
+      const editCode = $("editCode").value.trim();
+
+      if(!slug || !editCode){
+        setNotice("Missing slug or edit code.", false);
+        return;
+      }
+
+      const clientJson = buildClientJsonFromForm();
+
+      let logoBase64 = "";
+      let logoExt = "";
+
+      try{
+        const file = $("logoFile").files && $("logoFile").files[0];
+        if(file){
+          logoBase64 = await fileToBase64(file);
+
+          const name = String(file.name || "").toLowerCase();
+          if(name.endsWith(".jpg") || name.endsWith(".jpeg")) logoExt = "jpg";
+          else if(name.endsWith(".webp")) logoExt = "webp";
+          else logoExt = "png";
+        }
+
+        const payload = {
+          action: "updateprofile",
+          slug,
+          editCode,
+          clientJson,
+          logoBase64,
+          logoExt
+        };
+
+        setNotice("Saving changes...", true);
+
+        const r = await fetch(WEBAPP, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const j = await r.json();
+
+        if(!j.ok){
+          setNotice(j.error || "Could not save changes.", false);
+          return;
+        }
+
+        setNotice("Changes saved successfully.", true);
+      }catch(err){
+        console.error(err);
+        setNotice("Could not save changes.", false);
       }
     }
 
@@ -483,4 +485,3 @@ setNotice("Could not save changes.", false);
   </script>
 </body>
 </html>
-
