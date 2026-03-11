@@ -1,236 +1,384 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Edit Your Tap-Deck</title>
 
-<title>Edit Your Tap-Deck</title>
+  <link rel="stylesheet" href="/base.css?v=1" />
+  <link id="themeStylesheet" rel="stylesheet" href="/themes/theme-01-neon-dark.css?v=1" />
 
-<link rel="stylesheet" href="/base.css">
+  <style>
+    .edit-card{
+      width:min(820px, 100%);
+    }
 
-<style>
-.edit-wrap{
-max-width:900px;
-margin:0 auto;
-padding:40px 20px;
-}
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
 
-.edit-card{
-background:rgba(255,255,255,.06);
-border:1px solid rgba(255,255,255,.12);
-border-radius:20px;
-padding:25px;
-}
+    .full{
+      grid-column:1 / -1;
+    }
 
-.form-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-}
+    .field-label{
+      display:block;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:12px;
+      margin:0 0 6px;
+      color:rgba(238,242,255,.92);
+    }
 
-.full{
-grid-column:1/-1;
-}
+    .field-input,
+    .field-textarea{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      padding:12px 14px;
+      font:inherit;
+      outline:none;
+    }
 
-input, textarea{
-width:100%;
-padding:10px;
-border-radius:10px;
-border:1px solid rgba(255,255,255,.15);
-background:rgba(0,0,0,.25);
-color:white;
-}
+    .field-textarea{
+      min-height:120px;
+      resize:vertical;
+    }
 
-textarea{
-min-height:100px;
-}
+    .field-input::placeholder,
+    .field-textarea::placeholder{
+      color:rgba(238,242,255,.48);
+    }
 
-.actions{
-margin-top:20px;
-text-align:center;
-}
+    .actions{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
 
-.notice{
-margin-top:15px;
-padding:12px;
-border-radius:10px;
-display:none;
-}
+    .notice{
+      display:none;
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:rgba(238,242,255,.92);
+      text-align:center;
+    }
 
-.notice.ok{
-background:rgba(34,197,94,.2);
-}
+    .notice.ok{
+      border-color:rgba(34,197,94,.28);
+      background:rgba(34,197,94,.10);
+    }
 
-.notice.bad{
-background:rgba(239,68,68,.2);
-}
-</style>
+    .notice.bad{
+      border-color:rgba(239,68,68,.30);
+      background:rgba(239,68,68,.10);
+    }
 
+    .mini-help{
+      text-align:center;
+      color:rgba(238,242,255,.72);
+      font-size:12px;
+      line-height:1.45;
+      max-width:640px;
+      margin:8px auto 0;
+    }
+
+    .editor-wrap.is-hidden{
+      display:none !important;
+    }
+
+    .logo-upload-note{
+      margin-top:6px;
+      color:rgba(238,242,255,.70);
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    @media (max-width: 720px){
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+      .full{
+        grid-column:auto;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <a class="sticky-home" href="/" aria-label="Home">Home</a>
 
-<a class="sticky-home" href="/">Home</a>
+  <main class="wrap">
+    <section class="card edit-card">
+      <header class="header">
+        <h1 class="brand" style="font-size:30px;">Edit Your Tap-Deck</h1>
+        <p class="tagline">Enter your slug and permanent edit code to load your profile.</p>
+        <p class="mini-help">
+          Once loaded, you’ll be able to update your profile details. If you upload a new logo,
+          it will replace the old one. If you leave logo upload blank, your current logo stays.
+        </p>
+      </header>
 
-<div class="edit-wrap">
+      <div class="section-title">Unlock Your Profile</div>
 
-<div class="edit-card">
+      <div class="form-grid">
+        <div>
+          <label class="field-label" for="slug">Slug</label>
+          <input class="field-input" id="slug" placeholder="your-slug" />
+        </div>
 
-<h1>Edit Your Tap-Deck</h1>
+        <div>
+          <label class="field-label" for="editCode">Edit Code</label>
+          <input class="field-input" id="editCode" placeholder="ABC-1234-WXYZ" />
+        </div>
+      </div>
 
-<p>Enter your profile slug and edit code.</p>
+      <div class="actions">
+        <button class="btn btn--chip" id="loadBtn" type="button">Load Profile</button>
+      </div>
 
-<div class="form-grid">
+      <div id="notice" class="notice"></div>
 
-<div>
-<label>Slug</label>
-<input id="slug">
-</div>
+      <div id="editorWrap" class="editor-wrap is-hidden">
+        <hr class="sep" />
 
-<div>
-<label>Edit Code</label>
-<input id="editCode">
-</div>
+        <div class="section-title">Profile Details</div>
 
-</div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label" for="businessName">Business Name</label>
+            <input class="field-input" id="businessName" />
+          </div>
 
-<div class="actions">
-<button class="btn" id="loadBtn">Load Profile</button>
-</div>
+          <div>
+            <label class="field-label" for="tagline">Tagline</label>
+            <input class="field-input" id="tagline" />
+          </div>
 
-<div id="notice" class="notice"></div>
+          <div class="full">
+            <label class="field-label" for="about">About</label>
+            <textarea class="field-textarea" id="about"></textarea>
+          </div>
 
-<hr class="sep">
+          <div>
+            <label class="field-label" for="website">Website</label>
+            <input class="field-input" id="website" />
+          </div>
 
-<div id="editor" style="display:none">
+          <div>
+            <label class="field-label" for="facebook">Facebook</label>
+            <input class="field-input" id="facebook" />
+          </div>
 
-<div class="form-grid">
+          <div>
+            <label class="field-label" for="instagram">Instagram</label>
+            <input class="field-input" id="instagram" />
+          </div>
 
-<div>
-<label>Business Name</label>
-<input id="businessName">
-</div>
+          <div>
+            <label class="field-label" for="tiktok">TikTok</label>
+            <input class="field-input" id="tiktok" />
+          </div>
 
-<div>
-<label>Tagline</label>
-<input id="tagline">
-</div>
+          <div>
+            <label class="field-label" for="youtube">YouTube</label>
+            <input class="field-input" id="youtube" />
+          </div>
 
-<div class="full">
-<label>About</label>
-<textarea id="about"></textarea>
-</div>
+          <div>
+            <label class="field-label" for="booksy">Booksy</label>
+            <input class="field-input" id="booksy" />
+          </div>
 
-<div>
-<label>Website</label>
-<input id="website">
-</div>
+          <div class="full">
+            <label class="field-label" for="other">Other</label>
+            <input class="field-input" id="other" />
+          </div>
 
-<div>
-<label>Facebook</label>
-<input id="facebook">
-</div>
+          <div>
+            <label class="field-label" for="linkedin">LinkedIn</label>
+            <input class="field-input" id="linkedin" />
+          </div>
 
-<div>
-<label>Instagram</label>
-<input id="instagram">
-</div>
+          <div>
+            <label class="field-label" for="paypal">PayPal</label>
+            <input class="field-input" id="paypal" />
+          </div>
 
-<div>
-<label>TikTok</label>
-<input id="tiktok">
-</div>
+          <div>
+            <label class="field-label" for="cashapp">Cash App</label>
+            <input class="field-input" id="cashapp" />
+          </div>
 
-<div>
-<label>YouTube</label>
-<input id="youtube">
-</div>
+          <div>
+            <label class="field-label" for="venmo">Venmo</label>
+            <input class="field-input" id="venmo" />
+          </div>
 
-<div>
-<label>Booksy</label>
-<input id="booksy">
-</div>
+          <div>
+            <label class="field-label" for="name">Contact Name</label>
+            <input class="field-input" id="name" />
+          </div>
 
-<div class="full">
-<label>Other</label>
-<input id="other">
-</div>
+          <div>
+            <label class="field-label" for="phoneE164">Phone (E.164)</label>
+            <input class="field-input" id="phoneE164" />
+          </div>
 
-</div>
+          <div>
+            <label class="field-label" for="phoneDisplay">Phone (Display)</label>
+            <input class="field-input" id="phoneDisplay" />
+          </div>
 
-</div>
+          <div>
+            <label class="field-label" for="email">Email</label>
+            <input class="field-input" id="email" />
+          </div>
 
-</div>
+          <div class="full">
+            <label class="field-label" for="theme">Theme</label>
+            <input class="field-input" id="theme" />
+          </div>
 
-</div>
+          <div class="full">
+            <label class="field-label" for="logoFile">New Logo (Optional)</label>
+            <input class="field-input" id="logoFile" type="file" accept="image/*" />
+            <div class="logo-upload-note">
+              Leave this blank to keep your current logo.
+            </div>
+          </div>
+        </div>
 
-<script>
+        <div class="actions">
+          <button class="btn" id="saveBtn" type="button">Save Changes</button>
+        </div>
+      </div>
 
-const WEBAPP="https://script.google.com/macros/s/AKfycbxVOXKxYD3MkT81Y-xD-8vw8nJPJc9W_IaY-ZbL20Ckbcs21dfudA7Cn9gchGkCc-MZ/exec";
+      <footer class="footer">
+        <div class="small">© <span id="year"></span> Tap-Deck</div>
+      </footer>
+    </section>
+  </main>
 
-function notice(msg,ok=true){
+  <script>
+    const WEBAPP = "PASTE_YOUR_TEST_APPS_SCRIPT_URL_HERE";
+    const DEFAULT_THEME = "theme-01-neon-dark.css";
+    const $ = (id) => document.getElementById(id);
 
-const el=document.getElementById("notice");
-el.style.display="block";
-el.textContent=msg;
+    function getParam(name){
+      return new URLSearchParams(location.search).get(name) || "";
+    }
 
-el.className="notice "+(ok?"ok":"bad");
+    function normalizeTheme(v){
+      const s = (v || "").trim();
+      if(!s) return "";
+      return s.replace(/^\/?themes\//i, "").replace(/^\/+/, "");
+    }
 
-}
+    function applyTheme(themeFile){
+      const theme = normalizeTheme(themeFile || DEFAULT_THEME) || DEFAULT_THEME;
+      const href = ("/themes/" + theme).replace("/themes//","/themes/");
+      $("themeStylesheet").href = href + `?v=${Date.now()}`;
+    }
 
-function fill(data){
+    function setNotice(msg, ok = true){
+      const el = $("notice");
+      el.style.display = msg ? "block" : "none";
+      el.textContent = msg || "";
+      el.className = "notice " + (ok ? "ok" : "bad");
+    }
 
-document.getElementById("businessName").value=data.businessName||"";
-document.getElementById("tagline").value=data.tagline||"";
-document.getElementById("about").value=data.about||"";
+    function normalizeUrl(u){
+      const x = String(u || "").trim();
+      if(!x) return "";
+      if(x.startsWith("http://") || x.startsWith("https://")) return x;
+      return "https://" + x;
+    }
 
-document.getElementById("website").value=data.links.website||"";
-document.getElementById("facebook").value=data.links.facebook||"";
-document.getElementById("instagram").value=data.links.instagram||"";
-document.getElementById("tiktok").value=data.links.tiktok||"";
-document.getElementById("youtube").value=data.links.youtube||"";
-document.getElementById("booksy").value=data.links.booksy||"";
-document.getElementById("other").value=data.links.other||"";
+    function makeSlug(input){
+      return String(input || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
 
-}
+    function fillForm(client){
+      $("businessName").value = client.businessName || "";
+      $("tagline").value = client.tagline || "";
+      $("about").value = client.about || "";
 
-document.getElementById("loadBtn").onclick=async ()=>{
+      $("website").value = client.links?.website || "";
+      $("facebook").value = client.links?.facebook || "";
+      $("instagram").value = client.links?.instagram || "";
+      $("tiktok").value = client.links?.tiktok || "";
+      $("youtube").value = client.links?.youtube || "";
+      $("booksy").value = client.links?.booksy || "";
+      $("other").value = client.links?.other || "";
+      $("linkedin").value = client.links?.linkedin || "";
+      $("paypal").value = client.links?.paypal || "";
+      $("cashapp").value = client.links?.cashapp || "";
+      $("venmo").value = client.links?.venmo || "";
 
-const slug=document.getElementById("slug").value.trim();
-const code=document.getElementById("editCode").value.trim();
+      $("name").value = client.contact?.name || "";
+      $("phoneE164").value = client.contact?.phoneE164 || "";
+      $("phoneDisplay").value = client.contact?.phoneDisplay || "";
+      $("email").value = client.contact?.email || "";
+      $("theme").value = client.theme || "";
 
-if(!slug||!code){
+      applyTheme(client.theme || DEFAULT_THEME);
+    }
 
-notice("Missing slug or edit code",false);
-return;
+    async function loadProfile(){
+      const slug = makeSlug($("slug").value);
+      const editCode = $("editCode").value.trim();
 
-}
+      if(!slug || !editCode){
+        setNotice("Please enter both slug and edit code.", false);
+        return;
+      }
 
-const url=
-WEBAPP+
-"?action=getclientforedit"+
-"&slug="+encodeURIComponent(slug)+
-"&editCode="+encodeURIComponent(code);
+      const url =
+        WEBAPP +
+        "?action=getclientforedit" +
+        "&slug=" + encodeURIComponent(slug) +
+        "&editCode=" + encodeURIComponent(editCode);
 
-const r=await fetch(url);
-const j=await r.json();
+      try{
+        const r = await fetch(url);
+        const j = await r.json();
 
-if(!j.ok){
+        if(!j.ok){
+          setNotice(j.error || "Invalid slug or edit code.", false);
+          return;
+        }
 
-notice("Invalid slug or edit code",false);
-return;
+        fillForm(j.client || {});
+        $("editorWrap").classList.remove("is-hidden");
+        setNotice("Profile loaded successfully.");
+      }catch(err){
+        console.error(err);
+        setNotice("Could not load profile.", false);
+      }
+    }
 
-}
+    $("loadBtn").addEventListener("click", loadProfile);
+    $("year").textContent = new Date().getFullYear();
 
-fill(j.client);
+    const qsSlug = makeSlug(getParam("slug"));
+    if(qsSlug) $("slug").value = qsSlug;
 
-document.getElementById("editor").style.display="block";
-
-notice("Profile loaded successfully");
-
-}
-
-</script>
-
+    applyTheme(DEFAULT_THEME);
+  </script>
 </body>
 </html>
