@@ -1,0 +1,29 @@
+{
+  "slug": "kphaulinganddumpster",
+  "businessName": "KP Hauling & Dumpster Services",
+  "tagline": "",
+  "about": "",
+  "links": {
+    "website": "",
+    "facebook": "https://www.facebook.com/p/KP-Hauling-Dumpster-Services-100078057324427/",
+    "instagram": "",
+    "tiktok": "",
+    "youtube": "",
+    "booksy": "",
+    "other": "",
+    "linkedin": "",
+    "paypal": "",
+    "cashapp": "https://cash.app/$kphaulinganddumpster",
+    "venmo": "https://venmo.com/u/Kaden-Polito"
+  },
+  "contact": {
+    "name": "Kaden Polito",
+    "phoneE164": "+12193093475",
+    "phoneDisplay": "219-309-3475",
+    "email": "kphaulinganddumpster@gmail.com"
+  },
+  "theme": "animated-17-peach-glow.css",
+  "logoPath": "/assets/logos/kphaulinganddumpster.jpg",
+  "vcardPath": "/vcards/kphaulinganddumpster.vcf",
+  "qrPath": "/assets/qr/kphaulinganddumpster.png"
+}
