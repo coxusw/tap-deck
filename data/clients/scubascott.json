@@ -1,0 +1,29 @@
+{
+  "slug": "scubascott",
+  "businessName": "PA Scuba Supply",
+  "tagline": "",
+  "about": "",
+  "links": {
+    "website": "https://www.pascubasupply.com",
+    "facebook": "",
+    "instagram": "",
+    "tiktok": "",
+    "youtube": "",
+    "booksy": "",
+    "other": "",
+    "linkedin": "",
+    "paypal": "",
+    "cashapp": "",
+    "venmo": ""
+  },
+  "contact": {
+    "name": "Scott",
+    "phoneE164": "",
+    "phoneDisplay": "",
+    "email": "Scott@pascubasupply.com"
+  },
+  "theme": "animated-02-neon-ribbon.css",
+  "logoPath": "",
+  "vcardPath": "/vcards/scubascott.vcf",
+  "qrPath": "/assets/qr/scubascott.png"
+}
