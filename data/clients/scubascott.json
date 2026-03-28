@@ -5,8 +5,8 @@
   "about": "",
   "links": {
     "website": "https://www.pascubasupply.com",
-    "facebook": "",
-    "instagram": "",
+    "facebook": "https://www.facebook.com/pascubasupply",
+    "instagram": "https://www.instagram.com/_scuba_scott_/",
     "tiktok": "",
     "youtube": "",
     "booksy": "",
@@ -18,12 +18,12 @@
   },
   "contact": {
     "name": "Scott",
-    "phoneE164": "",
-    "phoneDisplay": "",
-    "email": "Scott@pascubasupply.com"
+    "phoneE164": "+18144225383",
+    "phoneDisplay": "814-422-5383",
+    "email": "scott@pascubasupply.com"
   },
   "theme": "animated-02-neon-ribbon.css",
   "vcardPath": "/vcards/scubascott.vcf",
-  "qrPath": "/assets/qr/scubascott.png",
-  "logoPath": "/assets/logos/scubascott.png"
+  "logoPath": "/assets/logos/scubascott.png",
+  "qrPath": "/assets/qr/scubascott.png"
 }
