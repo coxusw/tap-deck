@@ -2,6 +2,7 @@ BEGIN:VCARD
 VERSION:3.0
 FN:Scott
 ORG:PA Scuba Supply
-EMAIL;TYPE=INTERNET:Scott@pascubasupply.com
+TEL;TYPE=CELL:+18144225383
+EMAIL;TYPE=INTERNET:scott@pascubasupply.com
 URL:https://www.pascubasupply.com
 END:VCARD
