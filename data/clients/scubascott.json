@@ -23,7 +23,7 @@
     "email": "Scott@pascubasupply.com"
   },
   "theme": "animated-02-neon-ribbon.css",
-  "logoPath": "",
   "vcardPath": "/vcards/scubascott.vcf",
-  "qrPath": "/assets/qr/scubascott.png"
+  "qrPath": "/assets/qr/scubascott.png",
+  "logoPath": "/assets/logos/scubascott.png"
 }
