@@ -19,11 +19,11 @@
   "contact": {
     "name": "Chris",
     "phoneE164": "888-888-8888",
-    "phoneDisplay": "888-888-8888",
+    "phoneDisplay": "CALL ME",
     "email": "Support@tap-deck.com"
   },
-  "theme": "",
-  "qrPath": "/assets/qr/tap-deck.png",
+  "theme": "theme-01-neon-dark.css",
   "vcardPath": "/vcards/tap-deck.vcf",
-  "logoPath": "/assets/logos/tap-deck.jpg"
+  "logoPath": "/assets/logos/tap-deck.jpg",
+  "qrPath": "/assets/qr/tap-deck.png"
 }
