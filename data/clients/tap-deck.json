@@ -24,5 +24,6 @@
   },
   "theme": "",
   "qrPath": "/assets/qr/tap-deck.png",
-  "vcardPath": "/vcards/tap-deck.vcf"
+  "vcardPath": "/vcards/tap-deck.vcf",
+  "logoPath": "/assets/logos/tap-deck.jpg"
 }
