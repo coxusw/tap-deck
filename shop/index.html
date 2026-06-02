@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tap-Deck Shop</title>
   <meta name="description" content="Tap-Deck NFC devices pre-loaded with your profile." />
+  <link rel="canonical" href="https://www.tap-deck.com/shop" />
+  <meta property="og:title" content="Tap-Deck Shop" />
+  <meta property="og:description" content="Tap-Deck NFC devices pre-loaded with your profile." />
+  <meta property="og:url" content="https://www.tap-deck.com/shop" />
+  <meta property="og:site_name" content="Tap-Deck" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://www.tap-deck.com/logos/TD.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Shared layout -->
   <link rel="stylesheet" href="/base.css?v=1" />
@@ -252,7 +260,7 @@
           ${bullets}
 
           <div class="product-actions">
-            <a class="btn btn--buy" href="${escapeAttr(p.payLink || "#")}" target="_blank" rel="noopener">Buy on Square</a>
+            <a class="btn btn--buy" href="${escapeAttr(String(p.payLink || "#"))}" target="_blank" rel="noopener">Buy on Square</a>
           </div>
         `;
         grid.appendChild(el);
