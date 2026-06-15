@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/hauling",
+      "destination": "https://kp-hauling-backend.vercel.app/hauling"
+    },
+    {
+      "source": "/hauling/:path*",
+      "destination": "https://kp-hauling-backend.vercel.app/hauling/:path*"
+    }
+  ]
+}
