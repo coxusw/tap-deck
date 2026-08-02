@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /edit/
+Disallow: /intake/
+Disallow: /pay/
+
+Sitemap: https://www.tap-deck.com/sitemap.xml
