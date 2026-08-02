@@ -317,12 +317,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const qs = makeSlug(getParam("preview")) || DEFAULT_PREVIEW_SLUG;
     PREVIEW_PROFILE.slug = qs;
 
-    const url = `/data/clients/${encodeURIComponent(qs)}.json?v=${Date.now()}`;
+    const url = `/api/client?slug=${encodeURIComponent(qs)}&v=${Date.now()}`;
 
     try{
       const res = await fetch(url, { cache: "no-store" });
       if(!res.ok) throw new Error("preview profile not found");
-      const data = await res.json();
+      const result = await res.json();
+      const data = result.client || result;
 
       PREVIEW_PROFILE = {
         ...PREVIEW_PROFILE,
@@ -381,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function payUrl(themeFile, slug){
-    const u = new URL("/pay/", location.origin);
+    const u = new URL("/pay", location.origin);
     u.searchParams.set("theme", themeFile);
     if (slug) u.searchParams.set("slug", slug);
     return u.toString();
@@ -425,7 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setSlugStatus("Checking availability…", "neutral");
 
-    const url = `/data/clients/${encodeURIComponent(slug)}.json?v=${Date.now()}`;
+    const url = `/api/slug?slug=${encodeURIComponent(slug)}&v=${Date.now()}`;
 
     try{
       const res = await fetch(url, { method: "GET", cache: "no-store" });
@@ -445,6 +446,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function checkSlugAvailabilityApi(slug){
+    if (!slug){
+      slugOk = false;
+      setSlugStatus("Enter a slug to check availability.", "neutral");
+      return;
+    }
+
+    setSlugStatus("Checking availability...", "neutral");
+
+    try{
+      const res = await fetch(`/api/slug?slug=${encodeURIComponent(slug)}&v=${Date.now()}`, { method: "GET", cache: "no-store" });
+      const data = await res.json();
+      if (data.ok && data.available){
+        slugOk = true;
+        setSlugStatus("Available", "good");
+      } else if (data.ok){
+        slugOk = false;
+        setSlugStatus("Taken - please choose a different slug.", "bad");
+      } else {
+        slugOk = false;
+        setSlugStatus(data.error || `Could not verify (HTTP ${res.status}). Try again.`, "bad");
+      }
+    }catch(e){
+      try{
+        const legacy = await fetch(`/data/clients/${encodeURIComponent(slug)}.json?v=${Date.now()}`, { method: "GET", cache: "no-store" });
+        slugOk = !legacy.ok;
+        setSlugStatus(slugOk ? "Available" : "Taken - please choose a different slug.", slugOk ? "good" : "bad");
+      }catch(err){
+        slugOk = false;
+        setSlugStatus("Could not verify (network error). Try again.", "bad");
+      }
+    }
+  }
+
   function onSlugInput(){
     const raw = $("slugInput").value;
     const slug = makeSlug(raw);
@@ -454,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (raw !== slug) $("slugInput").value = slug;
 
     clearTimeout(slugTimer);
-    slugTimer = setTimeout(()=>checkSlugAvailability(slug), 220);
+    slugTimer = setTimeout(()=>checkSlugAvailabilityApi(slug), 220);
   }
 
   // ---- Render themes (lazy iframe loading) ----

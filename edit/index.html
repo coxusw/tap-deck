@@ -276,7 +276,8 @@
   </main>
 
   <script>
-    const WEBAPP = "https://script.google.com/macros/s/AKfycbxVOXKxYD3MkT81Y-xD-8vw8nJPJc9W_IaY-ZbL20Ckbcs21dfudA7Cn9gchGkCc-MZ/exec";
+    const WEBAPP = "/api/edit";
+    const LEGACY_WEBAPP = "https://script.google.com/macros/s/AKfycbxVOXKxYD3MkT81Y-xD-8vw8nJPJc9W_IaY-ZbL20Ckbcs21dfudA7Cn9gchGkCc-MZ/exec";
     const DEFAULT_THEME = "theme-01-neon-dark.css";
     const GITHUB_OWNER = "coxusw";
     const GITHUB_REPO = "tap-deck";
@@ -359,6 +360,17 @@
       el.textContent = msg || "";
       el.className = "notice " + (ok ? "ok" : "bad");
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function fetchEditJson(url, options = {}, legacyOptions = null){
+      try{
+        const r = await fetch(url, options);
+        return await r.json();
+      }catch(err){
+        const legacyUrl = url.replace(WEBAPP, LEGACY_WEBAPP);
+        const r = await fetch(legacyUrl, legacyOptions || options);
+        return await r.json();
+      }
     }
 
     function normalizeUrl(u){
@@ -466,8 +478,7 @@
         btn.textContent = "Loading...";
         setNotice("Loading profile...", true);
 
-        const r = await fetch(url, { method: "GET" });
-        const j = await r.json();
+        const j = await fetchEditJson(url, { method: "GET" });
 
         if(!j.ok){
           setNotice(j.error || "Invalid slug or edit code.", false);
@@ -525,15 +536,19 @@
           logoExt
         };
 
-        const r = await fetch(WEBAPP, {
+        const j = await fetchEditJson(WEBAPP, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        }, {
           method: "POST",
           headers: {
             "Content-Type": "text/plain;charset=utf-8"
           },
           body: JSON.stringify(payload)
         });
-
-        const j = await r.json();
 
         if(!j.ok){
           setNotice(j.error || "Could not save changes.", false);

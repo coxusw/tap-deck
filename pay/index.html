@@ -7,7 +7,7 @@
   - Reads ?theme=...&slug=...
   - Shows "Pay with Square" button
   - Optional: ONE-TIME bypass token (validated via Apps Script Web App)
-  - After valid token, redirects to Google Form with theme+slug prefilled
+  - After valid token, redirects to Tap-Deck intake with theme+slug prefilled
 
   Also:
   - Slug is required and auto-slugified
@@ -149,9 +149,9 @@
       </div>
 
       <div style="margin-top:14px;">
-        <a class="btn primary" id="payBtn" href="#" target="_blank" rel="noopener">Pay with Square</a>
+        <a class="btn primary" id="payBtn" href="#">Pay with Square</a>
         <div class="small" style="margin-top:8px;">
-          Payment verification can be added later. For now, payment is separate from the intake form.
+          You will continue to the intake form after Square confirms payment.
         </div>
       </div>
 
@@ -177,18 +177,13 @@
 /* =========================================================
    ✅ EDIT THESE
 ========================================================= */
-const SQUARE_PAYMENT_LINK = "https://square.link/u/tvd67HVK";
-
-const GOOGLE_FORM_URL   = "https://docs.google.com/forms/d/e/1FAIpQLSeS31lPzqUNhcwy3fnXIYOVJPSNgydtd38XF61HHSs_cK72SA/viewform?usp=pp_url";
-const THEME_QUERY_KEY   = "entry.2114451287";
-const SLUG_QUERY_KEY    = "entry.1052989883";
-
-const TOKEN_WEBAPP_URL  = "https://script.google.com/macros/s/AKfycbxVOXKxYD3MkT81Y-xD-8vw8nJPJc9W_IaY-ZbL20Ckbcs21dfudA7Cn9gchGkCc-MZ/exec";
-
-/* Slug availability check (repo must be public) */
-const GITHUB_OWNER  = "coxusw";
-const GITHUB_REPO   = "tap-deck";
-const GITHUB_BRANCH = "main";
+const INTAKE_URL = "/intake";
+const TOKEN_API  = "/api/token";
+const PAYMENT_API = "/api/payment";
+const LEGACY_TOKEN_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxVOXKxYD3MkT81Y-xD-8vw8nJPJc9W_IaY-ZbL20Ckbcs21dfudA7Cn9gchGkCc-MZ/exec";
+const LEGACY_GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeS31lPzqUNhcwy3fnXIYOVJPSNgydtd38XF61HHSs_cK72SA/viewform?usp=pp_url";
+const LEGACY_THEME_QUERY_KEY = "entry.2114451287";
+const LEGACY_SLUG_QUERY_KEY = "entry.1052989883";
 
 /* Live site host for the preview line */
 const BRAND_HOST = "www.tap-deck.com";
@@ -224,19 +219,32 @@ function showSlugStatus(msg, kind){
 }
 
 function buildFormUrl(theme, slug){
-  const u = new URL(GOOGLE_FORM_URL);
-  if (theme) u.searchParams.set(THEME_QUERY_KEY, theme);
-  if (slug)  u.searchParams.set(SLUG_QUERY_KEY, slug);
+  const u = new URL(INTAKE_URL, location.origin);
+  if (theme) u.searchParams.set("theme", theme);
+  if (slug)  u.searchParams.set("slug", slug);
+  return u.toString();
+}
+
+function buildLegacyFormUrl(theme, slug){
+  const u = new URL(LEGACY_GOOGLE_FORM_URL);
+  if (theme) u.searchParams.set(LEGACY_THEME_QUERY_KEY, theme);
+  if (slug)  u.searchParams.set(LEGACY_SLUG_QUERY_KEY, slug);
   return u.toString();
 }
 
 async function checkSlugAvailable(slug){
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/data/clients/${encodeURIComponent(slug)}.json?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
-  const res = await fetch(url, { headers: { "Accept":"application/vnd.github+json" } });
-
-  if (res.status === 404) return { ok:true, available:true };
-  if (res.ok) return { ok:true, available:false };
-  return { ok:false, code: res.status };
+  try{
+    const res = await fetch(`/api/slug?slug=${encodeURIComponent(slug)}&v=${Date.now()}`, { cache: "no-store" });
+    const data = await res.json();
+    if (data.ok) return { ok: true, available: data.available };
+    return { ok:false, code: res.status, error: data.error };
+  }catch(err){
+    const url = `https://api.github.com/repos/coxusw/tap-deck/contents/data/clients/${encodeURIComponent(slug)}.json?ref=main`;
+    const res = await fetch(url, { headers: { "Accept":"application/vnd.github+json" } });
+    if (res.status === 404) return { ok:true, available:true };
+    if (res.ok) return { ok:true, available:false };
+    return { ok:false, code: res.status };
+  }
 }
 
 async function main(){
@@ -249,7 +257,7 @@ async function main(){
   $("slugPill").textContent  = slug || "Not set";
   $("linkPreview").textContent = `https://${BRAND_HOST}/${slug || "your-slug"}`;
 
-  $("payBtn").href = SQUARE_PAYMENT_LINK;
+  $("payBtn").href = "#";
 
   if(!themeRaw || !slug){
     showSlugStatus("Missing theme or slug. Please go back to the theme gallery and try again.", "bad");
@@ -275,18 +283,42 @@ async function main(){
   }
   showSlugStatus("Slug is available ✅ You can proceed.", "ok");
 
+  $("payBtn").addEventListener("click", async (event)=>{
+    event.preventDefault();
+    showNotice("Creating secure Square checkout...", "warn");
+    $("payBtn").style.pointerEvents = "none";
+    $("payBtn").style.opacity = ".65";
+
+    try{
+      const u = new URL(PAYMENT_API, location.origin);
+      u.searchParams.set("action", "start");
+      const res = await fetch(u.toString(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify({ theme: themeRaw, slug })
+      });
+      const data = await res.json();
+      if (!data.ok || !data.checkoutUrl) throw new Error(data.error || "Could not create Square checkout.");
+      location.href = data.checkoutUrl;
+    }catch(err){
+      showNotice("Square checkout failed: " + (err.message || String(err)), "bad");
+      $("payBtn").style.pointerEvents = "";
+      $("payBtn").style.opacity = "";
+    }
+  });
+
   $("tokenBtn").addEventListener("click", async ()=>{
     const token = ($("token").value || "").trim();
     if (!token) return showNotice("Enter a token first.", "bad");
 
-    if (!TOKEN_WEBAPP_URL || TOKEN_WEBAPP_URL.includes("PASTE_")) {
-      return showNotice("Token service not configured. (TOKEN_WEBAPP_URL not set)", "bad");
+    if (!TOKEN_API) {
+      return showNotice("Token service not configured.", "bad");
     }
 
     showNotice("Validating token…", "warn");
 
     try{
-      const u = new URL(TOKEN_WEBAPP_URL);
+      const u = new URL(TOKEN_API, location.origin);
       u.searchParams.set("action", "redeem");
       u.searchParams.set("token", token);
       u.searchParams.set("theme", themeRaw);
@@ -301,7 +333,20 @@ async function main(){
       setTimeout(()=>{ location.href = data.formUrl || buildFormUrl(themeRaw, slug); }, 650);
 
     }catch(err){
-      showNotice("Token failed: " + (err.message || String(err)), "bad");
+      try{
+        const u = new URL(LEGACY_TOKEN_WEBAPP_URL);
+        u.searchParams.set("action", "redeem");
+        u.searchParams.set("token", token);
+
+        const res = await fetch(u.toString(), { cache:"no-store" });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "Token rejected");
+
+        showNotice("Token accepted! Sending you to the intake formâ€¦", "ok");
+        setTimeout(()=>{ location.href = data.formUrl || buildLegacyFormUrl(themeRaw, slug); }, 650);
+      }catch(legacyErr){
+        showNotice("Token failed: " + (legacyErr.message || String(legacyErr)), "bad");
+      }
     }
   });
 }

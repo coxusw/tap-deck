@@ -1,0 +1,14 @@
+{
+  "name": "tap-deck",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "migrate:clients": "node scripts/migrate-static-clients.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "dotenv": "^16.4.7",
+    "nodemailer": "^6.9.16",
+    "qrcode": "^1.5.4"
+  }
+}

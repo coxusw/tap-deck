@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Create your profile</title>
+<title>Create your Tap-Deck profile</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -15,67 +15,361 @@
   --border:rgba(255,255,255,.12);
   --text:#eef2ff;
   --muted:#b6c2ff;
+  --good:rgba(34,197,94,.14);
+  --bad:rgba(239,68,68,.14);
 }
-
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Inter,sans-serif;
+  min-height:100vh;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   color:var(--text);
   background:
     radial-gradient(circle at 20% 20%, rgba(6,182,212,.18), transparent 45%),
     radial-gradient(circle at 80% 30%, rgba(167,139,250,.14), transparent 45%),
     linear-gradient(180deg,var(--bg1),var(--bg2),var(--bg1));
 }
-
-.wrap{
-  max-width:900px;
-  margin:auto;
-  padding:30px 16px;
-}
-
+.wrap{max-width:920px;margin:auto;padding:30px 16px 60px}
 .card{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:18px;
   padding:20px;
+  box-shadow:0 18px 60px rgba(0,0,0,.25);
 }
-
-h1{
-  font-family:Fraunces,serif;
-  margin:0 0 10px;
-}
-
-.sub{
-  color:var(--muted);
-  margin-bottom:18px;
-}
-
-/* Form iframe styling */
-iframe{
+h1{font-family:Fraunces,serif;margin:0 0 10px;font-size:32px}
+.sub{color:var(--muted);line-height:1.45;margin:0 0 18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.full{grid-column:1 / -1}
+label{display:block;font-weight:800;font-size:13px;margin:0 0 6px}
+input,textarea,select{
   width:100%;
-  height:1200px;
-  border:none;
+  border:1px solid var(--border);
   border-radius:14px;
-  background:white;
+  background:rgba(0,0,0,.24);
+  color:var(--text);
+  padding:12px 13px;
+  font:inherit;
+  outline:none;
+}
+textarea{min-height:130px;resize:vertical}
+input::placeholder,textarea::placeholder{color:rgba(238,242,255,.45)}
+.locked{opacity:.85}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn{
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  cursor:pointer;
+  font-weight:900;
+  padding:12px 16px;
+  min-width:220px;
+}
+.btn.primary{
+  background:linear-gradient(90deg, rgba(34,197,94,.24), rgba(6,182,212,.18));
+  border-color:rgba(34,197,94,.30);
+}
+.btn[disabled]{opacity:.6;cursor:not-allowed}
+.notice{
+  display:none;
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.06);
+  line-height:1.45;
+  text-align:center;
+}
+.notice.ok{display:block;background:var(--good)}
+.notice.bad{display:block;background:var(--bad)}
+.small{font-size:12px;color:var(--muted);line-height:1.4;margin-top:6px}
+.homeFixed{
+  position:fixed;
+  top:14px;
+  right:14px;
+  z-index:5;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  text-decoration:none;
+  font-weight:900;
+}
+@media (max-width:720px){
+  .grid{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .wrap{padding-top:58px}
 }
 </style>
 </head>
 <body>
+<a class="homeFixed" href="/">Home</a>
 
-<div class="wrap">
-  <div class="card">
-
+<main class="wrap">
+  <section class="card">
     <h1>Create your profile</h1>
-    <div class="sub">
-      Fill out the form below to activate your Crested Critters NFC profile.
-    </div>
+    <p class="sub">Fill out your Tap-Deck profile details. Email is required; everything else can be left blank if it does not apply.</p>
+    <div id="paymentNotice" class="notice"></div>
 
-    <iframe
-      src="https://docs.google.com/forms/d/e/1FAIpQLSeS31lPzqUNhcwy3fnXIYOVJPSNgydtd38XF61HHSs_cK72SA/viewform?embedded=true">
-    </iframe>
+    <form id="intakeForm">
+      <div class="grid">
+        <div>
+          <label for="businessName">Business name</label>
+          <input id="businessName" autocomplete="organization">
+        </div>
+        <div>
+          <label for="tagline">Tagline</label>
+          <input id="tagline">
+        </div>
+        <div class="full">
+          <label for="about">About</label>
+          <textarea id="about"></textarea>
+        </div>
+        <div>
+          <label for="website">Website</label>
+          <input id="website" inputmode="url">
+        </div>
+        <div>
+          <label for="facebook">Facebook</label>
+          <input id="facebook" inputmode="url">
+        </div>
+        <div>
+          <label for="instagram">Instagram</label>
+          <input id="instagram">
+        </div>
+        <div>
+          <label for="tiktok">TikTok Link</label>
+          <input id="tiktok" inputmode="url">
+        </div>
+        <div>
+          <label for="linkedin">Linkedin</label>
+          <input id="linkedin" inputmode="url">
+        </div>
+        <div>
+          <label for="booksy">Booksy</label>
+          <input id="booksy" inputmode="url">
+        </div>
+        <div>
+          <label for="youtube">Youtube</label>
+          <input id="youtube" inputmode="url">
+        </div>
+        <div>
+          <label for="other">Other Link</label>
+          <input id="other" inputmode="url">
+        </div>
+        <div>
+          <label for="cashapp">Cash App</label>
+          <input id="cashapp">
+        </div>
+        <div>
+          <label for="venmo">Venmo</label>
+          <input id="venmo">
+        </div>
+        <div>
+          <label for="paypal">Paypal</label>
+          <input id="paypal">
+        </div>
+        <div>
+          <label for="name">Name</label>
+          <input id="name" autocomplete="name">
+        </div>
+        <div>
+          <label for="phone">Phone #</label>
+          <input id="phone" autocomplete="tel">
+        </div>
+        <div>
+          <label for="email">Email *</label>
+          <input id="email" type="email" autocomplete="email" required>
+        </div>
+        <div>
+          <label for="theme">Theme</label>
+          <input id="theme" class="locked" readonly>
+        </div>
+        <div>
+          <label for="slug">Slug</label>
+          <input id="slug" class="locked" readonly>
+          <div class="small" id="slugHelp"></div>
+        </div>
+        <div class="full">
+          <label for="logoFile">Logo upload</label>
+          <input id="logoFile" type="file" accept="image/*">
+          <div class="small">PNG, JPG, or WebP works best.</div>
+        </div>
+      </div>
 
-  </div>
-</div>
+      <div class="actions">
+        <button id="submitBtn" class="btn primary" type="submit">Submit profile</button>
+      </div>
 
+      <div id="notice" class="notice"></div>
+    </form>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+function getParam(name){
+  return new URLSearchParams(location.search).get(name) || "";
+}
+
+function makeSlug(input){
+  return String(input || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function setNotice(message, ok = true){
+  const notice = $("notice");
+  notice.textContent = message || "";
+  notice.className = "notice " + (message ? (ok ? "ok" : "bad") : "");
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const value = String(reader.result || "");
+      const comma = value.indexOf(",");
+      resolve(comma >= 0 ? value.slice(comma + 1) : value);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function field(id){
+  return ($(id).value || "").trim();
+}
+
+function buildClientJson(){
+  const slug = makeSlug(field("slug"));
+  return {
+    slug,
+    businessName: field("businessName"),
+    tagline: field("tagline"),
+    about: field("about"),
+    links: {
+      website: field("website"),
+      facebook: field("facebook"),
+      instagram: field("instagram"),
+      tiktok: field("tiktok"),
+      linkedin: field("linkedin"),
+      booksy: field("booksy"),
+      youtube: field("youtube"),
+      other: field("other"),
+      cashapp: field("cashapp"),
+      venmo: field("venmo"),
+      paypal: field("paypal")
+    },
+    contact: {
+      name: field("name"),
+      phone: field("phone"),
+      phoneDisplay: field("phone"),
+      email: field("email")
+    },
+    theme: field("theme")
+  };
+}
+
+async function verifySlug(slug){
+  const res = await fetch(`/api/slug?slug=${encodeURIComponent(slug)}&v=${Date.now()}`, { cache: "no-store" });
+  const data = await res.json();
+  return data.ok && data.available;
+}
+
+async function verifyPaymentSession(){
+  const paymentSessionId = getParam("session");
+  const paymentToken = getParam("token");
+  if (!paymentSessionId || !paymentToken) {
+    throw new Error("Confirmed payment is required before this intake form can be submitted.");
+  }
+
+  const u = new URL("/api/payment", location.origin);
+  u.searchParams.set("action", "status");
+  u.searchParams.set("session", paymentSessionId);
+  u.searchParams.set("token", paymentToken);
+  const res = await fetch(u.toString(), { cache: "no-store" });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || "Payment session could not be verified.");
+  if (!data.paid) throw new Error("Payment has not been confirmed yet.");
+  return { paymentSessionId, paymentToken };
+}
+
+async function submitProfile(event){
+  event.preventDefault();
+  const btn = $("submitBtn");
+  const slug = makeSlug(field("slug"));
+  const email = field("email");
+
+  if (!slug) return setNotice("Missing slug. Please go back to the theme gallery and choose a slug.", false);
+  if (!email) return setNotice("Email is required.", false);
+
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+  setNotice("Creating your profile...", true);
+
+  try{
+    const available = await verifySlug(slug);
+    if (!available) throw new Error("That slug is no longer available. Please choose another one.");
+
+    let logoBase64 = "";
+    let logoExt = "";
+    const file = $("logoFile").files && $("logoFile").files[0];
+    if (file){
+      logoBase64 = await fileToBase64(file);
+      const name = String(file.name || "").toLowerCase();
+      logoExt = name.endsWith(".jpg") || name.endsWith(".jpeg") ? "jpg" : name.endsWith(".webp") ? "webp" : "png";
+    }
+
+    const res = await fetch("/api/intake", {
+      method: "POST",
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+      body: JSON.stringify({
+        slug,
+        paymentSessionId: getParam("session"),
+        paymentToken: getParam("token"),
+        clientJson: buildClientJson(),
+        logoBase64,
+        logoExt
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || "Could not create profile.");
+
+    setNotice("Profile created. Check your email for your live link and edit code.", true);
+    setTimeout(() => { location.href = `/${encodeURIComponent(slug)}`; }, 900);
+  }catch(err){
+    setNotice(err.message || String(err), false);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Submit profile";
+  }
+}
+
+const theme = (getParam("theme") || "").trim();
+const slug = makeSlug(getParam("slug"));
+$("theme").value = theme;
+$("slug").value = slug;
+$("slugHelp").textContent = slug ? `Your profile link will be ${location.origin}/${slug}` : "Slug is missing.";
+$("submitBtn").disabled = true;
+verifyPaymentSession()
+  .then(() => {
+    $("paymentNotice").textContent = "Payment confirmed. You can submit your profile.";
+    $("paymentNotice").className = "notice ok";
+    $("submitBtn").disabled = false;
+  })
+  .catch((err) => {
+    $("paymentNotice").textContent = err.message || String(err);
+    $("paymentNotice").className = "notice bad";
+    $("submitBtn").disabled = true;
+  });
+$("intakeForm").addEventListener("submit", submitProfile);
+</script>
 </body>
 </html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payment confirmed</title>
+<style>
+:root{
+  --bg1:#050816;--bg2:#0b1020;--card:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.12);--text:#eef2ff;--muted:#b6c2ff;
+  --good:rgba(34,197,94,.16);--bad:rgba(239,68,68,.16);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px 14px;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--text);background:linear-gradient(180deg,var(--bg1),var(--bg2),var(--bg1));
+}
+.card{width:min(620px,100%);border:1px solid var(--border);background:var(--card);border-radius:18px;padding:20px;box-shadow:0 18px 60px rgba(0,0,0,.25)}
+h1{margin:0 0 10px;font-size:24px}
+p{color:var(--muted);line-height:1.45}
+.notice{margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.06)}
+.ok{background:var(--good)}.bad{background:var(--bad)}
+.btn{display:inline-flex;margin-top:14px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.10);color:var(--text);font-weight:900;text-decoration:none}
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>Confirming payment</h1>
+  <p id="message">Checking Square payment status...</p>
+  <div id="notice" class="notice">Please keep this window open.</div>
+  <a id="continueLink" class="btn" href="/theme-gallery" style="display:none">Continue</a>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+const notice = document.getElementById("notice");
+const message = document.getElementById("message");
+const continueLink = document.getElementById("continueLink");
+
+async function confirmPayment(){
+  const session = params.get("session") || "";
+  const token = params.get("token") || "";
+  if (!session || !token) throw new Error("Missing payment session.");
+
+  const u = new URL("/api/payment", location.origin);
+  u.searchParams.set("action", "confirm");
+  for (const [key, value] of params.entries()) u.searchParams.set(key, value);
+
+  const res = await fetch(u.toString(), { cache: "no-store" });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || "Payment could not be confirmed.");
+  if (!data.paid) throw new Error("Square has not confirmed this payment yet. Refresh this page after payment completes.");
+
+  notice.className = "notice ok";
+  notice.textContent = "Payment confirmed.";
+  message.textContent = "You can now complete your Tap-Deck profile.";
+  continueLink.href = data.session.formUrl;
+  continueLink.textContent = "Continue to intake form";
+  continueLink.style.display = "";
+  setTimeout(() => { location.href = data.session.formUrl; }, 900);
+}
+
+confirmPayment().catch((err) => {
+  notice.className = "notice bad";
+  notice.textContent = err.message || String(err);
+  message.textContent = "Payment confirmation failed.";
+  continueLink.href = "/pay";
+  continueLink.textContent = "Return to payment";
+  continueLink.style.display = "";
+});
+</script>
+</body>
+</html>
