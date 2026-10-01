@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tap-Deck Profiles</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d12;--card:#151922;--card2:#1c2230;--text:#f5f7fb;--muted:#9da7b6;--line:#2a3241;--accent:#8ab4ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:18px 16px 34px}
+main{max-width:620px;margin:auto}.brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}.mark{width:42px;height:42px;border-radius:12px;background:#447cff;display:grid;place-items:center;font-weight:900}
+h1,h2{margin:0}.sub{color:var(--muted);font-size:14px;margin-top:4px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}a.btn,button{display:block;padding:12px;border-radius:13px;border:1px solid var(--line);background:var(--card2);color:var(--text);text-decoration:none;text-align:center;font-weight:800}
+input{width:100%;padding:14px;border-radius:13px;border:1px solid var(--line);background:#0f131b;color:var(--text);font-size:16px;margin:12px 0}
+.head{display:flex;justify-content:space-between;align-items:end;gap:10px}.head button{width:auto}.count{color:var(--muted);font-size:13px;margin-top:4px}
+.list{display:grid;gap:10px}.profile{background:#0f131b;border:1px solid var(--line);border-radius:15px;padding:14px}.name{font-weight:800;font-size:17px}.slug{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);margin-top:4px}
+.meta{font-size:13px;color:var(--muted);margin-top:8px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.actions a{font-size:13px;padding:10px}
+.msg{text-align:center;color:var(--muted);padding:18px 4px}
+</style>
+</head>
+<body>
+<main>
+<div class="brand"><div class="mark">TD</div><div><h1>Tap-Deck Profiles</h1><div class="sub">Mobile admin view</div></div></div>
+<nav><a class="btn" href="/admin/token">Bypass Tokens</a><a class="btn" href="/admin">Admin Home</a></nav>
+<section class="card">
+<div class="head"><div><h2>Current Profiles</h2><div id="count" class="count"></div></div><button id="refresh">Refresh</button></div>
+<input id="search" type="search" placeholder="Search business or profile URL…" autocomplete="off">
+<div id="message" class="msg">Loading profiles…</div>
+<div id="list" class="list"></div>
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id);let rows=[];
+async function load(){
+  $("refresh").disabled=true;$("message").textContent="Loading profiles…";
+  try{
+    const r=await fetch("/api/admin-token?action=profiles",{credentials:"same-origin"});
+    const d=await r.json();
+    if(!r.ok||!d.ok)throw new Error(d.error||"Request failed");
+    rows=d.accounts||[];render();
+  }catch(e){
+    $("list").replaceChildren();
+    $("message").textContent=e.message==="Admin login required."?"Open Bypass Tokens and sign in first, then return here.":e.message;
+  }finally{$("refresh").disabled=false}
+}
+function date(v){if(!v)return"";const d=new Date(v);return isNaN(d)?"":d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}
+function text(parent,value,cls){const e=document.createElement("div");if(cls)e.className=cls;e.textContent=value;parent.appendChild(e)}
+function render(){
+  const q=$("search").value.trim().toLowerCase();
+  const shown=rows.filter(x=>[x.businessName,x.slug,x.theme].some(v=>String(v||"").toLowerCase().includes(q)));
+  $("count").textContent=(q?shown.length+" of ":"")+rows.length+" profiles";
+  $("message").textContent=shown.length?"":(rows.length?"No profiles match your search.":"No profiles found.");
+  const root=$("list");root.replaceChildren();
+  for(const p of shown){
+    const card=document.createElement("article");card.className="profile";
+    text(card,p.businessName||p.slug,"name");text(card,"tap-deck.com/"+p.slug,"slug");
+    const meta=document.createElement("div");meta.className="meta";if(p.theme)text(meta,"Theme: "+p.theme);if(p.updatedAt)text(meta,"Updated: "+date(p.updatedAt));card.appendChild(meta);
+    const actions=document.createElement("div");actions.className="actions";
+    const view=document.createElement("a");view.className="btn";view.href="/"+encodeURIComponent(p.slug);view.target="_blank";view.rel="noopener";view.textContent="View Profile";
+    const edit=document.createElement("a");edit.className="btn";edit.href="/edit?slug="+encodeURIComponent(p.slug);edit.target="_blank";edit.rel="noopener";edit.textContent="Edit Page";
+    actions.append(view,edit);card.appendChild(actions);root.appendChild(card);
+  }
+}
+$("refresh").onclick=load;$("search").oninput=render;load();
+</script>
+</body>
+</html>
