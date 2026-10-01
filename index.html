@@ -490,7 +490,8 @@
 
       if(!qrPath){ hide(link); return; }
 
-      img.src = qrPath + `?v=${Date.now()}`;
+      const separator = qrPath.includes("?") ? "&" : "?";
+      img.src = qrPath + separator + `v=${Date.now()}`;
       link.href = qrPath;
       show(link);
     }
