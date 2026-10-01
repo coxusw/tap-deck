@@ -131,6 +131,30 @@ module.exports = async function handler(req, res) {
       return json(res, 200, { ok: true, token });
     }
 
+
+    if (action === "accounts") {
+      if (req.method !== "GET") return json(res, 405, { ok: false, error: "Method not allowed" });
+
+      const supabase = getSupabase();
+      if (!supabase) return json(res, 500, { ok: false, error: "Supabase is not configured." });
+
+      const { data, error } = await supabase
+        .from("tap_deck_profiles")
+        .select("slug, business_name, theme, created_at, updated_at")
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+
+      const accounts = (data || []).map((row) => ({
+        slug: row.slug,
+        businessName: row.business_name || "",
+        theme: row.theme || "",
+        createdAt: row.created_at || null,
+        updatedAt: row.updated_at || null
+      }));
+
+      return json(res, 200, { ok: true, count: accounts.length, accounts });
+    }
+
     if (action === "qr") {
       if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
       const data = await body(req);
