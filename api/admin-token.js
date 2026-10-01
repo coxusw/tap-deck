@@ -132,7 +132,7 @@ module.exports = async function handler(req, res) {
     }
 
 
-    if (action === "accounts") {
+    if (action === "profiles" || action === "accounts") {
       if (req.method !== "GET") return json(res, 405, { ok: false, error: "Method not allowed" });
 
       const supabase = getSupabase();
