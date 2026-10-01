@@ -1,184 +1,295 @@
 <!doctype html>
-<!-- =========================================================
-  ADMIN PANEL (Foundation) — Copy/Paste Generator
-  =========================================================
-
-  ✅ EDIT THESE (each client)
-  --------------------------
-  Fill out the form and click “Generate”.
-  Then save:
-    1) JSON → /data/clients/{slug}.json
-    2) vCard → /vcards/{slug}.vcf
-
-  ✅ NEXT STEP (automation)
-  ------------------------
-  We'll add a tiny local server so you can:
-    - Click "Create client"
-    - It writes the files
-    - Commits + pushes to GitHub
-    - Client is live
-
-========================================================= -->
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>NFC Admin</title>
-  <link rel="stylesheet" href="../themes/theme-05-minimal-light.css"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0d12">
+  <title>Tap-Deck Admin</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#0b0d12;
+      --panel:#141923;
+      --panel2:#0f141d;
+      --line:#293241;
+      --text:#f6f8fc;
+      --muted:#9da8b8;
+      --accent:#8ab4ff;
+      --accent2:#5f8ff7;
+      --success:#7fdda0;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:
+      radial-gradient(circle at top right,rgba(74,105,255,.16),transparent 34%),
+      var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
+    }
+    body{padding:calc(18px + env(safe-area-inset-top)) 16px calc(38px + env(safe-area-inset-bottom))}
+    main{width:min(100%,720px);margin:0 auto}
+    .hero{display:flex;align-items:center;gap:13px;margin:2px 0 18px}
+    .mark{
+      width:48px;height:48px;border-radius:15px;display:grid;place-items:center;
+      font-weight:1000;font-size:18px;color:#08111f;
+      background:linear-gradient(145deg,#7ba9ff,#a9c9ff);
+      box-shadow:0 12px 30px rgba(74,105,255,.24)
+    }
+    h1{margin:0;font-size:28px;line-height:1.05;letter-spacing:-.02em}
+    .subtitle{margin-top:5px;color:var(--muted);font-size:14px}
+    .panel{
+      background:rgba(20,25,35,.96);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.22)
+    }
+    .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .quick{
+      min-height:112px;border-radius:18px;padding:16px;text-decoration:none;color:var(--text);
+      border:1px solid var(--line);background:var(--panel2);
+      display:flex;flex-direction:column;justify-content:space-between;gap:12px
+    }
+    .quick.primary{background:linear-gradient(145deg,rgba(73,116,255,.26),rgba(35,49,78,.8));border-color:#496ddd}
+    .quick-icon{font-size:26px}
+    .quick-title{font-size:17px;font-weight:900}
+    .quick-copy{font-size:12px;color:var(--muted);line-height:1.35;margin-top:3px}
+    .section-gap{margin-top:14px}
+    details{border:1px solid var(--line);border-radius:20px;background:rgba(20,25,35,.96);overflow:hidden}
+    summary{
+      list-style:none;cursor:pointer;padding:18px;font-weight:900;font-size:17px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px
+    }
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"＋";font-size:24px;color:var(--accent);font-weight:500}
+    details[open] summary::after{content:"−"}
+    .details-body{padding:0 18px 18px;border-top:1px solid var(--line)}
+    .helper{color:var(--muted);font-size:13px;line-height:1.5;margin:14px 0 0}
+    .section{margin-top:22px}
+    .section h2{font-size:15px;margin:0 0 11px;letter-spacing:.08em;text-transform:uppercase;color:#dce5f7}
+    .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .field.full{grid-column:1/-1}
+    label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin:0 0 7px}
+    input,textarea,select{
+      width:100%;border-radius:13px;border:1px solid var(--line);background:#0b1017;color:var(--text);
+      padding:13px 14px;font:inherit;font-size:16px;outline:none
+    }
+    textarea{resize:vertical;min-height:96px}
+    input:focus,textarea:focus,select:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(95,143,247,.13)}
+    .primary-btn,.secondary-btn{
+      width:100%;border:0;border-radius:14px;padding:14px 16px;font:inherit;font-size:16px;font-weight:900;cursor:pointer
+    }
+    .primary-btn{background:var(--accent);color:#07101d;margin-top:18px}
+    .secondary-btn{background:#1a2230;color:var(--text);border:1px solid var(--line)}
+    .output-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+    .output-head h3{margin:0;font-size:14px}
+    .copy-btn{width:auto;padding:8px 10px;border-radius:10px;font-size:12px;margin:0}
+    code{color:#c5d7ff}
+    .status{min-height:18px;color:var(--success);font-size:13px;text-align:center;margin-top:10px}
+    footer{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
+    @media(max-width:560px){
+      .quick-grid,.field-grid{grid-template-columns:1fr}
+      .field.full{grid-column:auto}
+      h1{font-size:25px}
+      .quick{min-height:98px}
+      .panel,details{border-radius:18px}
+      body{padding-left:12px;padding-right:12px}
+    }
+  </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card">
-      <h1 class="brand" style="background:none;color:var(--text-main);-webkit-text-fill-color:initial;">NFC Admin (Foundation)</h1>
-      <p class="tagline">Generate client JSON + vCard (then copy/paste into the repo).</p>
+<main>
+  <header class="hero">
+    <div class="mark">TD</div>
+    <div>
+      <h1>Tap-Deck Admin</h1>
+      <div class="subtitle">Manage profiles and create bypass tokens</div>
+    </div>
+  </header>
 
-      <nav class="links" aria-label="Quick admin actions" style="margin:16px 0 22px;display:grid;gap:10px;">
-        <a class="btn" href="/admin/token">Mobile Bypass Tokens</a>
-        <a class="btn" href="/admin/profiles">Current Profiles</a>
-      </nav>
+  <section class="panel">
+    <div class="quick-grid">
+      <a class="quick primary" href="/admin/token">
+        <div class="quick-icon">⚡</div>
+        <div>
+          <div class="quick-title">Bypass Tokens</div>
+          <div class="quick-copy">Generate a one-time payment bypass token.</div>
+        </div>
+      </a>
+      <a class="quick" href="/admin/profiles">
+        <div class="quick-icon">👤</div>
+        <div>
+          <div class="quick-title">Current Profiles</div>
+          <div class="quick-copy">Search, view and open existing Tap-Deck profiles.</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <details class="section-gap">
+    <summary>Profile Generator</summary>
+    <div class="details-body">
+      <p class="helper">Legacy manual generator for client JSON and vCard files. Most day-to-day admin work can be done from the buttons above.</p>
 
       <section class="section">
         <h2>Basics</h2>
-        <div class="contact-grid">
-          <div class="contact-item"><div class="label">Slug (subdomain)</div><div class="value"><input id="slug" placeholder="sam" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">Business name</div><div class="value"><input id="businessName" placeholder="Sam Custom Apparel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">Tagline</div><div class="value"><input id="tagline" placeholder="Hand Crafted Greatness" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">About</div><div class="value"><textarea id="about" rows="3" placeholder="1–3 sentences…" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"></textarea></div></div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="slug">Profile slug</label>
+            <input id="slug" placeholder="sam-custom-apparel">
+          </div>
+          <div class="field">
+            <label for="businessName">Business name</label>
+            <input id="businessName" placeholder="Sam Custom Apparel">
+          </div>
+          <div class="field full">
+            <label for="tagline">Tagline</label>
+            <input id="tagline" placeholder="Hand Crafted Greatness">
+          </div>
+          <div class="field full">
+            <label for="about">About</label>
+            <textarea id="about" rows="4" placeholder="A short description of the business..."></textarea>
+          </div>
         </div>
       </section>
 
       <section class="section">
         <h2>Links</h2>
-        <div class="contact-grid">
-          <div class="contact-item"><div class="label">Website</div><div class="value"><input id="website" placeholder="https://…" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">Facebook</div><div class="value"><input id="facebook" placeholder="https://…" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">TikTok</div><div class="value"><input id="tiktok" placeholder="https://…" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="website">Website</label>
+            <input id="website" placeholder="https://...">
+          </div>
+          <div class="field">
+            <label for="facebook">Facebook</label>
+            <input id="facebook" placeholder="https://...">
+          </div>
+          <div class="field">
+            <label for="tiktok">TikTok</label>
+            <input id="tiktok" placeholder="https://...">
+          </div>
         </div>
       </section>
 
       <section class="section">
         <h2>Contact</h2>
-        <div class="contact-grid">
-          <div class="contact-item"><div class="label">Name</div><div class="value"><input id="name" placeholder="Samantha" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">Phone (E.164)</div><div class="value"><input id="phoneE164" placeholder="+18309550069" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">Phone (display)</div><div class="value"><input id="phoneDisplay" placeholder="(830) 955-0069" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-          <div class="contact-item"><div class="label">Email</div><div class="value"><input id="email" placeholder="you@domain.com" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/></div></div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Theme + assets</h2>
-        <div class="contact-grid">
-          <div class="contact-item">
-            <div class="label">Theme file (in /themes)</div>
-            <div class="value">
-              <select id="theme" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);">
-                <option selected>theme-01-neon-dark.css</option>
-                <option>theme-02-earthy.css</option>
-                <option>theme-03-pastel-light.css</option>
-                <option>theme-04-minimal-dark.css</option>
-                <option>theme-05-minimal-light.css</option>
-                <option>theme-06-luxury-gold.css</option>
-                <option>theme-07-sunset.css</option>
-                <option>theme-08-ocean.css</option>
-                <option>theme-09-forest.css</option>
-                <option>theme-10-candy.css</option>
-                <option>theme-11-royal.css</option>
-                <option>theme-12-coral.css</option>
-                <option>theme-13-lavender.css</option>
-                <option>theme-14-citrus.css</option>
-                <option>theme-15-slate-blue.css</option>
-                <option>theme-16-retro.css</option>
-                <option>theme-17-cyberpunk.css</option>
-                <option>theme-18-desert.css</option>
-                <option>theme-19-midnight-red.css</option>
-                <option>theme-20-paper-ink.css</option>
-              </select>
-            </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" placeholder="Samantha">
           </div>
-
-          <div class="contact-item">
-            <div class="label">Logo path (in repo)</div>
-            <div class="value">
-              <input id="logoPath" value="/logo.jpg" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);"/>
-              <div class="label" style="margin-top:8px;">Tip: store client logos in /assets/logos/{slug}.jpg</div>
-            </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@domain.com">
+          </div>
+          <div class="field">
+            <label for="phoneE164">Phone — E.164</label>
+            <input id="phoneE164" placeholder="+12195551234">
+          </div>
+          <div class="field">
+            <label for="phoneDisplay">Phone — display</label>
+            <input id="phoneDisplay" placeholder="(219) 555-1234">
           </div>
         </div>
       </section>
 
-      <nav class="links" aria-label="Admin actions">
-        <a class="btn" href="#" id="btnBuild">Generate</a>
-      </nav>
+      <section class="section">
+        <h2>Theme & Assets</h2>
+        <div class="field-grid">
+          <div class="field">
+            <label for="theme">Theme</label>
+            <select id="theme">
+              <option selected>theme-01-neon-dark.css</option>
+              <option>theme-02-earthy.css</option>
+              <option>theme-03-pastel-light.css</option>
+              <option>theme-04-minimal-dark.css</option>
+              <option>theme-05-minimal-light.css</option>
+              <option>theme-06-luxury-gold.css</option>
+              <option>theme-07-sunset.css</option>
+              <option>theme-08-ocean.css</option>
+              <option>theme-09-forest.css</option>
+              <option>theme-10-candy.css</option>
+              <option>theme-11-royal.css</option>
+              <option>theme-12-coral.css</option>
+              <option>theme-13-lavender.css</option>
+              <option>theme-14-citrus.css</option>
+              <option>theme-15-slate-blue.css</option>
+              <option>theme-16-retro.css</option>
+              <option>theme-17-cyberpunk.css</option>
+              <option>theme-18-desert.css</option>
+              <option>theme-19-midnight-red.css</option>
+              <option>theme-20-paper-ink.css</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="logoPath">Logo path</label>
+            <input id="logoPath" value="/logo.jpg">
+          </div>
+        </div>
+      </section>
+
+      <button class="primary-btn" id="btnBuild" type="button">Generate Files</button>
+      <div id="status" class="status"></div>
 
       <section class="section">
-        <h2>Output: client JSON</h2>
-        <p class="tagline">Save as: <code>/data/clients/{slug}.json</code></p>
-        <textarea id="outJson" rows="12" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);font-family:ui-monospace, SFMono-Regular, Menlo, monospace;"></textarea>
+        <div class="output-head">
+          <h3>Client JSON</h3>
+          <button class="secondary-btn copy-btn" type="button" data-copy="outJson">Copy JSON</button>
+        </div>
+        <div class="helper" style="margin:0 0 8px">Save as <code>/data/clients/{slug}.json</code></div>
+        <textarea id="outJson" rows="12"></textarea>
       </section>
 
       <section class="section">
-        <h2>Output: vCard</h2>
-        <p class="tagline">Save as: <code>/vcards/{slug}.vcf</code></p>
-        <textarea id="outVcf" rows="10" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);font-family:ui-monospace, SFMono-Regular, Menlo, monospace;"></textarea>
+        <div class="output-head">
+          <h3>vCard</h3>
+          <button class="secondary-btn copy-btn" type="button" data-copy="outVcf">Copy vCard</button>
+        </div>
+        <div class="helper" style="margin:0 0 8px">Save as <code>/vcards/{slug}.vcf</code></div>
+        <textarea id="outVcf" rows="10"></textarea>
       </section>
+    </div>
+  </details>
 
-      <footer class="footer">
-        <span>After commit & push, the client is live in seconds.</span>
-      </footer>
-    </section>
-  </main>
+  <footer>Tap-Deck mobile admin</footer>
+</main>
 
-  <script>
-    const $ = (id) => document.getElementById(id);
+<script>
+const $ = id => document.getElementById(id);
 
-    function safeSlug(s){
-      return (s || "")
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9-]/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
-    }
+function safeSlug(s){
+  return (s || "").trim().toLowerCase()
+    .replace(/[^a-z0-9-]/g,"-")
+    .replace(/-+/g,"-")
+    .replace(/^-|-$/g,"");
+}
 
-    function build(){
-      const slug = safeSlug($("slug").value);
-      if(!slug){
-        alert("Please enter a slug (subdomain), e.g., sam");
-        return;
-      }
+function build(){
+  const slug = safeSlug($("slug").value);
+  if(!slug){ alert("Please enter a profile slug."); return; }
 
-      const businessName = $("businessName").value.trim();
-      const tagline = $("tagline").value.trim();
-      const about = $("about").value.trim();
+  const businessName = $("businessName").value.trim();
+  const tagline = $("tagline").value.trim();
+  const about = $("about").value.trim();
+  const website = $("website").value.trim();
+  const facebook = $("facebook").value.trim();
+  const tiktok = $("tiktok").value.trim();
+  const name = $("name").value.trim();
+  const phoneE164 = $("phoneE164").value.trim();
+  const phoneDisplay = $("phoneDisplay").value.trim();
+  const email = $("email").value.trim();
+  const theme = $("theme").value.trim();
+  const logoPath = $("logoPath").value.trim() || "/logo.jpg";
 
-      const website = $("website").value.trim();
-      const facebook = $("facebook").value.trim();
-      const tiktok = $("tiktok").value.trim();
+  const client = {
+    slug,businessName,tagline,about,
+    links:{website,facebook,tiktok},
+    contact:{name,phoneE164,phoneDisplay,email},
+    theme,logoPath,
+    vcardPath:`/vcards/${slug}.vcf`
+  };
 
-      const name = $("name").value.trim();
-      const phoneE164 = $("phoneE164").value.trim();
-      const phoneDisplay = $("phoneDisplay").value.trim();
-      const email = $("email").value.trim();
-
-      const theme = $("theme").value.trim();
-      const logoPath = $("logoPath").value.trim() || "/logo.jpg";
-
-      const client = {
-        slug,
-        businessName,
-        tagline,
-        about,
-        links: { website, facebook, tiktok },
-        contact: { name, phoneE164, phoneDisplay, email },
-        theme,
-        logoPath,
-        vcardPath: `/vcards/${slug}.vcf`
-      };
-
-      $("outJson").value = JSON.stringify(client, null, 2);
-
-      $("outVcf").value =
+  $("outJson").value = JSON.stringify(client,null,2);
+  $("outVcf").value =
 `BEGIN:VCARD
 VERSION:3.0
 N:Last;${name || "First"};;;
@@ -190,12 +301,26 @@ EMAIL:${email || "you@domain.com"}
 URL:${website || "https://example.com"}
 NOTE:${tagline || ""}
 END:VCARD`;
-    }
 
-    $("btnBuild").addEventListener("click", (e) => {
-      e.preventDefault();
-      build();
-    });
-  </script>
+  $("status").textContent = "Files generated.";
+}
+
+$("btnBuild").addEventListener("click", build);
+
+document.querySelectorAll("[data-copy]").forEach(btn=>{
+  btn.addEventListener("click", async ()=>{
+    const el = $(btn.dataset.copy);
+    if(!el.value) return;
+    try{
+      await navigator.clipboard.writeText(el.value);
+      const old = btn.textContent;
+      btn.textContent = "Copied";
+      setTimeout(()=>btn.textContent=old,1200);
+    }catch{
+      el.focus(); el.select();
+    }
+  });
+});
+</script>
 </body>
 </html>
