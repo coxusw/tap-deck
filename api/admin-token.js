@@ -5,6 +5,7 @@ const {
   getSupabase,
   hashSecret,
   json,
+  makeSlug,
   parseBody
 } = require("./_lib/tapdeck");
 
@@ -153,6 +154,33 @@ module.exports = async function handler(req, res) {
       }));
 
       return json(res, 200, { ok: true, count: accounts.length, accounts });
+    }
+
+    if (action === "delete-profile") {
+      if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
+
+      const supabase = getSupabase();
+      if (!supabase) return json(res, 500, { ok: false, error: "Supabase is not configured." });
+
+      const data = await body(req);
+      const slug = makeSlug(data.slug);
+      const confirmSlug = String(data.confirmSlug || "").trim().toLowerCase();
+
+      if (!slug) return json(res, 400, { ok: false, error: "Missing profile slug." });
+      if (confirmSlug !== slug) {
+        return json(res, 400, { ok: false, error: "Confirmation slug does not match." });
+      }
+
+      const { data: deleted, error } = await supabase
+        .from("tap_deck_profiles")
+        .delete()
+        .eq("slug", slug)
+        .select("slug")
+        .maybeSingle();
+      if (error) throw error;
+      if (!deleted) return json(res, 404, { ok: false, error: "Profile not found." });
+
+      return json(res, 200, { ok: true, deletedSlug: deleted.slug });
     }
 
     if (action === "qr") {
