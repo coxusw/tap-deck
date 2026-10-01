@@ -3,64 +3,245 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
 <title>Tap-Deck Profiles</title>
 <style>
-:root{color-scheme:dark;--bg:#0b0d12;--card:#151922;--card2:#1c2230;--text:#f5f7fb;--muted:#9da7b6;--line:#2a3241;--accent:#8ab4ff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:18px 16px 34px}
-main{max-width:620px;margin:auto}.brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}.mark{width:42px;height:42px;border-radius:12px;background:#447cff;display:grid;place-items:center;font-weight:900}
-h1,h2{margin:0}.sub{color:var(--muted);font-size:14px;margin-top:4px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}a.btn,button{display:block;padding:12px;border-radius:13px;border:1px solid var(--line);background:var(--card2);color:var(--text);text-decoration:none;text-align:center;font-weight:800}
+:root{
+  color-scheme:dark;
+  --bg:#0b0d12;--card:#151922;--card2:#1c2230;--text:#f5f7fb;
+  --muted:#9da7b6;--line:#2a3241;--accent:#8ab4ff;--danger:#ff6b6b;--dangerBg:#35191c
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding:calc(18px + env(safe-area-inset-top)) 16px calc(34px + env(safe-area-inset-bottom))}
+main{max-width:620px;margin:auto}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.mark{width:42px;height:42px;border-radius:12px;background:#447cff;display:grid;place-items:center;font-weight:900}
+h1,h2{margin:0}
+.sub{color:var(--muted);font-size:14px;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+a.btn,button{display:block;padding:12px;border-radius:13px;border:1px solid var(--line);background:var(--card2);color:var(--text);text-decoration:none;text-align:center;font-weight:800;font:inherit}
 input{width:100%;padding:14px;border-radius:13px;border:1px solid var(--line);background:#0f131b;color:var(--text);font-size:16px;margin:12px 0}
-.head{display:flex;justify-content:space-between;align-items:end;gap:10px}.head button{width:auto}.count{color:var(--muted);font-size:13px;margin-top:4px}
-.list{display:grid;gap:10px}.profile{background:#0f131b;border:1px solid var(--line);border-radius:15px;padding:14px}.name{font-weight:800;font-size:17px}.slug{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);margin-top:4px}
-.meta{font-size:13px;color:var(--muted);margin-top:8px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.actions a{font-size:13px;padding:10px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:10px}
+.head button{width:auto}
+.count{color:var(--muted);font-size:13px;margin-top:4px}
+.list{display:grid;gap:10px}
+.profile{background:#0f131b;border:1px solid var(--line);border-radius:15px;padding:14px}
+.name{font-weight:800;font-size:17px}
+.slug{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);margin-top:4px;overflow-wrap:anywhere}
+.meta{font-size:13px;color:var(--muted);margin-top:8px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.actions a,.actions button{font-size:13px;padding:10px;margin:0}
+.actions .delete{grid-column:1/-1;background:var(--dangerBg);border-color:#6f2b31;color:#ffb0b0}
 .msg{text-align:center;color:var(--muted);padding:18px 4px}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:flex-end;justify-content:center;
+  padding:18px;z-index:9999
+}
+.overlay.open{display:flex}
+.modal{
+  width:min(100%,520px);background:#141923;border:1px solid var(--line);border-radius:22px;
+  padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.55);margin-bottom:env(safe-area-inset-bottom)
+}
+.modal h2{font-size:21px}
+.modal p{color:var(--muted);line-height:1.45;font-size:14px}
+.confirmSlug{font:700 13px ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffd0d0;background:#251316;border:1px solid #5e292f;padding:10px 12px;border-radius:12px}
+.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.modalActions button{margin:0}
+.modalActions .danger{background:#b4232f;border-color:#d44550;color:#fff}
+.modalActions .danger:disabled{opacity:.45}
 </style>
 </head>
 <body>
 <main>
 <div class="brand"><div class="mark">TD</div><div><h1>Tap-Deck Profiles</h1><div class="sub">Mobile admin view</div></div></div>
 <nav><a class="btn" href="/admin/token">Bypass Tokens</a><a class="btn" href="/admin">Admin Home</a></nav>
+
 <section class="card">
-<div class="head"><div><h2>Current Profiles</h2><div id="count" class="count"></div></div><button id="refresh">Refresh</button></div>
-<input id="search" type="search" placeholder="Search business or profile URL…" autocomplete="off">
-<div id="message" class="msg">Loading profiles…</div>
-<div id="list" class="list"></div>
+  <div class="head">
+    <div><h2>Current Profiles</h2><div id="count" class="count"></div></div>
+    <button id="refresh">Refresh</button>
+  </div>
+  <input id="search" type="search" placeholder="Search business or profile URL…" autocomplete="off">
+  <div id="message" class="msg">Loading profiles…</div>
+  <div id="list" class="list"></div>
 </section>
 </main>
+
+<div id="deleteOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+  <div class="modal">
+    <h2 id="deleteTitle">Delete profile?</h2>
+    <p id="deleteCopy"></p>
+    <div id="deleteSlugDisplay" class="confirmSlug"></div>
+    <p>Type the profile slug exactly to confirm. This permanently removes the Tap-Deck profile.</p>
+    <input id="deleteConfirmInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type profile slug">
+    <div id="deleteMessage" class="msg" style="padding:4px 0 0"></div>
+    <div class="modalActions">
+      <button id="cancelDelete" type="button">Cancel</button>
+      <button id="confirmDelete" class="danger" type="button" disabled>Delete Profile</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const $=id=>document.getElementById(id);let rows=[];
+const $=id=>document.getElementById(id);
+let rows=[];
+let pendingDelete=null;
+
+async function request(action,method="GET",payload){
+  const options={method,credentials:"same-origin",headers:{}};
+  if(payload!==undefined){
+    options.headers["Content-Type"]="application/json";
+    options.body=JSON.stringify(payload);
+  }
+  const r=await fetch("/api/admin-token?action="+encodeURIComponent(action),options);
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok||!d.ok){const e=new Error(d.error||"Request failed");e.status=r.status;throw e}
+  return d;
+}
+
 async function load(){
-  $("refresh").disabled=true;$("message").textContent="Loading profiles…";
+  $("refresh").disabled=true;
+  $("message").textContent="Loading profiles…";
   try{
-    const r=await fetch("/api/admin-token?action=profiles",{credentials:"same-origin"});
-    const d=await r.json();
-    if(!r.ok||!d.ok)throw new Error(d.error||"Request failed");
-    rows=d.accounts||[];render();
+    const d=await request("profiles");
+    rows=d.accounts||[];
+    render();
   }catch(e){
     $("list").replaceChildren();
-    $("message").textContent=e.message==="Admin login required."?"Open Bypass Tokens and sign in first, then return here.":e.message;
-  }finally{$("refresh").disabled=false}
+    $("message").textContent=e.message==="Admin login required."
+      ?"Open Bypass Tokens and sign in first, then return here."
+      :e.message;
+  }finally{
+    $("refresh").disabled=false;
+  }
 }
-function date(v){if(!v)return"";const d=new Date(v);return isNaN(d)?"":d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}
-function text(parent,value,cls){const e=document.createElement("div");if(cls)e.className=cls;e.textContent=value;parent.appendChild(e)}
+
+function date(v){
+  if(!v)return"";
+  const d=new Date(v);
+  return isNaN(d)?"":d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+}
+
+function text(parent,value,cls){
+  const e=document.createElement("div");
+  if(cls)e.className=cls;
+  e.textContent=value;
+  parent.appendChild(e);
+}
+
+function openDelete(profile){
+  pendingDelete=profile;
+  $("deleteCopy").textContent="You are about to delete "+(profile.businessName||profile.slug)+".";
+  $("deleteSlugDisplay").textContent=profile.slug;
+  $("deleteConfirmInput").value="";
+  $("deleteMessage").textContent="";
+  $("confirmDelete").disabled=true;
+  $("deleteOverlay").classList.add("open");
+  setTimeout(()=>$("deleteConfirmInput").focus(),100);
+}
+
+function closeDelete(){
+  pendingDelete=null;
+  $("deleteOverlay").classList.remove("open");
+  $("deleteConfirmInput").value="";
+  $("deleteMessage").textContent="";
+  $("confirmDelete").disabled=true;
+}
+
 function render(){
   const q=$("search").value.trim().toLowerCase();
   const shown=rows.filter(x=>[x.businessName,x.slug,x.theme].some(v=>String(v||"").toLowerCase().includes(q)));
   $("count").textContent=(q?shown.length+" of ":"")+rows.length+" profiles";
   $("message").textContent=shown.length?"":(rows.length?"No profiles match your search.":"No profiles found.");
-  const root=$("list");root.replaceChildren();
+
+  const root=$("list");
+  root.replaceChildren();
+
   for(const p of shown){
-    const card=document.createElement("article");card.className="profile";
-    text(card,p.businessName||p.slug,"name");text(card,"tap-deck.com/"+p.slug,"slug");
-    const meta=document.createElement("div");meta.className="meta";if(p.theme)text(meta,"Theme: "+p.theme);if(p.updatedAt)text(meta,"Updated: "+date(p.updatedAt));card.appendChild(meta);
-    const actions=document.createElement("div");actions.className="actions";
-    const view=document.createElement("a");view.className="btn";view.href="/"+encodeURIComponent(p.slug);view.target="_blank";view.rel="noopener";view.textContent="View Profile";
-    const edit=document.createElement("a");edit.className="btn";edit.href="/edit?slug="+encodeURIComponent(p.slug);edit.target="_blank";edit.rel="noopener";edit.textContent="Edit Page";
-    actions.append(view,edit);card.appendChild(actions);root.appendChild(card);
+    const card=document.createElement("article");
+    card.className="profile";
+
+    text(card,p.businessName||p.slug,"name");
+    text(card,"tap-deck.com/"+p.slug,"slug");
+
+    const meta=document.createElement("div");
+    meta.className="meta";
+    if(p.theme)text(meta,"Theme: "+p.theme);
+    if(p.updatedAt)text(meta,"Updated: "+date(p.updatedAt));
+    card.appendChild(meta);
+
+    const actions=document.createElement("div");
+    actions.className="actions";
+
+    const view=document.createElement("a");
+    view.className="btn";
+    view.href="/"+encodeURIComponent(p.slug);
+    view.target="_blank";
+    view.rel="noopener";
+    view.textContent="View Profile";
+
+    const edit=document.createElement("a");
+    edit.className="btn";
+    edit.href="/edit?slug="+encodeURIComponent(p.slug);
+    edit.target="_blank";
+    edit.rel="noopener";
+    edit.textContent="Edit Page";
+
+    const del=document.createElement("button");
+    del.className="delete";
+    del.type="button";
+    del.textContent="Delete Profile";
+    del.addEventListener("click",()=>openDelete(p));
+
+    actions.append(view,edit,del);
+    card.appendChild(actions);
+    root.appendChild(card);
   }
 }
-$("refresh").onclick=load;$("search").oninput=render;load();
+
+$("refresh").onclick=load;
+$("search").oninput=render;
+$("cancelDelete").onclick=closeDelete;
+
+$("deleteOverlay").addEventListener("click",e=>{
+  if(e.target===$("deleteOverlay"))closeDelete();
+});
+
+$("deleteConfirmInput").addEventListener("input",()=>{
+  $("confirmDelete").disabled=!pendingDelete||$("deleteConfirmInput").value.trim().toLowerCase()!==pendingDelete.slug.toLowerCase();
+});
+
+$("confirmDelete").onclick=async()=>{
+  if(!pendingDelete)return;
+  const slug=pendingDelete.slug;
+  const confirmSlug=$("deleteConfirmInput").value.trim();
+
+  $("confirmDelete").disabled=true;
+  $("cancelDelete").disabled=true;
+  $("deleteMessage").textContent="Deleting profile…";
+
+  try{
+    await request("delete-profile","POST",{slug,confirmSlug});
+    rows=rows.filter(x=>x.slug!==slug);
+    closeDelete();
+    render();
+    $("message").textContent="Deleted "+slug+".";
+    setTimeout(()=>{if($("message").textContent==="Deleted "+slug+".")$("message").textContent=""},2500);
+  }catch(e){
+    if(e.status===401){
+      location.href="/admin/token";
+      return;
+    }
+    $("deleteMessage").textContent=e.message;
+    $("confirmDelete").disabled=false;
+  }finally{
+    $("cancelDelete").disabled=false;
+  }
+};
+
+load();
 </script>
 </body>
 </html>
